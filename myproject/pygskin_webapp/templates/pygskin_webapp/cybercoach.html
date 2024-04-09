@@ -1,5 +1,29 @@
 <html>
     <body>
-        Welcome to the cybercoach page.
+        Welcome to the cybercoach page. The current coach is {{ coach_name }}.
+        <br>
+        <h2>Items Table</h2>
+        {% if coach_seasons %}
+            <table>
+                <thead>
+                    <tr>
+                        {% for key in coach_seasons.0.keys %}
+                            <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in coach_seasons %}
+                        <tr>
+                            {% for value in item.values %}
+                                <td>{{ value }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No items found.</p>
+        {% endif %}
     </body>
 </html>

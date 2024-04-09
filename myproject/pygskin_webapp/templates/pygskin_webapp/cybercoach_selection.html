@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Dropdown Menus</title>
+</head>
+<body>
+    <label for="coach-select">Choose a coach:</label>
+    <select id="coach-select" onchange="updateModelDropdown()">
+        {% for coach, paths in cybercoach_paths.items %}
+            <option value="{{ coach }}">{{ coach }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="model-select">Choose a model type:</label>
+    <select id="model-select">
+        <!-- Options will be added here based on the first dropdown's selection -->
+    </select>
+
+    {# Safe JSON representation of cybercoach_paths #}
+    {{ cybercoach_paths|json_script:"cybercoachPathsData" }}
+
+    <script>
+        function updateModelDropdown() {
+            const coachSelect = document.getElementById('coach-select');
+            const modelSelect = document.getElementById('model-select');
+            const selectedCoach = coachSelect.value;
+
+            // Access the embedded JSON data
+            const cybercoachPaths = JSON.parse(document.getElementById('cybercoachPathsData').textContent);
+            const models = cybercoachPaths[selectedCoach];
+
+            // Clear existing options in the model dropdown
+            while (modelSelect.firstChild) {
+                modelSelect.removeChild(modelSelect.firstChild);
+            }
+
+            // Populate the model dropdown with new options
+            for (const model in models) {
+                const option = document.createElement('option');
+                option.value = model;
+                option.text = model;
+                modelSelect.appendChild(option);
+            }
+        }
+
+        // Initialize the model dropdown with the first coach's models
+        window.onload = updateModelDropdown;
+    </script>
+</body>
+</html>
