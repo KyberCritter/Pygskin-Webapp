@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.template import loader
 
@@ -8,49 +8,68 @@ import os
 import pickle
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the Pygskin index.")
+    return HttpResponse(render(request, "pygskin_webapp/index.html"))
 
-def cybercoach_selection(request):
-    # Cybercoach access page
-    template = loader.get_template("pygskin_webapp/cybercoach_selection.html")
-
-    # TODO: find a better way to store the paths
-    cybercoach_paths = {
-        "Kalen Deboer": {
-            "decision_tree": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_decision_tree.cybercoach"),
-            "neural_network": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_neural_network.cybercoach"),
-            "k_nearest_neighbors": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_k_nearest_neighbors.cybercoach"),
-            "logistic_regression": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_logistic_regression.cybercoach"),
-            "random_forest": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_random_forest.cybercoach"),
-        },
-        "Deion Sanders": {
-            "decision_tree": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_decision_tree.cybercoach"),
-            "neural_network": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_neural_network.cybercoach"),
-            "k_nearest_neighbors": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_k_nearest_neighbors.cybercoach"),
-            "logistic_regression": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_logistic_regression.cybercoach"),
-            "random_forest": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_random_forest.cybercoach"),
-        }
+# TODO: find a better way to store the paths
+cybercoach_paths = {
+    "Kalen Deboer": {
+        "decision_tree": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_decision_tree.cybercoach"),
+        "random_forest": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_random_forest.cybercoach"),
+        "k_nearest_neighbors": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_k_nearest_neighbors.cybercoach"),
+        "logistic_regression": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_logistic_regression.cybercoach"),
+        "neural_network": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_neural_network.cybercoach"),
+    },
+    "Deion Sanders": {
+        "decision_tree": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_decision_tree.cybercoach"),
+        "random_forest": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_random_forest.cybercoach"),
+        "k_nearest_neighbors": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_k_nearest_neighbors.cybercoach"),
+        "logistic_regression": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_logistic_regression.cybercoach"),
+        "neural_network": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_neural_network.cybercoach"),
     }
-    # cybercoach_path = os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_decision_tree.cybercoach")
-    # cybercoach = pickle.load(open(cybercoach_path, "rb"))
-    # print(os.path.curdir)
-    # cybercoach = pickle.load(open(cybercoach_path, "rb"))
-    # context["coach_name"] = cybercoach.coach.coach_dict["first_name"] + " " + cybercoach.coach.coach_dict["last_name"]
-    # # context["coach_dict"] = cybercoach.coach.coach_dict
-    # context["coach_seasons"] = cybercoach.coach.coach_dict["seasons"]
+}
+
+def cybercoach_list(request):
+    # Cybercoach access page
+    template = loader.get_template("pygskin_webapp/cybercoach_list.html")
     context = {
         "cybercoach_paths": cybercoach_paths
     }
     return HttpResponse(template.render(context, request))
 
-def cybercoach_render(request, cybercoach_path):
-    # Cybercoach render page
-    template = loader.get_template("pygskin_webapp/cybercoach.html")
-    context = {
-        # empty for now
-    }
-    cybercoach = pickle.load(open(cybercoach_path, "rb"))
-    context["coach_name"] = cybercoach.coach.coach_dict["first_name"] + " " + cybercoach.coach.coach_dict["last_name"]
-    # context["coach_dict"] = cybercoach.coach.coach_dict
-    context["coach_seasons"] = cybercoach.coach.coach_dict["seasons"]
-    return HttpResponse(template.render(context, request))
+def cybercoach(request):
+    # Only proceed if this is a POST request
+    if request.method == 'POST':
+        # Extract the selected coach and model type from the POST request
+        selected_coach = request.POST.get('coach')
+        selected_model_type = request.POST.get('model_type')
+
+        # Construct the cybercoach_path based on the selections
+        # This part assumes you have a way to determine the path from the selected coach and model type
+        if selected_coach in cybercoach_paths and selected_model_type in cybercoach_paths[selected_coach]:
+            cybercoach_path = cybercoach_paths[selected_coach][selected_model_type]
+        else:
+            # Handle the case where the path does not exist for the selected options
+            return HttpResponse("Selected model path does not exist.", status=404)
+
+        # Load the cybercoach from the path
+        try:
+            cybercoach = pickle.load(open(cybercoach_path, "rb"))
+        except Exception as e:
+            return HttpResponse(f"Error loading model: {e}", status=500)
+
+        # Prepare context data for rendering
+        context = {
+            "coach_name": cybercoach.coach.coach_dict["first_name"] + " " + cybercoach.coach.coach_dict["last_name"],
+            "coach_seasons": cybercoach.coach.coach_dict["seasons"],
+        }
+
+        # Render and return the template with context
+        return render(request, "pygskin_webapp/cybercoach.html", context)
+
+    else:
+        # Redirect or show an error for non-POST requests
+        # Adjust the redirect path as necessary
+        return redirect('index')
+
+def coaches(request):
+    return HttpResponse(render(request, "pygskin_webapp/coaches.html"))

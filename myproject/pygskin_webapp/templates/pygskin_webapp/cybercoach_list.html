@@ -1,25 +1,34 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Dropdown Menus</title>
+    <title>Cybercoach Selection</title>
 </head>
 <body>
-    <label for="coach-select">Choose a coach:</label>
-    <select id="coach-select" onchange="updateModelDropdown()">
-        {% for coach, paths in cybercoach_paths.items %}
-            <option value="{{ coach }}">{{ coach }}</option>
-        {% endfor %}
-    </select>
+    <!-- The action attribute should point to your cybercoach_render view's URL -->
+    <form action="{% url 'cybercoach' %}" method="POST">
+        {% csrf_token %}
+        <label for="coach-select">Choose a coach:</label>
+        <!-- Ensure the select name attributes are set so they can be accessed in your Django view -->
+        <select id="coach-select" name="coach" onchange="updateModelDropdown()">
+            {% for coach, paths in cybercoach_paths.items %}
+                <option value="{{ coach }}">{{ coach }}</option>
+            {% endfor %}
+        </select>
 
-    <label for="model-select">Choose a model type:</label>
-    <select id="model-select">
-        <!-- Options will be added here based on the first dropdown's selection -->
-    </select>
+        <label for="model-select">Choose a model type:</label>
+        <select id="model-select" name="model_type">
+            <!-- Options will be added here based on the first dropdown's selection -->
+        </select>
 
-    {# Safe JSON representation of cybercoach_paths #}
+        <button type="submit">Submit</button>
+    </form>
+
     {{ cybercoach_paths|json_script:"cybercoachPathsData" }}
+
+    {% include "footer.html" %}
 
     <script>
         function updateModelDropdown() {

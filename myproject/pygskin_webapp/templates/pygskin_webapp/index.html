@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+<html>
+<head>
+    <title>Pygskin - College Football Coach Statistics</title>
+</head>
+<body>
+    {% include "navbar.html" %}
+
+    <h1>Welcome to Pygskin</h1>
+    <p>Providing visualizations for college football coach statistics</p>
+
+    <section>
+        <h2>Explore Coach Statistics</h2>
+        <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
+        <a href="/404">Explore Coach Statistics</a>
+    </section>
+
+    <section>
+        <h2>Cybercoaches</h2>
+        <p>Experience the power of machine learning with our Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles.</p>
+        <a href="{% url 'cybercoach_list' %}">Try our Cybercoaches</a>
+    </section>
+
+    {% include "footer.html" %}
+</body>
+</html>

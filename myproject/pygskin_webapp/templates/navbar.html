@@ -1,0 +1,11 @@
+<!-- navbar.html -->
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+
+<div class="navbar">
+    <div id="navLinks">
+        <a href="{% url 'index' %}">Pygskin Home</a>
+        <a href="{% url 'coaches' %}">Coach Statistics</a>
+        <a href="{% url 'cybercoach_list' %}">Cybercoaches</a>
+    </div>
+</div>

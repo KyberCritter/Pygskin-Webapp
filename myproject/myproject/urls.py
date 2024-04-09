@@ -23,6 +23,7 @@ urlpatterns = [
     # path("pygskin_webapp/", include("pygskin_webapp.urls")),
     path("admin/", admin.site.urls),
     path("", views.index, name="index"),
-    path("cybercoach/", views.cybercoach_render, name="cybercoach"),
-    path("cybercoach_selection/", views.cybercoach_selection, name="cybercoach_selection"),
+    path("coaches", views.coaches, name="coaches"),
+    path("cybercoach/", views.cybercoach, name="cybercoach"),
+    path("cybercoach_list/", views.cybercoach_list, name="cybercoach_list"),
 ]

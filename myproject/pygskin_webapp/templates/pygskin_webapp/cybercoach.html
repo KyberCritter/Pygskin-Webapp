@@ -1,7 +1,7 @@
 <html>
+    {% load static %}
     <body>
-        Welcome to the cybercoach page. The current coach is {{ coach_name }}.
-        <br>
+        <h1>Cybercoach of {{ coach_name }}</h1>
         <h2>Items Table</h2>
         {% if coach_seasons %}
             <table>
@@ -25,5 +25,7 @@
         {% else %}
             <p>No items found.</p>
         {% endif %}
+
+        {% include "footer.html" %}
     </body>
 </html>
