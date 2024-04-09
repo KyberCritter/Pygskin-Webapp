@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ coach_name }} Statistics</title>
+</head>
+<body>
+    {% include "navbar.html" %}
+
+    <h1>{{ coach_name }} Statistics</h1>
+    <h2>Included Seasons</h2>
+    {% if coach_seasons %}
+        <table>
+            <thead>
+                <tr>
+                    {% for key in coach_seasons.0.keys %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in coach_seasons %}
+                    <tr>
+                        {% for value in item.values %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No items found.</p>
+    {% endif %}
+
+    <h2>Playcalling Tendencies</h2>
+    <p>This section is a placeholder.</p>
+
+    {% include "footer.html" %}
+</body>
+</html>

@@ -7,6 +7,9 @@
     <title>Cybercoach Selection</title>
 </head>
 <body>
+    {% include "navbar.html" %}
+
+    <h1>Select a CyberCoach</h1>
     <!-- The action attribute should point to your cybercoach_render view's URL -->
     <form action="{% url 'cybercoach' %}" method="POST">
         {% csrf_token %}

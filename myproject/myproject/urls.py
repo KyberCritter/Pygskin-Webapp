@@ -21,9 +21,11 @@ from pygskin_webapp import views
 
 urlpatterns = [
     # path("pygskin_webapp/", include("pygskin_webapp.urls")),
+    path("404/", views.handler404, name="error_404"),
     path("admin/", admin.site.urls),
     path("", views.index, name="index"),
-    path("coaches", views.coaches, name="coaches"),
+    path("coach/", views.coach, name="coach"),
+    path("coach_list/", views.coach_list, name="coach_list"),
     path("cybercoach/", views.cybercoach, name="cybercoach"),
     path("cybercoach_list/", views.cybercoach_list, name="cybercoach_list"),
 ]

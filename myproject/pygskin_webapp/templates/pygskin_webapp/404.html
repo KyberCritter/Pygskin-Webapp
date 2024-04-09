@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+<html>
+<head>
+    <title>404 Error - Page Not Found</title>
+</head>
+<body>
+    {% include "navbar.html" %}
+
+    <h1>404 Error - Page Not Found</h1>
+    <a href="{% url 'index' %}">Return Home</a>
+
+    {% include "footer.html" %}
+</body>
+</html>

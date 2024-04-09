@@ -1,31 +1,17 @@
-<html>
-    {% load static %}
-    <body>
-        <h1>Cybercoach of {{ coach_name }}</h1>
-        <h2>Items Table</h2>
-        {% if coach_seasons %}
-            <table>
-                <thead>
-                    <tr>
-                        {% for key in coach_seasons.0.keys %}
-                            <th>{{ key }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in coach_seasons %}
-                        <tr>
-                            {% for value in item.values %}
-                                <td>{{ value }}</td>
-                            {% endfor %}
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No items found.</p>
-        {% endif %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cybercoach of {{ coach_name }}</title>
+</head>
+<body>
+    {% include "navbar.html" %}
 
-        {% include "footer.html" %}
-    </body>
+    <h1>Cybercoach of {{ coach_name }}</h1>
+    <p>This section is a placeholder.</p>
+
+    {% include "footer.html" %}
+</body>
 </html>
