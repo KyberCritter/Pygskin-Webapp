@@ -9,7 +9,6 @@ on:
 
 env:
   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  DEBUG: "TRUE"
 
 jobs:
   build:
@@ -17,4 +16,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag pygskin-webapp:$(date +%s) --build-args ${{ GH_TOKEN }}
+      run: docker build . --file Dockerfile --tag pygskin-webapp:$(date +%s)
