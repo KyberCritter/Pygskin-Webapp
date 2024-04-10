@@ -22,8 +22,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN echo "made it to login"
-
 # Set up environment variable for GitHub access token
 ARG GITHUB_TOKEN
 
@@ -35,7 +33,7 @@ RUN gh release download -R KyberCritter/pygskin --pattern "*.whl"
 
 # Install the downloaded .whl file with pip
 # Note: This assumes only one .whl file is downloaded. Adjust as necessary.
-COPY requirements_docker.txt /app/
+COPY requirements_docker.txt /app/requirements.txt
 COPY ./*.whl /app/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
