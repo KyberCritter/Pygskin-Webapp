@@ -8,7 +8,6 @@ on:
   workflow_dispatch:
 
 env:
-  GH_TOKEN: ${{ github.token }}
   DEBUG: "TRUE"
 
 jobs:
