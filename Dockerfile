@@ -29,6 +29,7 @@ ARG GITHUB_TOKEN
 RUN gh auth login
 # Clone the latest release from the private repo
 # Replace 'your_username/your_private_repo' with the actual path to your GitHub repository
+RUN echo "made it past login"
 RUN gh release download -R KyberCritter/pygskin --pattern "*.whl"
 
 # Install the downloaded .whl file with pip
