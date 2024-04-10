@@ -29,5 +29,6 @@ urlpatterns = [
     path("coach_list/", views.coach_list, name="coach_list"),
     path("cybercoach/", views.cybercoach, name="cybercoach"),
     path("cybercoach_list/", views.cybercoach_list, name="cybercoach_list"),
-    path("cybercoach_prediction/", views.cybercoach_prediction, name="cybercoach_prediction"),
+    path("cybercoach_results/", views.cybercoach_results, name="cybercoach_results"),
+    path("prediction/", views.prediction, name="prediction"),
 ]

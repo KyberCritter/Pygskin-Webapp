@@ -149,7 +149,9 @@ def cybercoach(request):
             "last_year": last_year,
             "coach_seasons": cybercoach.coach.coach_dict["seasons"],
             "opponents_by_year": opponents_by_year,
+            "cybercoach_path": cybercoach_path,
         }
+        request.session['cybercoach_path'] = cybercoach_path
 
         # Render and return the template with context
         return render(request, "pygskin_webapp/cybercoach.html", context)
@@ -159,8 +161,60 @@ def cybercoach(request):
         # Adjust the redirect path as necessary
         return redirect('index')
     
-def cybercoach_prediction(request):
-    return render(request, "pygskin_webapp/cybercoach_prediction.html")
+def cybercoach_results(request):
+    if request.method == 'POST':
+        # Extract the selected coach and model type from the POST request
+        # selected_coach = request.POST.get('selected_coach')
+        # selected_model_type = request.POST.get('model_type')
+        selected_opponent = request.POST.get('opponent')
+        selected_year = int(request.POST.get('year'))
+
+        cybercoach_obj = pickle.load(open(request.session['cybercoach_path'], "rb"))
+        current_team = cybercoach_obj.coach.coach_school_dict[selected_year]
+        current_opponent = selected_opponent.split(",")[0]
+        current_week = int(selected_opponent.split(",")[1])
+        game_dict = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == current_week)].to_dict()
+
+        context = {
+            "selected_opponent": current_opponent,
+            "selected_week": current_week,
+            "selected_year": selected_year,
+            "current_team": current_team,
+            "df_columns": cybercoach_obj.original_play_df.columns,
+            "game_dict": game_dict,
+            "drive_numbers": set(game_dict["drive_number"].values()),
+        }
+        request.session['selected_opponent'] = current_opponent
+        request.session['current_week'] = current_week
+        request.session['selected_year'] = selected_year
+        request.session['current_team'] = current_team
+        request.session['df_columns'] = list(cybercoach_obj.original_play_df.columns)
+        request.session['game_dict'] = game_dict
+        request.session['drive_numbers'] = list(set(game_dict["drive_number"].values()))
+
+        # Render and return the template with context
+        return render(request, "pygskin_webapp/cybercoach_results.html", context)
+
+def prediction(request):
+    # game_dict = request.session['game_dict']
+    cybercoach_obj = pickle.load(open(request.session['cybercoach_path'], "rb"))
+    selected_opponent = request.session['selected_opponent']
+    current_team = request.session['current_team']
+    current_opponent = selected_opponent.split(",")[0]
+    current_week = request.session['current_week']
+    selected_year = request.session['selected_year']
+    drive_dict = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == current_week) & (cybercoach_obj.original_play_df["drive_number"] == int(request.POST.get('drive')))].to_dict()
+    # drive_number = request.POST.get('drive')
+    request.session['drive_dict'] = drive_dict
+    context = {
+        "selected_opponent": selected_opponent,
+        "selected_week": current_week,
+        "selected_year": selected_year,
+        "current_team": current_team,
+        "drive_dict": drive_dict,
+        "df_columns": cybercoach_obj.original_play_df.columns,
+    }
+    return render(request, "pygskin_webapp/prediction.html",context)
 
 def handler404(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/404.html"), status=404)
