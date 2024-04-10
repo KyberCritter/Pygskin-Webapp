@@ -9,7 +9,7 @@ on:
 
 env:
   GH_TOKEN: ${{ github.token }}
-  SECRET_KEY: ${{ secrets.django_secret_key }}
+  SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
   DEBUG: "TRUE"
 
 jobs:
