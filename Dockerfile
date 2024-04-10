@@ -25,20 +25,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set up environment variable for GitHub access token
 ARG GITHUB_TOKEN
 
-# Login to GitHub CLI
-RUN gh auth login
-# Clone the latest release from the private repo
-# Replace 'your_username/your_private_repo' with the actual path to your GitHub repository
-RUN gh release download -R KyberCritter/pygskin --pattern "*.whl"
+# Use curl to fetch the latest release data from GitHub API and parse the .whl asset download URL
+# Then, use curl again to download the .whl file using the GITHUB_TOKEN for authorization
+RUN curl -s -H "Authorization: token $GITHUB_TOKEN" \
+    "https://api.github.com/repos/KyberCritter/pygskin/releases/latest" | \
+    grep -Eo '"browser_download_url": "[^"]+\.whl"' | \
+    grep -Eo 'https:[^"]+' | \
+    xargs curl -s -L -o app_package.whl -H "Authorization: token $GITHUB_TOKEN"
 
 # Install the downloaded .whl file with pip
-# Note: This assumes only one .whl file is downloaded. Adjust as necessary.
 COPY requirements_docker.txt /app/requirements.txt
-COPY ./*.whl /app/
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    pip install --no-cache-dir app_package.whl
+
 RUN pip install -r requirements.txt
-# RUN pip install -r 
-RUN pip install --no-cache-dir ./*.whl
 
 # Copy the rest of your application's code into the container
 COPY . /app
