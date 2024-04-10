@@ -22,9 +22,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ARG gh_token
-ENV GH_TOKEN $gh_token
-
 # Clone the latest release from the private repo
 # Replace 'your_username/your_private_repo' with the actual path to your GitHub repository
 RUN gh release download -R KyberCritter/pygskin --pattern "*.whl"
