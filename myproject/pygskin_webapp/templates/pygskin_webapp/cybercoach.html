@@ -9,8 +9,10 @@
 <body>
     {% include "navbar.html" %}
 
-    <h1>Cybercoach of {{ coach_name }}</h1>
-    <p>This section is a placeholder.</p>
+    <div class="stat-display">
+        <h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
+        <p>This section is a placeholder.</p>
+    </div>
 
     {% include "footer.html" %}
 </body>

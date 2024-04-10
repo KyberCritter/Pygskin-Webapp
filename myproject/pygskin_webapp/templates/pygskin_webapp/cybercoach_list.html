@@ -9,25 +9,27 @@
 <body>
     {% include "navbar.html" %}
 
-    <h1>Select a CyberCoach</h1>
-    <!-- The action attribute should point to your cybercoach_render view's URL -->
-    <form action="{% url 'cybercoach' %}" method="POST">
-        {% csrf_token %}
-        <label for="coach-select">Choose a coach:</label>
-        <!-- Ensure the select name attributes are set so they can be accessed in your Django view -->
-        <select id="coach-select" name="coach" onchange="updateModelDropdown()">
-            {% for coach, paths in cybercoach_paths.items %}
-                <option value="{{ coach }}">{{ coach }}</option>
-            {% endfor %}
-        </select>
+    <div class="coach-selector">
+        <h1>Select a CyberCoach</h1>
+        <!-- The action attribute should point to your cybercoach_render view's URL -->
+        <form action="{% url 'cybercoach' %}" method="POST">
+            {% csrf_token %}
+            <label for="coach-select">Choose a coach:</label>
+            <!-- Ensure the select name attributes are set so they can be accessed in your Django view -->
+            <select id="coach-select" name="coach" onchange="updateModelDropdown()">
+                {% for coach, paths in cybercoach_paths.items %}
+                    <option value="{{ coach }}">{{ coach }}</option>
+                {% endfor %}
+            </select>
 
-        <label for="model-select">Choose a model type:</label>
-        <select id="model-select" name="model_type">
-            <!-- Options will be added here based on the first dropdown's selection -->
-        </select>
+            <label for="model-select">Choose a model type:</label>
+            <select id="model-select" name="model_type">
+                <!-- Options will be added here based on the first dropdown's selection -->
+            </select>
 
-        <button type="submit">Submit</button>
-    </form>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 
     {{ cybercoach_paths|json_script:"cybercoachPathsData" }}
 

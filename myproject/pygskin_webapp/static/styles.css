@@ -42,6 +42,7 @@ body {
 
 h1 {
     color: var(--color-3);
+    text-shadow: 1px 1px 2px #000;
 }
 
 h2 {
@@ -81,4 +82,10 @@ h2 {
 
 .navbar a:hover {
     color: var(--color-3);
+}
+
+/* Selector page styles */
+.homepage, .coach-selector, .stat-display {
+    padding-left: 7vw;
+    padding-right: 7vw;
 }
