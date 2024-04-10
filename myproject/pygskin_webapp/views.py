@@ -20,27 +20,28 @@ def license(request):
     return HttpResponse(template.render(context, request))
 
 # TODO: find a better way to store the paths
+path_to_cybercoaches = os.path.join(os.path.curdir, "myproject/pygskin_webapp/cybercoaches/")
 cybercoach_paths = {
     "Kalen DeBoer": {
-        "decision_tree": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_decision_tree.cybercoach"),
-        "random_forest": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_random_forest.cybercoach"),
-        "k_nearest_neighbors": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_k_nearest_neighbors.cybercoach"),
-        "logistic_regression": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_logistic_regression.cybercoach"),
-        "neural_network": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Kalen_Deboer_neural_network.cybercoach"),
+        "decision_tree": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_decision_tree.cybercoach"),
+        "random_forest": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_random_forest.cybercoach"),
+        "k_nearest_neighbors": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_k_nearest_neighbors.cybercoach"),
+        "logistic_regression": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_logistic_regression.cybercoach"),
+        "neural_network": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_neural_network.cybercoach"),
     },
     "Deion Sanders": {
-        "decision_tree": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_decision_tree.cybercoach"),
-        "random_forest": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_random_forest.cybercoach"),
-        "k_nearest_neighbors": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_k_nearest_neighbors.cybercoach"),
-        "logistic_regression": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_logistic_regression.cybercoach"),
-        "neural_network": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Deion_Sanders_neural_network.cybercoach"),
+        "decision_tree": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_decision_tree.cybercoach"),
+        "random_forest": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_random_forest.cybercoach"),
+        "k_nearest_neighbors": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_k_nearest_neighbors.cybercoach"),
+        "logistic_regression": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_logistic_regression.cybercoach"),
+        "neural_network": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_neural_network.cybercoach"),
     },
     "Biff Poggi": {
-        "decision_tree": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Biff_Poggi_decision_tree.cybercoach"),
-        "random_forest": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Biff_Poggi_random_forest.cybercoach"),
-        "k_nearest_neighbors": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Biff_Poggi_k_nearest_neighbors.cybercoach"),
-        "logistic_regression": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Biff_Poggi_logistic_regression.cybercoach"),
-        "neural_network": os.path.join(os.path.curdir, "pygskin_webapp/cybercoaches/Biff_Poggi_neural_network.cybercoach"),
+        "decision_tree": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_decision_tree.cybercoach"),
+        "random_forest": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_random_forest.cybercoach"),
+        "k_nearest_neighbors": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_k_nearest_neighbors.cybercoach"),
+        "logistic_regression": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_logistic_regression.cybercoach"),
+        "neural_network": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_neural_network.cybercoach"),
     }
 }
 
