@@ -14,6 +14,11 @@ def index(request):
     }
     return HttpResponse(template.render(context, request))
 
+def license(request):
+    template = loader.get_template("pygskin_webapp/license.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
 # TODO: find a better way to store the paths
 cybercoach_paths = {
     "Kalen DeBoer": {
@@ -120,12 +125,29 @@ def cybercoach(request):
         except Exception as e:
             return HttpResponse(f"Error loading model: {e}", status=500)
 
+        first_year = cybercoach.coach.first_year
+        last_year = cybercoach.coach.last_year
+        opponents_by_year = {}
+        for year in range(first_year, last_year + 1):
+            opponent_list = []
+            current_team = cybercoach.coach.coach_school_dict[year]
+            for game in cybercoach.coach.games_list:
+                if game.game_dict["season"] == year and game.game_dict["home_team"] == current_team and (game.game_dict["away_team"], game.game_dict["week"]) not in opponent_list:
+                    opponent_list.append((game.game_dict["away_team"], game.game_dict["week"]))
+                    # opponent_list.append(game.game_dict["away_team"])
+                elif game.game_dict["season"] == year and game.game_dict["away_team"] == current_team and (game.game_dict["home_team"], game.game_dict["week"]) not in opponent_list:
+                    opponent_list.append((game.game_dict["home_team"], game.game_dict["week"]))
+                    # opponent_list.append(game.game_dict["home_team"])
+            # self.opponent_combo_box.addItems([f"{opponent}, Week {week}" for opponent, week in opponent_list])
+            opponents_by_year[year] = opponent_list
+
         # Prepare context data for rendering
         context = {
             "coach_name": cybercoach.coach.coach_dict["first_name"] + " " + cybercoach.coach.coach_dict["last_name"],
-            "first_year": cybercoach.coach.first_year,
-            "last_year": cybercoach.coach.last_year,
+            "first_year": first_year,
+            "last_year": last_year,
             "coach_seasons": cybercoach.coach.coach_dict["seasons"],
+            "opponents_by_year": opponents_by_year,
         }
 
         # Render and return the template with context
@@ -135,6 +157,9 @@ def cybercoach(request):
         # Redirect or show an error for non-POST requests
         # Adjust the redirect path as necessary
         return redirect('index')
+    
+def cybercoach_prediction(request):
+    return render(request, "pygskin_webapp/cybercoach_prediction.html")
 
 def handler404(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/404.html"), status=404)

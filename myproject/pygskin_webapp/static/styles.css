@@ -35,6 +35,10 @@ footer {
     background-color: var(--color-2);
 }
 
+footer a {
+    color: #fff;
+}
+
 body {
     background-color: var(--background-color);
     color: var(--text-color);

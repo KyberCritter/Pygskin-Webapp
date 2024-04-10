@@ -17,15 +17,17 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from pygskin_webapp import views
+from pygskin_webapp import views, urls
 
 urlpatterns = [
-    # path("pygskin_webapp/", include("pygskin_webapp.urls")),
-    path("404/", views.handler404, name="error_404"),
     path("admin/", admin.site.urls),
+    # path("pygskin_webapp/", include("pygskin_webapp.urls")),
     path("", views.index, name="index"),
+    path("license/", views.license, name="license"),
+    path("404/", views.handler404, name="error_404"),
     path("coach/", views.coach, name="coach"),
     path("coach_list/", views.coach_list, name="coach_list"),
     path("cybercoach/", views.cybercoach, name="cybercoach"),
     path("cybercoach_list/", views.cybercoach_list, name="cybercoach_list"),
+    path("cybercoach_prediction/", views.cybercoach_prediction, name="cybercoach_prediction"),
 ]
