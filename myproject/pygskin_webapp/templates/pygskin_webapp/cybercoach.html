@@ -13,6 +13,7 @@
     <div class="stat-display">
         <h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
         <p>This section is a placeholder.</p>
+        <!-- TODO: Include statistics about the accuracy of the machine learning model -->
     </div>
 
     <div class="coach-selector">
@@ -60,7 +61,7 @@
                 var week = opponents[i][1];
                 const option = document.createElement('option');
                 option.value = [opponent, week];
-                option.text = opponent.concat(" (", week, ")");
+                option.text = opponent.concat(" (Week ", week, ")");
                 opponentSelect.appendChild(option);
             }
         }
