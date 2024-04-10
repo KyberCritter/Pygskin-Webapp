@@ -5,6 +5,7 @@ import pygskin
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import RequestContext, loader
+import pandas as pd
 
 
 def index(request):
@@ -206,6 +207,7 @@ def prediction(request):
     drive_dict = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == current_week) & (cybercoach_obj.original_play_df["drive_number"] == int(request.POST.get('drive')))].to_dict()
     # drive_number = request.POST.get('drive')
     request.session['drive_dict'] = drive_dict
+    prediction = cybercoach_obj.call_drive(pd.DataFrame(drive_dict), len(drive_dict))
     context = {
         "selected_opponent": selected_opponent,
         "selected_week": current_week,
@@ -213,6 +215,7 @@ def prediction(request):
         "current_team": current_team,
         "drive_dict": drive_dict,
         "df_columns": cybercoach_obj.original_play_df.columns,
+        "prediction": prediction,
     }
     return render(request, "pygskin_webapp/prediction.html",context)
 
