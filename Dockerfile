@@ -33,7 +33,7 @@ RUN gh release download -R KyberCritter/pygskin --pattern "*.whl"
 
 # Install the downloaded .whl file with pip
 # Note: This assumes only one .whl file is downloaded. Adjust as necessary.
-COPY requirements_docker.txt /app/requirements.txt
+COPY requirements_docker.txt /app/
 COPY ./*.whl /app/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
