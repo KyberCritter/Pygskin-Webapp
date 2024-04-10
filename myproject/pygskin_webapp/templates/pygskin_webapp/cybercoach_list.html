@@ -11,11 +11,9 @@
 
     <div class="coach-selector">
         <h1>Select a CyberCoach</h1>
-        <!-- The action attribute should point to your cybercoach_render view's URL -->
         <form action="{% url 'cybercoach' %}" method="POST">
             {% csrf_token %}
             <label for="coach-select">Choose a coach:</label>
-            <!-- Ensure the select name attributes are set so they can be accessed in your Django view -->
             <select id="coach-select" name="coach" onchange="updateModelDropdown()">
                 {% for coach, paths in cybercoach_paths.items %}
                     <option value="{{ coach }}">{{ coach }}</option>

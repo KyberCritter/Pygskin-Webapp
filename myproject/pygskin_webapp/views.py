@@ -8,7 +8,11 @@ from django.template import RequestContext, loader
 
 
 def index(request):
-    return HttpResponse(render(request, "pygskin_webapp/index.html"))
+    template = loader.get_template("pygskin_webapp/index.html")
+    context = {
+        "cybercoach_paths": cybercoach_paths
+    }
+    return HttpResponse(template.render(context, request))
 
 # TODO: find a better way to store the paths
 cybercoach_paths = {
