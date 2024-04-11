@@ -6,7 +6,8 @@
     --color-4: #d65108;
     --color-5: #591f0a;
     --background-color: rgb(206, 206, 206);
-    --text-color: #fff;
+    /* --text-color: #fff; */
+    --text-color: rgb(32, 32, 32);
     --mobile-view-max-width: 725px;
     background-color: var(--color-1);
 }
@@ -112,11 +113,14 @@ h3 {
     width: 100%;
 }
 
+.scrollable-table table {
+    border: 1px solid #000;
+}
+
 .scrollable-table th, td {  /* Cells of the table */
     min-width: 50px;
     max-width: fit-content;
-    padding: 3px 3px;
-    /* border: 1px solid var(--color-4); */
+    padding: 5px 5px;
     color: #000;
 }
 
@@ -133,5 +137,5 @@ h3 {
 }
 
 .scrollable-table .table-row:nth-of-type(even) {
-    background: var(--text-color);
+    background: #fff;
 }
