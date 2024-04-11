@@ -42,7 +42,7 @@ jobs:
       run: docker compose -f docker-compose.yml build pygskin_webapp
 
     - name: Tag the image
-      run: docker tag pygskin-webapp:latest registry.digitalocean.com/pygskin-webapp/pygskin-webapp:latest
+      run: docker tag pygskin-webapp-pygskin_webapp:latest registry.digitalocean.com/pygskin-webapp/pygskin-webapp:latest
 
     - name: Log in to DigitalOcean Container Registry with short-lived credentials
       run: doctl registry login --expiry-seconds 1200
