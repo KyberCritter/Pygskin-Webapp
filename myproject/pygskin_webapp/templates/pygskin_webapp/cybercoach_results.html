@@ -1,33 +1,24 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
+{% extends "base.html" %}
+
+{% block content %}
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cybercoach Prediction</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 </head>
-<body>
-    {% include "navbar.html" %}
 
-    <div class="homepage">
-        <p>Playing against {{ selected_opponent }} in week {{ selected_week }} of {{ selected_year }}.</p>
-    </div>
+<p>Playing against {{ selected_opponent }} in week {{ selected_week }} of {{ selected_year }}.</p>
 
-    <div class="coach-selector">
-        <h2>Select a Drive to Predict</h2>
-        <form action="{% url 'prediction' %}" method="POST">
-            {% csrf_token %}
-            <label for="drive-select">Choose a drive:</label>
-            <select id="drive-select" name="drive">
-                {% for x in drive_numbers %}
-                    <option value="{{ x }}">{{ x }}</option>
-                {% endfor %}
-            </select>
+<h2>Select a Drive to Predict</h2>
+<form action="{% url 'prediction' %}" method="POST">
+    {% csrf_token %}
+    <label for="drive-select">Choose a drive:</label>
+    <select id="drive-select" name="drive">
+        {% for x in drive_numbers %}
+            <option value="{{ x }}">{{ x }}</option>
+        {% endfor %}
+    </select>
 
-            <button type="submit">Submit</button>
-        </form>
-    </div>
+    <button type="submit">Submit</button>
+</form>
 
-    {% include "footer.html" %}
-</body>
+{% endblock %}

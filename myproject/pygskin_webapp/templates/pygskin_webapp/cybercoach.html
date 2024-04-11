@@ -1,73 +1,65 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
+{% extends "base.html" %}
+
+{% block content %}
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cybercoach of {{ coach_name }}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 </head>
-<body>
-    {% include "navbar.html" %}
 
-    <div class="stat-display">
-        <h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
-        <p>This section is a placeholder.</p>
-        <!-- TODO: Include statistics about the accuracy of the machine learning model -->
-    </div>
+<h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
+<p>This section is a placeholder.</p>
+<!-- TODO: Include statistics about the accuracy of the machine learning model -->
 
-    <div class="coach-selector">
-        <h2>Select a Game to Predict</h2>
-        <form action="{% url 'cybercoach_results' %}" method="POST">
-            {% csrf_token %}
-            <label for="year-select">Choose a year:</label>
-            <select id="year-select" name="year" onchange="updateOpponentDropdown()">
-                {% for year, x in opponents_by_year.items %}
-                    <option value="{{ year }}">{{ year }}</option>
-                {% endfor %}
-            </select>
+<div class="coach-selector">
+    <h2>Select a Game to Predict</h2>
+    <form action="{% url 'cybercoach_results' %}" method="POST">
+        {% csrf_token %}
+        <label for="year-select">Choose a year:</label>
+        <select id="year-select" name="year" onchange="updateOpponentDropdown()">
+            {% for year, x in opponents_by_year.items %}
+                <option value="{{ year }}">{{ year }}</option>
+            {% endfor %}
+        </select>
 
-            <label for="opponent-select">Choose an opponent:</label>
-            <select id="opponent-select" name="opponent">
-                <!-- Options will be added here based on the first dropdown's selection -->
-            </select>
+        <label for="opponent-select">Choose an opponent:</label>
+        <select id="opponent-select" name="opponent">
+            <!-- Options will be added here based on the first dropdown's selection -->
+        </select>
 
-            <button type="submit">Submit</button>
-        </form>
-    </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
 
-    {{ opponents_by_year|json_script:"opponentYearsData" }}
+{{ opponents_by_year|json_script:"opponentYearsData" }}
 
-    {% include "footer.html" %}
+<script>
+    function updateOpponentDropdown() {
+        const yearSelect = document.getElementById('year-select');
+        const opponentSelect = document.getElementById('opponent-select');
+        const selectedYear = yearSelect.value;
 
-    <script>
-        function updateOpponentDropdown() {
-            const yearSelect = document.getElementById('year-select');
-            const opponentSelect = document.getElementById('opponent-select');
-            const selectedYear = yearSelect.value;
+        // Access the embedded JSON data
+        const opponentYears = JSON.parse(document.getElementById('opponentYearsData').textContent);
+        const opponents = opponentYears[selectedYear];
 
-            // Access the embedded JSON data
-            const opponentYears = JSON.parse(document.getElementById('opponentYearsData').textContent);
-            const opponents = opponentYears[selectedYear];
-
-            // Clear existing options in the opponent dropdown
-            while (opponentSelect.firstChild) {
-                opponentSelect.removeChild(opponentSelect.firstChild);
-            }
-
-            // Populate the opponent dropdown with new options
-            for (var i = 0, l = opponents.length; i < l; i++) {
-                var opponent = opponents[i][0];
-                var week = opponents[i][1];
-                const option = document.createElement('option');
-                option.value = [opponent, week];
-                option.text = opponent.concat(" (Week ", week, ")");
-                opponentSelect.appendChild(option);
-            }
+        // Clear existing options in the opponent dropdown
+        while (opponentSelect.firstChild) {
+            opponentSelect.removeChild(opponentSelect.firstChild);
         }
 
-        // Initialize the opponent dropdown with the first year's opponents
-        window.onload = updateOpponentDropdown;
-    </script>
-</body>
-</html>
+        // Populate the opponent dropdown with new options
+        for (var i = 0, l = opponents.length; i < l; i++) {
+            var opponent = opponents[i][0];
+            var week = opponents[i][1];
+            const option = document.createElement('option');
+            option.value = [opponent, week];
+            option.text = opponent.concat(" (Week ", week, ")");
+            opponentSelect.appendChild(option);
+        }
+    }
+
+    // Initialize the opponent dropdown with the first year's opponents
+    window.onload = updateOpponentDropdown;
+</script>
+
+{% endblock %}

@@ -1,87 +1,83 @@
-<!DOCTYPE html>
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
-<html>
+{% extends "base.html" %}
+
+{% block content %}
+
 <head>
     <title>Pygskin - College Football Coach Statistics</title>
 </head>
-<body>
-    {% include "navbar.html" %}
 
-    <div class="homepage">
-        <h1>Welcome to Pygskin</h1>
-        <p>Providing visualizations for college football coach statistics</p>
+<div class="homepage">
+    <h1>Welcome to Pygskin</h1>
+    <p>Providing visualizations for college football coach statistics</p>
 
-        <section>
-            <h2>Explore Coach Statistics</h2>
-            <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
-            <h3>Select a Coach</h3>
-            <form action="{% url 'coach' %}" method="POST">
-                {% csrf_token %}
-                <label for="coach-select">Choose a coach:</label>
-                <select id="coach-select" name="coach">
-                    {% for coach, paths in cybercoach_paths.items %}
-                        <option value="{{ coach }}">{{ coach }}</option>
-                    {% endfor %}
-                </select>
-    
-                <button type="submit">Submit</button>
-            </form>
-        </section>
+    <section>
+        <h2>Explore Coach Statistics</h2>
+        <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
+        <h3>Select a Coach</h3>
+        <form action="{% url 'coach' %}" method="POST">
+            {% csrf_token %}
+            <label for="coach-select">Choose a coach:</label>
+            <select id="coach-select" name="coach">
+                {% for coach, paths in cybercoach_paths.items %}
+                    <option value="{{ coach }}">{{ coach }}</option>
+                {% endfor %}
+            </select>
 
-        <section>
-            <h2>Cybercoaches</h2>
-            <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles.</p>
-            <h3>Select a Cybercoach</h3>
-            <form action="{% url 'cybercoach' %}" method="POST">
-                {% csrf_token %}
-                <label for="cybercoach-select">Choose a coach:</label>
-                <select id="cybercoach-select" name="coach" onchange="updateModelDropdown()">
-                    {% for coach, paths in cybercoach_paths.items %}
-                        <option value="{{ coach }}">{{ coach }}</option>
-                    {% endfor %}
-                </select>
-    
-                <label for="model-select">Choose a model type:</label>
-                <select id="model-select" name="model_type">
-                    <!-- Options will be added here based on the first dropdown's selection -->
-                </select>
-    
-                <button type="submit">Submit</button>
-            </form>
-        </section>
-    </div>
+            <button type="submit">Submit</button>
+        </form>
+    </section>
 
-    {{ cybercoach_paths|json_script:"cybercoachPathsData" }}
+    <section>
+        <h2>Cybercoaches</h2>
+        <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles.</p>
+        <h3>Select a Cybercoach</h3>
+        <form action="{% url 'cybercoach' %}" method="POST">
+            {% csrf_token %}
+            <label for="cybercoach-select">Choose a coach:</label>
+            <select id="cybercoach-select" name="coach" onchange="updateModelDropdown()">
+                {% for coach, paths in cybercoach_paths.items %}
+                    <option value="{{ coach }}">{{ coach }}</option>
+                {% endfor %}
+            </select>
 
-    {% include "footer.html" %}
+            <label for="model-select">Choose a model type:</label>
+            <select id="model-select" name="model_type">
+                <!-- Options will be added here based on the first dropdown's selection -->
+            </select>
 
-    <script>
-        function updateModelDropdown() {
-            const coachSelect = document.getElementById('cybercoach-select');
-            const modelSelect = document.getElementById('model-select');
-            const selectedCoach = coachSelect.value;
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+</div>
 
-            // Access the embedded JSON data
-            const cybercoachPaths = JSON.parse(document.getElementById('cybercoachPathsData').textContent);
-            const models = cybercoachPaths[selectedCoach];
+{{ cybercoach_paths|json_script:"cybercoachPathsData" }}
 
-            // Clear existing options in the model dropdown
-            while (modelSelect.firstChild) {
-                modelSelect.removeChild(modelSelect.firstChild);
-            }
+<script>
+    function updateModelDropdown() {
+        const coachSelect = document.getElementById('cybercoach-select');
+        const modelSelect = document.getElementById('model-select');
+        const selectedCoach = coachSelect.value;
 
-            // Populate the model dropdown with new options
-            for (const model in models) {
-                const option = document.createElement('option');
-                option.value = model;
-                option.text = model;
-                modelSelect.appendChild(option);
-            }
+        // Access the embedded JSON data
+        const cybercoachPaths = JSON.parse(document.getElementById('cybercoachPathsData').textContent);
+        const models = cybercoachPaths[selectedCoach];
+
+        // Clear existing options in the model dropdown
+        while (modelSelect.firstChild) {
+            modelSelect.removeChild(modelSelect.firstChild);
         }
 
-        // Initialize the model dropdown with the first coach's models
-        window.onload = updateModelDropdown;
-    </script>
-</body>
-</html>
+        // Populate the model dropdown with new options
+        for (const model in models) {
+            const option = document.createElement('option');
+            option.value = model;
+            option.text = model;
+            modelSelect.appendChild(option);
+        }
+    }
+
+    // Initialize the model dropdown with the first coach's models
+    window.onload = updateModelDropdown;
+</script>
+
+{% endblock %}

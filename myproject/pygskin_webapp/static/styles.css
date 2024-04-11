@@ -1,11 +1,11 @@
 /* Style constants */
 :root {
     --color-1: #0267c1;
-    --color-2: #0075c4;
+    --color-2: #0181d6;
     --color-3: #efa00b;
     --color-4: #d65108;
     --color-5: #591f0a;
-    --background-color: rgb(172, 172, 172);
+    --background-color: rgb(206, 206, 206);
     --text-color: #fff;
     --mobile-view-max-width: 725px;
     background-color: var(--color-1);
@@ -35,13 +35,25 @@ footer {
     background-color: var(--color-2);
 }
 
-footer a {
+a {
     color: #fff;
+}
+
+a:visited {
+    color: #3d1972;
+}
+
+a:hover {
+    color: var(--color-3)
 }
 
 body {
     background-color: var(--background-color);
     color: var(--text-color);
+}
+
+.container {
+    padding: 20px 7vw;
 }
 
 h1 {
@@ -61,8 +73,6 @@ h3 {
 }
 
 /* Navbar styles */
-
-/* Style the navigation menu */
 .navbar {
     position: sticky;
     display: grid;
@@ -95,8 +105,33 @@ h3 {
     color: var(--color-3);
 }
 
-/* Selector page styles */
-.homepage, .coach-selector, .stat-display {
-    padding-left: 7vw;
-    padding-right: 7vw;
+/* Table styles */
+.scrollable-table { /* Div to wrap the table */
+    overflow-x: scroll;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.scrollable-table th, td {  /* Cells of the table */
+    min-width: 50px;
+    max-width: fit-content;
+    padding: 3px 3px;
+    /* border: 1px solid var(--color-4); */
+    color: #000;
+}
+
+.scrollable-table .table-header {
+    background: #000;
+}
+
+.scrollable-table .table-header td {
+    color: #fff;
+}
+
+.scrollable-table .table-row:nth-of-type(odd) {
+    background: var(--background-color);
+}
+
+.scrollable-table .table-row:nth-of-type(even) {
+    background: var(--text-color);
 }

@@ -1,65 +1,57 @@
-<!DOCTYPE html>
-{% load static %}
-<html lang="en">
+{% extends "base.html" %}
+
+{% block content %}
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ coach_name }} Statistics</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
     <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
 </head>
-<body>
-    {% include "navbar.html" %}
 
-    <div class="stat-display">
-        <h1>{{ coach_name }} Statistics {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
-        <h2>Included Seasons</h2>
-        {% if coach_seasons %}
-            <table>
-                <thead>
-                    <tr>
-                        {% for key in coach_seasons.0.keys %}
-                            <th>{{ key }}</th>
-                        {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in coach_seasons %}
-                        <tr>
-                            {% for value in item.values %}
-                                <td>{{ value }}</td>
-                            {% endfor %}
-                        </tr>
+<h1>{{ coach_name }} Statistics {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
+<h2>Included Seasons</h2>
+{% if coach_seasons %}
+    <table>
+        <thead>
+            <tr>
+                {% for key in coach_seasons.0.keys %}
+                    <th>{{ key }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in coach_seasons %}
+                <tr>
+                    {% for value in item.values %}
+                        <td>{{ value }}</td>
                     {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No items found.</p>
-        {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No items found.</p>
+{% endif %}
 
-        <h2>Playcalling Tendencies</h2>
-        <div id="playDistChart"></div>
-    </div>
+<h2>Playcalling Tendencies</h2>
+<div id="playDistChart"></div>
 
-    {% include "footer.html" %}
+<script>
+    var data = [{
+        values: {{ play_dist|safe }},
+        labels: {{ play_types|safe }},
+        marker: { colors: {{ colors|safe }} },
+        type: 'pie'
+    }];
 
-    <script>
-        var data = [{
-            values: {{ play_dist|safe }},
-            labels: {{ play_types|safe }},
-            marker: { colors: {{ colors|safe }} },
-            type: 'pie'
-        }];
-    
-        var layout = {
-            height: 400,
-            width: 500
-        };
-    
-        {% comment %} Load the JS last to ensure quick response time {% endcomment %}
-        document.addEventListener('DOMContentLoaded', function() {
-            Plotly.newPlot("playDistChart", data, layout);
-        });
-    </script>
-</body>
-</html>
+    var layout = {
+        height: 400,
+        width: 500
+    };
+
+    {% comment %} Load the JS last to ensure quick response time {% endcomment %}
+    document.addEventListener('DOMContentLoaded', function() {
+        Plotly.newPlot("playDistChart", data, layout);
+    });
+</script>
+
+{% endblock %}

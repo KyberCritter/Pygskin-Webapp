@@ -159,7 +159,6 @@ def cybercoach(request):
 
     else:
         # Redirect or show an error for non-POST requests
-        # Adjust the redirect path as necessary
         return redirect('index')
     
 def cybercoach_results(request):
@@ -204,9 +203,17 @@ def prediction(request):
     current_opponent = selected_opponent.split(",")[0]
     current_week = request.session['current_week']
     selected_year = request.session['selected_year']
-    drive_dict = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == current_week) & (cybercoach_obj.original_play_df["drive_number"] == int(request.POST.get('drive')))].to_dict()
+    try:
+        drive_number = int(request.POST.get('drive'))
+    except:   # upon error, redirect to homepage
+        return redirect('index')
+
+    # drive_dict = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == current_week) & (cybercoach_obj.original_play_df["drive_number"] == drive_number)].to_dict()
+    drive_df = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == current_week) & (cybercoach_obj.original_play_df["drive_number"] == drive_number)]
+    drive_dict = drive_df.to_dict()
     # drive_number = request.POST.get('drive')
     request.session['drive_dict'] = drive_dict
+    # request.session['drive_df'] = drive_df
     prediction = cybercoach_obj.call_drive(pd.DataFrame(drive_dict), len(drive_dict))
     context = {
         "selected_opponent": selected_opponent,
@@ -214,6 +221,7 @@ def prediction(request):
         "selected_year": selected_year,
         "current_team": current_team,
         "drive_dict": drive_dict,
+        "drive_df": drive_df,
         "df_columns": cybercoach_obj.original_play_df.columns,
         "prediction": prediction,
     }
