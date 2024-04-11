@@ -15,5 +15,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: robinraju/release-downloader@v1.10
+      with: 
+        repository: "KyberCritter/Pygskin"
+        latest: true
+        preRelease: false
+        fileName: "*.whl"
+        tarBall: false
+        zipBall: false
+        # Relative path under $GITHUB_WORKSPACE to place the downloaded file(s)
+        # It will create the target directory automatically if not present
+        # eg: out-file-path: "my-downloads" => It will create directory $GITHUB_WORKSPACE/my-downloads
+        out-file-path: ""
+        extract: false
+        token: ${{ secrets.PYGSKIN_REPO_PAT }}
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag pygskin-webapp:$(date +%s)
