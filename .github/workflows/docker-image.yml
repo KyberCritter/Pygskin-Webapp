@@ -29,5 +29,23 @@ jobs:
         out-file-path: ""
         extract: false
         token: ${{ secrets.PYGSKIN_REPO_PAT }}
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag pygskin-webapp:$(date +%s)
+        
+    # - name: Build the Docker image
+    #   run: docker build . --file Dockerfile --tag pygskin-webapp:$(date +%s)
+
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+    - name: Build web service image
+      run: docker compose -f docker-compose.yml build pygskin_webapp
+
+    - name: Tag the image
+      run: docker tag api-web:latest registry.digitalocean.com/pygskin-webapp/pygskin-webapp:latest
+
+    - name: Log in to DigitalOcean Container Registry with short-lived credentials
+      run: doctl registry login --expiry-seconds 1200
+      
+    - name: Push the image to DigitalOcean Container Registry
+      run: docker push registry.digitalocean.com/pygskin-webapp/pygskin-webapp:latest
