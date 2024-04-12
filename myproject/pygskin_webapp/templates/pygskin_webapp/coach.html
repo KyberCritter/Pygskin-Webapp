@@ -9,28 +9,30 @@
 
 <h1>{{ coach_name }} Statistics {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
 <h2>Included Seasons</h2>
+<div class="scrollable-table">
 {% if coach_seasons %}
     <table>
-        <thead>
+        <thead class="table-header">
             <tr>
-                {% for key in coach_seasons.0.keys %}
-                    <th>{{ key }}</th>
-                {% endfor %}
+            {% for key in coach_seasons.0.keys %}
+                <th>{{ key }}</th>
+            {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for item in coach_seasons %}
-                <tr>
-                    {% for value in item.values %}
-                        <td>{{ value }}</td>
-                    {% endfor %}
-                </tr>
+            <tr class="table-row">
+                {% for value in item.values %}
+                    <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
             {% endfor %}
         </tbody>
     </table>
 {% else %}
     <p>No items found.</p>
 {% endif %}
+</div>
 
 <h2>Playcalling Tendencies</h2>
 <div id="playDistChart"></div>

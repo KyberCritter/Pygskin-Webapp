@@ -6,19 +6,25 @@
     <title>Cybercoach of {{ coach_name }}</title>
 </head>
 
-{{ prediction }}
+<h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
+
+<h2>Predicted Drive Results</h2>
+{% comment %} {{ prediction }} {% endcomment %}
+<p>{% for call in prediction %}{% if call == 0 %}Pass{% elif call == 1 %}Rush{% elif call == 2 %}Field Goal{% elif call == 3 %}PAT{% elif call == 4 %}Punt{% else %}Other{% endif %}, {% endfor %}</p>
 <!-- TODO: place predictions into play_dict and play_df -->
 
 <h2>Actual Drive Results</h2>
 <div class="scrollable-table">
-    <table class="scrollable-table">
-        <tr class="table-header">
-            {% for col in drive_df.columns %}
-            <td>
-                {{ col }}
-            </td>
-            {% endfor %}
-        </tr>
+    <table>
+        <thead class="table-header">
+            <tr>
+                {% for col in drive_df.columns %}
+                <td>
+                    {{ col }}
+                </td>
+                {% endfor %}
+            </tr>
+        </thead>
         {% for index, row in drive_df.iterrows %}
         <tr class="table-row">
             {% for cell in row %}
