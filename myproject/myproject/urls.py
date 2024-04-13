@@ -32,3 +32,8 @@ urlpatterns = [
     path("cybercoach_results/", views.cybercoach_results, name="cybercoach_results"),
     path("prediction/", views.prediction, name="prediction"),
 ]
+
+handler400 = "pygskin_webapp.views.handler400"
+handler403 = "pygskin_webapp.views.handler403"
+handler404 = "pygskin_webapp.views.handler404"
+handler500 = "pygskin_webapp.views.generic_error"
