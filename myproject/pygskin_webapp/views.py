@@ -237,5 +237,14 @@ def prediction(request):
     }
     return render(request, "pygskin_webapp/prediction.html",context)
 
+def handler400(request, *args, **argv):
+    return HttpResponse(render(request, "pygskin_webapp/400.html"), status=400)
+
+def handler403(request, *args, **argv):
+    return HttpResponse(render(request, "pygskin_webapp/403.html"), status=403)
+
 def handler404(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/404.html"), status=404)
+
+def generic_error(request, *args, **argv):
+    return HttpResponse(render(request, "pygskin_webapp/generic_error.html"))
