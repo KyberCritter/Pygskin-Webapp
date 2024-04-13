@@ -5,11 +5,17 @@
     --color-3: #efa00b;
     --color-4: #d65108;
     --color-5: #591f0a;
-    --background-color: rgb(206, 206, 206);
+    
+    --sideline-green: #006106;
+    --turf-green: #008705;
+    --goalpost-yellow: #ecec17;
+    --pylon-orange: #ff2a00;
+
+    --background-color: rgb(255, 255, 255);
+    /* --background-color: var(--sideline-green); */
     /* --text-color: #fff; */
     --text-color: rgb(32, 32, 32);
     --mobile-view-max-width: 725px;
-    background-color: var(--color-1);
 }
 
 /* Common styles */
@@ -18,7 +24,7 @@ header {
     position: fixed;
     flex-direction: row;
     align-items: center;
-    background-color: var(--color-1);
+    background-color: var(--sideline-green);
     /* color: white; */
     padding: 10px 0px;
     font-size: x-large;
@@ -33,7 +39,12 @@ footer {
     text-align: center;
     padding: 20px 0;
     margin-top: 40px;
-    background-color: var(--color-2);
+    background-color: var(--turf-green);
+    color: #fff;
+}
+
+html {
+    background-color: var(--sideline-green);
 }
 
 a {
@@ -45,12 +56,15 @@ a:visited {
 }
 
 a:hover {
-    color: var(--color-3)
+    color: var(--goalpost-yellow)
 }
 
 body {
+    /* background-color: var(--turf-green); */
     background-color: var(--background-color);
     color: var(--text-color);
+    outline-color: #fff;
+    outline-width: 2px;
 }
 
 .container {
@@ -58,18 +72,18 @@ body {
 }
 
 h1 {
-    color: var(--color-3);
+    color: var(--goalpost-yellow);
     text-shadow: 1px 1px 2px #000;
     font-size: xx-large;
 }
 
 h2 {
-    color: var(--color-4);
+    color: var(--pylon-orange);
     font-size: x-large;
 }
 
 h3 {
-    color: var(--color-5);
+    color: var(--text-color);
     font-size: larger;
 }
 
@@ -82,7 +96,7 @@ h3 {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    background-color: var(--color-1);
+    background-color: var(--turf-green);
     padding: 10px 10px;
     box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.5);
 }
@@ -103,7 +117,7 @@ h3 {
 }
 
 .navbar a:hover {
-    color: var(--color-3);
+    color: var(--goalpost-yellow);
 }
 
 /* Table styles */
@@ -121,19 +135,20 @@ h3 {
     min-width: 50px;
     max-width: fit-content;
     padding: 5px 5px;
-    color: #000;
 }
 
 .scrollable-table .table-header {
     background: #000;
+    color: #fff;
 }
 
-.scrollable-table .table-header td {
+.scrollable-table .table-header tr {
+    background: #000;
     color: #fff;
 }
 
 .scrollable-table .table-row:nth-of-type(odd) {
-    background: var(--background-color);
+    background: #b2b2b2;
 }
 
 .scrollable-table .table-row:nth-of-type(even) {

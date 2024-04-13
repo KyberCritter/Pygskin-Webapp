@@ -6,6 +6,7 @@
     <title>Cybercoach Prediction</title>
 </head>
 
+<h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
 <p>Playing against {{ selected_opponent }} in week {{ selected_week }} of {{ selected_year }}.</p>
 
 <h2>Select a Drive to Predict</h2>

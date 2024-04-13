@@ -153,6 +153,8 @@ def cybercoach(request):
             "cybercoach_path": cybercoach_path,
         }
         request.session['cybercoach_path'] = cybercoach_path
+        for key, value in context.items():
+            request.session[key] = value
 
         # Render and return the template with context
         return render(request, "pygskin_webapp/cybercoach.html", context)
@@ -183,6 +185,10 @@ def cybercoach_results(request):
             "df_columns": cybercoach_obj.original_play_df.columns,
             "game_dict": game_dict,
             "drive_numbers": set(game_dict["drive_number"].values()),
+            "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
+            "first_year": cybercoach_obj.coach.first_year,
+            "last_year": cybercoach_obj.coach.last_year,
+            "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
         }
         request.session['selected_opponent'] = current_opponent
         request.session['current_week'] = current_week
@@ -224,6 +230,10 @@ def prediction(request):
         "drive_df": drive_df,
         "df_columns": cybercoach_obj.original_play_df.columns,
         "prediction": prediction,
+        "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
+        "first_year": cybercoach_obj.coach.first_year,
+        "last_year": cybercoach_obj.coach.last_year,
+        "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
     }
     return render(request, "pygskin_webapp/prediction.html",context)
 
