@@ -26,10 +26,8 @@ urlpatterns = [
     path("license/", views.license, name="license"),
     path("404/", views.handler404, name="error_404"),
     path("coach/", views.coach, name="coach"),
-    path("coach_list/", views.coach_list, name="coach_list"),
     path("cybercoach/", views.cybercoach, name="cybercoach"),
-    path("cybercoach_list/", views.cybercoach_list, name="cybercoach_list"),
-    path("cybercoach_results/", views.cybercoach_results, name="cybercoach_results"),
+    path("year_select/", views.year_select, name="year_select"),
     path("prediction/", views.prediction, name="prediction"),
 ]
 

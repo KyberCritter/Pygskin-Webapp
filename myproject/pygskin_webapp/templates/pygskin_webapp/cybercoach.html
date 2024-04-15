@@ -12,7 +12,7 @@
 
 <div class="coach-selector">
     <h2>Select a Game to Predict</h2>
-    <form action="{% url 'cybercoach_results' %}" method="POST">
+    <form action="{% url 'year_select' %}" method="POST">
         {% csrf_token %}
         <label for="year-select">Choose a year:</label>
         <select id="year-select" name="year" onchange="updateOpponentDropdown()">
