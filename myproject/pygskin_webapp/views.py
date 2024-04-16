@@ -96,13 +96,11 @@ def cybercoach(request):
             cybercoach_model = form.cleaned_data.get('cybercoach')
             # Load the cybercoach from the path
             if cybercoach_model is None:
-                print("Cybercoach model is None")
                 return redirect('error')    # avoid exposing the error message to the user
             cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_model.model_filename)
             try:
                 cybercoach_obj = pickle.load(open(cybercoach_path, "rb"))
             except Exception as e:
-                print(e)
                 return redirect('error')    # avoid exposing the error message to the user
 
             first_year = cybercoach_obj.coach.first_year

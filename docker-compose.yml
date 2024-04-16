@@ -33,7 +33,9 @@ services:
       dockerfile: Dockerfile.nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
+      - ./certs:/etc/nginx/certs
       - ./staticfiles:/app/staticfiles
     depends_on:
       - web
