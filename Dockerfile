@@ -18,6 +18,6 @@ RUN pip install -r requirements.txt --force-reinstall
 
 RUN chmod u+x /app/docker-entrypoint.sh
 EXPOSE 8000
-ENTRYPOINT ["sh","/app/docker-entrypoint.sh"]
+ENTRYPOINT ["sh", "/app/docker-entrypoint.sh"]
 
 CMD ["python", "myproject/manage.py", "runserver", "0.0.0.0:8000"]

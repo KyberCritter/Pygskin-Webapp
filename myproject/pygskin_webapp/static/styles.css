@@ -137,20 +137,20 @@ h3 {
     padding: 5px 5px;
 }
 
-.scrollable-table .table-header {
+.scrollable-table thead {
     background: #000;
     color: #fff;
 }
 
-.scrollable-table .table-header tr {
+.scrollable-table thead tr {
     background: #000;
     color: #fff;
 }
 
-.scrollable-table .table-row:nth-of-type(odd) {
+.scrollable-table tbody tr:nth-of-type(odd) {
     background: #b2b2b2;
 }
 
-.scrollable-table .table-row:nth-of-type(even) {
+.scrollable-table tbody tr:nth-of-type(even) {
     background: #fff;
 }

@@ -25,11 +25,13 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("license/", views.license, name="license"),
     path("404/", views.handler404, name="error_404"),
+    path("403/", views.handler403, name="error_403"),
+    path("400/", views.handler400, name="error_400"),
+    path("500/", views.generic_error, name="error_500"),
+    path("error/", views.generic_error, name="error"),
     path("coach/", views.coach, name="coach"),
-    path("coach_list/", views.coach_list, name="coach_list"),
     path("cybercoach/", views.cybercoach, name="cybercoach"),
-    path("cybercoach_list/", views.cybercoach_list, name="cybercoach_list"),
-    path("cybercoach_results/", views.cybercoach_results, name="cybercoach_results"),
+    path("drive_select/", views.drive_select, name="drive_select"),
     path("prediction/", views.prediction, name="prediction"),
 ]
 
