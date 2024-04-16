@@ -39,7 +39,7 @@ def license(request):
     return HttpResponse(template.render(context, request))
 
 # TODO: find a better way to store the paths
-path_to_cybercoaches = os.path.join(os.path.curdir, "myproject/pygskin_webapp/cybercoaches/")
+path_to_cybercoaches = "/app/myproject/pygskin_webapp/cybercoaches"
 
 def coach(request):
     # Only proceed if this is a POST request
@@ -96,11 +96,13 @@ def cybercoach(request):
             cybercoach_model = form.cleaned_data.get('cybercoach')
             # Load the cybercoach from the path
             if cybercoach_model is None:
+                print("Cybercoach model is None")
                 return redirect('error')    # avoid exposing the error message to the user
             cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_model.model_filename)
             try:
                 cybercoach_obj = pickle.load(open(cybercoach_path, "rb"))
             except Exception as e:
+                print(e)
                 return redirect('error')    # avoid exposing the error message to the user
 
             first_year = cybercoach_obj.coach.first_year
@@ -143,6 +145,8 @@ def cybercoach(request):
 def drive_select(request):
     # select a drive from the cybercoach
     if request.method == 'POST':
+        if "cybercoach_id" not in request.session:
+            return redirect('index')
         if not request.session["cybercoach_id"]:
             return redirect('index')
         cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])

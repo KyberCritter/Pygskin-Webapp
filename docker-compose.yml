@@ -1,16 +1,39 @@
 version: '3.8'
 
 services:
-  pygskin_webapp:
+  # pygskin_webapp:
+  #   build: .
+  #   command: python myproject/manage.py runserver 0.0.0.0:8000
+  #   volumes:
+  #     - .:/app
+  #   ports:
+  #     - "80:8000"
+  #   environment:
+  #     RTE: ${RTE}
+  #     DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
+  #     DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
+  #     DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
+
+  web:
     build: .
-    command: python myproject/manage.py runserver 0.0.0.0:8000
+    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
     volumes:
       - .:/app
-    ports:
-      - "80:8000"
+    expose:
+      - 8000
     environment:
       RTE: ${RTE}
       DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
       DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
       DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
-      
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./staticfiles:/app/staticfiles
+    depends_on:
+      - web

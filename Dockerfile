@@ -9,10 +9,7 @@ WORKDIR /app
 
 COPY . /app
 
-# Copy requirements file to the container
-COPY requirements_docker.txt /app/requirements.txt
-
-# Install dependencies including the downloaded .whl file
+# Install dependencies, including the downloaded .whl file
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt --force-reinstall
 
@@ -20,4 +17,8 @@ RUN chmod u+x /app/docker-entrypoint.sh
 EXPOSE 8000
 ENTRYPOINT ["sh", "/app/docker-entrypoint.sh"]
 
-CMD ["python", "myproject/manage.py", "runserver", "0.0.0.0:8000"]
+RUN python myproject/manage.py collectstatic --noinput
+WORKDIR /app/myproject/
+CMD ["gunicorn", "myproject.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+# CMD ["python", "myproject/manage.py", "runserver", "0.0.0.0:8000"]
