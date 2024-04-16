@@ -1,39 +1,60 @@
 {% extends "base.html" %}
 
+{% block title %}Cybercoach Predictions{% endblock %}
+
 {% block content %}
 
-<head>
-    <title>Cybercoach of {{ coach_name }}</title>
-</head>
-
 <h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
+<p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was {{ model_accuracy }}% accurate on the evaluation data set.</p>
+<p>You have selected drive {{ drive_number }} of {{ current_team }} vs. {{ selected_opponent }} in week {{ selected_week }} of {{ selected_year }}. These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that drive.</p>
 
-<h2>Predicted Drive Results</h2>
-{% comment %} {{ prediction }} {% endcomment %}
-<p>{% for call in prediction %}{% if call == 0 %}Pass{% elif call == 1 %}Rush{% elif call == 2 %}Field Goal{% elif call == 3 %}PAT{% elif call == 4 %}Punt{% else %}Other{% endif %}, {% endfor %}</p>
-<!-- TODO: place predictions into play_dict and play_df -->
-
-<h2>Actual Drive Results</h2>
+<h2>Predicted and Actual Play Calls</h2>
 <div class="scrollable-table">
-    <table>
-        <thead class="table-header">
+    <table border="1">
+        <thead>
             <tr>
-                {% for col in drive_df.columns %}
-                <td>
-                    {{ col }}
-                </td>
-                {% endfor %}
+                <th>Play #</th>
+                <th>Predicted Play Call</th>
+                <th>Actual Play Call</th>
+                <th>Correct</th>
             </tr>
         </thead>
-        {% for index, row in drive_df.iterrows %}
-        <tr class="table-row">
-            {% for cell in row %}
-            <td>
-                {{ cell }}
-            </td>
+        <tbody>
+            {% for pred, actual in predictions_and_actual %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{% if pred == 0 %}Pass{% elif pred == 1 %}Rush{% elif pred == 2 %}Field Goal{% elif pred == 3 %}PAT{% elif pred == 4 %}Punt{% else %}Other{% endif %}</td>
+                    <td>{% if actual == 0 %}Pass{% elif actual == 1 %}Rush{% elif actual == 2 %}Field Goal{% elif actual == 3 %}PAT{% elif actual == 4 %}Punt{% else %}Other{% endif %}</td>
+                    <td>{% if pred == actual %}✅{% else %}❌{% endif %}</td>
+                </tr>
             {% endfor %}
-        </tr>
-        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h2>Drive Data</h2>
+<div class="scrollable-table">
+    <table>
+        <thead>
+            <tr>
+                <!-- Dynamically add table headers -->
+                {% if drive_dict %}
+                    {% for key in drive_dict.0.keys %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Iterate over each row in the drive_dict -->
+            {% for row in drive_dict %}
+                <tr>
+                    {% for value in row.values %}
+                        <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 </div>
 

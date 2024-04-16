@@ -21,11 +21,3 @@ class CybercoachSelectForm(forms.Form):
         to_field_name="id",
         widget=forms.Select(attrs={'class': 'form-control'})
     )
-
-class OpponentForm(forms.Form):
-    opponent_selection = forms.ChoiceField(choices=[], label="Select an Opponent")
-
-    def __init__(self, *args, **kwargs):
-        opponent_choices = kwargs.pop('opponent_choices', [])
-        super().__init__(*args, **kwargs)
-        self.fields['opponent_selection'].choices = opponent_choices

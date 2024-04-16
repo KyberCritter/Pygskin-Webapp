@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
+{% block title %}{{ coach_name }} Statistics{% endblock %}
+
 {% block content %}
 
 <head>
-    <title>{{ coach_name }} Statistics</title>
     <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
 </head>
 
@@ -12,7 +13,7 @@
 <div class="scrollable-table">
 {% if coach_seasons %}
     <table>
-        <thead class="table-header">
+        <thead>
             <tr>
             {% for key in coach_seasons.0.keys %}
                 <th>{{ key }}</th>
@@ -21,7 +22,7 @@
         </thead>
         <tbody>
             {% for item in coach_seasons %}
-            <tr class="table-row">
+            <tr>
                 {% for value in item.values %}
                     <td>{{ value }}</td>
                 {% endfor %}

@@ -7,9 +7,23 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import RequestContext, loader
 
-from .forms import CoachSelectForm, CybercoachSelectForm, OpponentForm
+from .forms import CoachSelectForm, CybercoachSelectForm
 from .models import Coach, Cybercoach
 
+
+def get_model_type_name(model_type):
+    if model_type == "DECISION_TREE":
+        return "Decision Tree"
+    elif model_type == "RANDOM_FOREST":
+        return "Random Forest"
+    elif model_type == "KNN":
+        return "K-Nearest Neighbors"
+    elif model_type == "LOGISTIC_REGRESSION":
+        return "Logistic Regression"
+    elif model_type == "MLP_NN":
+        return "Multi-Layer Perceptron Neural Network"
+    else:
+        return model_type
 
 def index(request):
     template = loader.get_template("pygskin_webapp/index.html")
@@ -26,29 +40,6 @@ def license(request):
 
 # TODO: find a better way to store the paths
 path_to_cybercoaches = os.path.join(os.path.curdir, "myproject/pygskin_webapp/cybercoaches/")
-cybercoach_paths = {
-    "Kalen DeBoer": {
-        "decision_tree": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_decision_tree.cybercoach"),
-        "random_forest": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_random_forest.cybercoach"),
-        "k_nearest_neighbors": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_k_nearest_neighbors.cybercoach"),
-        "logistic_regression": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_logistic_regression.cybercoach"),
-        "neural_network": os.path.join(os.path.curdir, path_to_cybercoaches, "Kalen_Deboer_neural_network.cybercoach"),
-    },
-    "Deion Sanders": {
-        "decision_tree": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_decision_tree.cybercoach"),
-        "random_forest": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_random_forest.cybercoach"),
-        "k_nearest_neighbors": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_k_nearest_neighbors.cybercoach"),
-        "logistic_regression": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_logistic_regression.cybercoach"),
-        "neural_network": os.path.join(os.path.curdir, path_to_cybercoaches, "Deion_Sanders_neural_network.cybercoach"),
-    },
-    "Biff Poggi": {
-        "decision_tree": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_decision_tree.cybercoach"),
-        "random_forest": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_random_forest.cybercoach"),
-        "k_nearest_neighbors": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_k_nearest_neighbors.cybercoach"),
-        "logistic_regression": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_logistic_regression.cybercoach"),
-        "neural_network": os.path.join(os.path.curdir, path_to_cybercoaches, "Biff_Poggi_neural_network.cybercoach"),
-    }
-}
 
 def coach(request):
     # Only proceed if this is a POST request
@@ -62,12 +53,12 @@ def coach(request):
             cybercoach_obj = Cybercoach.objects.filter(coach=coach).first()
             if cybercoach_obj is None:
                 return HttpResponse("Cybercoach not found for the selected coach.", status=404)
+            cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_obj.model_filename)
             try:
-                cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_obj.model_filename)
                 cybercoach = pickle.load(open(cybercoach_path, "rb"))
             except Exception as e:
-                return HttpResponse(f"Error loading model: {e}", status=500)
-            
+                return redirect('error')    # avoid exposing the error message to the user
+
             # Gather playcalling statistics
             play_dist = [value for value in cybercoach.play_distribution.values()]
             play_types = [pygskin.PlayType(key).name for key in cybercoach.play_distribution.keys()]
@@ -102,39 +93,43 @@ def cybercoach(request):
 
         if form.is_valid():
             # Extract the selected cybercoach from the POST request
-            cybercoach_obj = form.cleaned_data.get('cybercoach')
+            cybercoach_model = form.cleaned_data.get('cybercoach')
             # Load the cybercoach from the path
-            if cybercoach_obj is None:
+            if cybercoach_model is None:
                 return HttpResponse("Cybercoach not found for the selected coach.", status=404)
+            cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_model.model_filename)
             try:
-                cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_obj.model_filename)
-                cybercoach = pickle.load(open(cybercoach_path, "rb"))
+                cybercoach_obj = pickle.load(open(cybercoach_path, "rb"))
             except Exception as e:
-                return HttpResponse(f"Error loading model: {e}", status=500)
+                return redirect('error')    # avoid exposing the error message to the user
 
-            first_year = cybercoach.coach.first_year
-            last_year = cybercoach.coach.last_year
+            first_year = cybercoach_obj.coach.first_year
+            last_year = cybercoach_obj.coach.last_year
             opponents_by_year = {}
             for year in range(first_year, last_year + 1):
                 opponent_list = []
-                current_team = cybercoach.coach.coach_school_dict[year]
-                for game in cybercoach.coach.games_list:
+                current_team = cybercoach_obj.coach.coach_school_dict[year]
+                for game in cybercoach_obj.coach.games_list:
                     if game.game_dict["season"] == year and game.game_dict["home_team"] == current_team and (game.game_dict["away_team"], game.game_dict["week"]) not in opponent_list:
                         opponent_list.append((game.game_dict["away_team"], game.game_dict["week"]))
                     elif game.game_dict["season"] == year and game.game_dict["away_team"] == current_team and (game.game_dict["home_team"], game.game_dict["week"]) not in opponent_list:
                         opponent_list.append((game.game_dict["home_team"], game.game_dict["week"]))
                 opponents_by_year[year] = opponent_list
-
+                
             # Prepare context data for rendering
             context = {
-                "coach_name": cybercoach.coach.coach_dict["first_name"] + " " + cybercoach.coach.coach_dict["last_name"],
+                "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
                 "first_year": first_year,
                 "last_year": last_year,
-                "coach_seasons": cybercoach.coach.coach_dict["seasons"],
+                "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
                 "opponents_by_year": opponents_by_year,
+                "current_team": cybercoach_obj.coach.coach_school_dict[cybercoach_obj.coach.first_year],
+                "model_accuracy": round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2),
+                "cybercoach_id": cybercoach_model.id,
+                "model_type": get_model_type_name(cybercoach_model.model_type),
             }
-            # for key, value in context.items():
-            #     request.session[key] = value
+            for key, value in context.items():
+                request.session[key] = value
 
             # Render and return the template with context
             return render(request, "pygskin_webapp/cybercoach.html", context)
@@ -144,113 +139,99 @@ def cybercoach(request):
     else:
         # Redirect or show an error for non-POST requests
         return redirect('index')
-    
-def year_select(request):
-    # select a year from the cybercoach
-    return render(request, "pygskin_webapp/year_select.html")
-
-def opponent_select(request):
-    # select an opponent from the cybercoach
-    return render(request, "pygskin_webapp/opponent_select.html")
 
 def drive_select(request):
     # select a drive from the cybercoach
-    return render(request, "pygskin_webapp/drive_select.html")
-
-def cybercoach_results(request):
     if request.method == 'POST':
-        form = OpponentForm(request.POST)
-
-        if form.is_valid():
-            # Extract the selected cybercoach from the POST request
-            cybercoach = form.cleaned_data.get('cybercoach')
-            # Load the cybercoach from the path
-            if cybercoach is None:
-                return HttpResponse("Cybercoach not found for the selected coach.", status=404)
-            try:
-                cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach.model_filename)
-                cybercoach = pickle.load(open(cybercoach_path, "rb"))
-            except Exception as e:
-                return HttpResponse(f"Error loading model: {e}", status=500)
-            
-            
-            
-            # Extract the selected coach and model type from the POST request
-            # selected_coach = request.POST.get('selected_coach')
-            # selected_model_type = request.POST.get('model_type')
-            selected_opponent = request.POST.get('opponent')
-            selected_year = int(request.POST.get('year'))
-
-            current_team = cybercoach.coach.coach_school_dict[selected_year]
-            current_opponent = selected_opponent.split(",")[0]
-            current_week = int(selected_opponent.split(",")[1])
-            game_dict = cybercoach.original_play_df[(cybercoach.original_play_df["season"] == selected_year) & (cybercoach.original_play_df["offense"] == current_team) & (cybercoach.original_play_df["defense"] == current_opponent) & (cybercoach.original_play_df["week"] == current_week)].to_dict()
-
-            context = {
-                "selected_opponent": current_opponent,
-                "selected_week": current_week,
-                "selected_year": selected_year,
-                "current_team": current_team,
-                "df_columns": cybercoach.original_play_df.columns,
-                "game_dict": game_dict,
-                "drive_numbers": set(game_dict["drive_number"].values()),
-                "coach_name": cybercoach.coach.coach_dict["first_name"] + " " + cybercoach.coach.coach_dict["last_name"],
-                "first_year": cybercoach.coach.first_year,
-                "last_year": cybercoach.coach.last_year,
-                "coach_seasons": cybercoach.coach.coach_dict["seasons"],
-            }
-            request.session['selected_opponent'] = current_opponent
-            request.session['current_week'] = current_week
-            request.session['selected_year'] = selected_year
-            request.session['current_team'] = current_team
-            request.session['df_columns'] = list(cybercoach.original_play_df.columns)
-            request.session['game_dict'] = game_dict
-            request.session['drive_numbers'] = list(set(game_dict["drive_number"].values()))
-
-            # Render and return the template with context
-            return render(request, "pygskin_webapp/year_select.html", context)
-        else:
-            # Redirect or show an error for invalid form data
+        if not request.session["cybercoach_id"]:
             return redirect('index')
+        cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
+        try:
+            cybercoach_obj = pickle.load(open(os.path.join(path_to_cybercoaches, cybercoach_model.model_filename), "rb"))
+        except Exception as e:
+            return redirect('error')    # avoid exposing the error message to the user
+
+        # Extract the selected coach and model type from the POST request
+        selected_opponent = request.POST.get('opponent')
+        selected_year = int(request.POST.get('year'))
+
+        current_team = cybercoach_obj.coach.coach_school_dict[selected_year]
+        current_opponent = selected_opponent.split(",")[0]
+        selected_week = int(selected_opponent.split(",")[1])
+        game_dict = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == selected_week)].to_dict()
+
+        context = {
+            "selected_year": selected_year,
+            "selected_week": selected_week,
+            "selected_opponent": current_opponent,
+            "current_team": current_team,
+            "game_dict": game_dict,
+            "drive_numbers": list(set(game_dict["drive_number"].values())),
+            "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
+            "first_year": cybercoach_obj.coach.first_year,
+            "last_year": cybercoach_obj.coach.last_year,
+            "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
+            "model_accuracy": round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2),
+            "model_type": get_model_type_name(cybercoach_model.model_type),
+            "cybercoach_id": cybercoach_model.id,
+        }
+        for key, value in context.items():
+            request.session[key] = value
+    
+        return render(request, "pygskin_webapp/drive_select.html", context)
     else:
         # Redirect or show an error for non-POST requests
         return redirect('index')
 
 def prediction(request):
-    # game_dict = request.session['game_dict']
-    cybercoach_obj = pickle.load(open(request.session['cybercoach_path'], "rb"))
-    selected_opponent = request.session['selected_opponent']
-    current_team = request.session['current_team']
-    current_opponent = selected_opponent.split(",")[0]
-    current_week = request.session['current_week']
-    selected_year = request.session['selected_year']
-    try:
-        drive_number = int(request.POST.get('drive'))
-    except:   # upon error, redirect to homepage
-        return redirect('index')
+    if request.method == 'POST':
+        if not request.session["cybercoach_id"]:
+            return redirect('index')
+        cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
+        try:
+            cybercoach_obj = pickle.load(open(os.path.join(path_to_cybercoaches, cybercoach_model.model_filename), "rb"))
+        except Exception as e:
+            return redirect('error')    # avoid exposing the error message to the user
 
-    # drive_dict = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == current_week) & (cybercoach_obj.original_play_df["drive_number"] == drive_number)].to_dict()
-    drive_df = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == current_week) & (cybercoach_obj.original_play_df["drive_number"] == drive_number)]
-    drive_dict = drive_df.to_dict()
-    # drive_number = request.POST.get('drive')
-    request.session['drive_dict'] = drive_dict
-    # request.session['drive_df'] = drive_df
-    prediction = cybercoach_obj.call_drive(pd.DataFrame(drive_dict), len(drive_dict))
-    context = {
-        "selected_opponent": selected_opponent,
-        "selected_week": current_week,
-        "selected_year": selected_year,
-        "current_team": current_team,
-        "drive_dict": drive_dict,
-        "drive_df": drive_df,
-        "df_columns": cybercoach_obj.original_play_df.columns,
-        "prediction": prediction,
-        "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
-        "first_year": cybercoach_obj.coach.first_year,
-        "last_year": cybercoach_obj.coach.last_year,
-        "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
-    }
-    return render(request, "pygskin_webapp/prediction.html",context)
+        selected_opponent = request.session['selected_opponent']
+        current_team = request.session['current_team']
+        current_opponent = selected_opponent.split(",")[0]
+        selected_week = request.session['selected_week']
+        selected_year = request.session['selected_year']
+        try:
+            drive_number = int(request.POST.get('drive-number'))
+        except Exception as e:
+            return redirect('error')    # avoid exposing the error message to the user
+
+        drive_df = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == selected_week) & (cybercoach_obj.original_play_df["drive_number"] == drive_number)]
+        drive_dict = drive_df.to_dict(orient='records')
+        prediction = cybercoach_obj.call_drive(drive_df, len(drive_df) + 1).tolist()
+        actual_calls = drive_df["play_call"].tolist()
+        predictions_and_actual = list(zip(prediction, actual_calls))
+
+        context = {
+            "selected_year": selected_year,
+            "selected_week": selected_week,
+            "selected_opponent": current_opponent,
+            "current_team": current_team,
+            "drive_dict": drive_dict,
+            "predictions_and_actual": predictions_and_actual,
+            "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
+            "first_year": cybercoach_obj.coach.first_year,
+            "last_year": cybercoach_obj.coach.last_year,
+            "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
+            "drive_number": drive_number,
+            "model_accuracy": round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2),
+            "model_type": get_model_type_name(cybercoach_model.model_type),
+            "cybercoach_id": cybercoach_model.id,
+        }
+        for key, value in context.items():
+            request.session[key] = value
+        
+        return render(request, "pygskin_webapp/prediction.html", context)
+    else:
+        # Redirect or show an error for non-POST requests
+        return redirect('index')
 
 def handler400(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/400.html"), status=400)
@@ -262,4 +243,4 @@ def handler404(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/404.html"), status=404)
 
 def generic_error(request, *args, **argv):
-    return HttpResponse(render(request, "pygskin_webapp/generic_error.html"))
+    return HttpResponse(render(request, "pygskin_webapp/error.html"))
