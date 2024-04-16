@@ -52,7 +52,7 @@ def coach(request):
             # Load the cybercoach from the path
             cybercoach_obj = Cybercoach.objects.filter(coach=coach).first()
             if cybercoach_obj is None:
-                return HttpResponse("Cybercoach not found for the selected coach.", status=404)
+                return redirect('error')    # avoid exposing the error message to the user
             cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_obj.model_filename)
             try:
                 cybercoach = pickle.load(open(cybercoach_path, "rb"))
@@ -96,7 +96,7 @@ def cybercoach(request):
             cybercoach_model = form.cleaned_data.get('cybercoach')
             # Load the cybercoach from the path
             if cybercoach_model is None:
-                return HttpResponse("Cybercoach not found for the selected coach.", status=404)
+                return redirect('error')    # avoid exposing the error message to the user
             cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_model.model_filename)
             try:
                 cybercoach_obj = pickle.load(open(cybercoach_path, "rb"))
