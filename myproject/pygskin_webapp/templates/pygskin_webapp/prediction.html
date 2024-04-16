@@ -6,7 +6,8 @@
 
 <h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
 <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was {{ model_accuracy }}% accurate on the evaluation data set.</p>
-<p>You have selected drive {{ drive_number }} of {{ current_team }} vs. {{ selected_opponent }} in week {{ selected_week }} of {{ selected_year }}. These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that drive.</p>
+<p>You selected drive {{ drive_number }} of {{ current_team }} vs. {{ selected_opponent }} in week {{ selected_week }} of {{ selected_year }}.</p>
+<p>These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that drive.</p>
 
 <h2>Predicted and Actual Play Calls</h2>
 <div class="scrollable-table">
