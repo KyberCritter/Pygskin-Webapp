@@ -162,4 +162,7 @@ cython_debug/
 pygskin-0.1.0-py3-none-any.whl
 /myproject/staticfiles
 /staticfiles
+# pushing certs to repo is a security risk
 /certs
+# the Cybercoach files take up a lot of space in the repo and should be generated locally by an admin, then uploaded to a server
+/myproject/pygskin_webapp/cybercoaches/

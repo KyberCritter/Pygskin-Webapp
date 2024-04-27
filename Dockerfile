@@ -20,5 +20,3 @@ ENTRYPOINT ["sh", "/app/docker-entrypoint.sh"]
 RUN python myproject/manage.py collectstatic --noinput
 WORKDIR /app/myproject/
 CMD ["gunicorn", "myproject.wsgi:application", "--bind", "0.0.0.0:8000"]
-
-# CMD ["python", "myproject/manage.py", "runserver", "0.0.0.0:8000"]
