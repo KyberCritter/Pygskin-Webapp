@@ -2,13 +2,9 @@
 
 {% block content %}
 
-<head>
-    <title>Pygskin - College Football Coach Statistics</title>
-</head>
-
 <div class="homepage">
     <h1>Welcome to Pygskin</h1>
-    <p>Providing visualizations for college football coach statistics</p>
+    <p>The Pygskin project aims to replicate the offensive playcalling habits of specific NCAA football coaches with the power of machine learning. The models are trained on several games of data, focused on a specific college football coach. The models use data like the current down, yardage situation, and offensive metrics to determine what type of play that coach might call in a given situation.</p>
 
     <section>
         <h2>Explore Coach Statistics</h2>
@@ -16,14 +12,8 @@
         <h3>Select a Coach</h3>
         <form action="{% url 'coach' %}" method="POST">
             {% csrf_token %}
-            <label for="coach-select">Choose a coach:</label>
-            <select id="coach-select" name="coach">
-                {% for coach, paths in cybercoach_paths.items %}
-                    <option value="{{ coach }}">{{ coach }}</option>
-                {% endfor %}
-            </select>
-
-            <button type="submit">Submit</button>
+            {{ coach_form.as_p }}
+            <button type="submit">Select</button>
         </form>
     </section>
 
@@ -33,51 +23,10 @@
         <h3>Select a Cybercoach</h3>
         <form action="{% url 'cybercoach' %}" method="POST">
             {% csrf_token %}
-            <label for="cybercoach-select">Choose a coach:</label>
-            <select id="cybercoach-select" name="coach" onchange="updateModelDropdown()">
-                {% for coach, paths in cybercoach_paths.items %}
-                    <option value="{{ coach }}">{{ coach }}</option>
-                {% endfor %}
-            </select>
-
-            <label for="model-select">Choose a model type:</label>
-            <select id="model-select" name="model_type">
-                <!-- Options will be added here based on the first dropdown's selection -->
-            </select>
-
-            <button type="submit">Submit</button>
+            {{ cybercoach_form.as_p }}
+            <button type="submit">Select</button>
         </form>
     </section>
 </div>
-
-{{ cybercoach_paths|json_script:"cybercoachPathsData" }}
-
-<script>
-    function updateModelDropdown() {
-        const coachSelect = document.getElementById('cybercoach-select');
-        const modelSelect = document.getElementById('model-select');
-        const selectedCoach = coachSelect.value;
-
-        // Access the embedded JSON data
-        const cybercoachPaths = JSON.parse(document.getElementById('cybercoachPathsData').textContent);
-        const models = cybercoachPaths[selectedCoach];
-
-        // Clear existing options in the model dropdown
-        while (modelSelect.firstChild) {
-            modelSelect.removeChild(modelSelect.firstChild);
-        }
-
-        // Populate the model dropdown with new options
-        for (const model in models) {
-            const option = document.createElement('option');
-            option.value = model;
-            option.text = model;
-            modelSelect.appendChild(option);
-        }
-    }
-
-    // Initialize the model dropdown with the first coach's models
-    window.onload = updateModelDropdown;
-</script>
 
 {% endblock %}
