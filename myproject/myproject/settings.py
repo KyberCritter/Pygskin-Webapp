@@ -36,7 +36,6 @@ ALLOWED_HOSTS = [
     ".pygskin.com",
 ]
 
-
 # Application definition
 
 INSTALLED_APPS = [
