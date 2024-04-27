@@ -162,3 +162,4 @@ cython_debug/
 pygskin-0.1.0-py3-none-any.whl
 /myproject/staticfiles
 /staticfiles
+/certs
