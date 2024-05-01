@@ -29,6 +29,9 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG") == "TRUE"
 
+# Cybercoach loading
+PATH_TO_CYBERCOACHES = "/app/myproject/pygskin_webapp/cybercoaches" if os.getenv("RTE") == "PROD" else "./myproject/pygskin_webapp/cybercoaches"
+
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
@@ -134,7 +137,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # HTTPS
-CSRF_COOKIE_DOMAIN = 'pygskin.com'
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_DOMAIN = 'pygskin.com' if not DEBUG else "127.0.0.1"
+CSRF_COOKIE_SECURE = True if not DEBUG else False
+SESSION_COOKIE_SECURE = True if not DEBUG else False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

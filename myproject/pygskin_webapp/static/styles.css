@@ -90,8 +90,9 @@ h3 {
 /* Navbar styles */
 .navbar {
     position: sticky;
-    display: grid;
-    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
     justify-content: center;
     align-items: center;
     background-color: var(--turf-green);
@@ -99,23 +100,22 @@ h3 {
     box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.5);
 }
 
-.navbar #navLinks {
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-}
-
 .navbar a {
-    color: #fff;
-    padding: 2.5vh 1.5vw;
-    margin-inline-start: 1vw;
-    font-size: large;
-    outline-style: solid;
+    color: var(--sideline-green);
+    text-shadow: 1px 1px 1px #000;
+    font-size: x-large;
     text-decoration: none;
 }
 
 .navbar a:hover {
     color: var(--goalpost-yellow);
+}
+
+.navbar img {
+    max-height: 80px;
+    min-height: 30px;
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
 }
 
 /* Table styles */

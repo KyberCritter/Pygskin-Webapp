@@ -3,6 +3,7 @@ import pickle
 
 import pandas as pd
 import pygskin
+from django.conf import settings as conf_settings
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import RequestContext, loader
@@ -10,6 +11,7 @@ from django.template import RequestContext, loader
 from .forms import CoachSelectForm, CybercoachSelectForm
 from .models import Coach, Cybercoach
 
+PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
 def get_model_type_name(model_type):
     if model_type == "DECISION_TREE":
@@ -38,14 +40,11 @@ def license(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
-# TODO: find a better way to store the paths
-path_to_cybercoaches = "/app/myproject/pygskin_webapp/cybercoaches"
-
 def coach(request):
     # Only proceed if this is a POST request
     if request.method == 'POST':
         form = CoachSelectForm(request.POST)
-
+        
         if form.is_valid():
             # Extract the selected coach and model type from the POST request
             coach = form.cleaned_data.get('coach')
@@ -53,10 +52,10 @@ def coach(request):
             cybercoach_obj = Cybercoach.objects.filter(coach=coach).first()
             if cybercoach_obj is None:
                 return redirect('error')    # avoid exposing the error message to the user
-            cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_obj.model_filename)
+            cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_obj.model_filename)
             try:
                 cybercoach = pickle.load(open(cybercoach_path, "rb"))
-            except Exception as e:
+            except Exception as e:                
                 return redirect('error')    # avoid exposing the error message to the user
 
             # Gather playcalling statistics
@@ -97,7 +96,7 @@ def cybercoach(request):
             # Load the cybercoach from the path
             if cybercoach_model is None:
                 return redirect('error')    # avoid exposing the error message to the user
-            cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_model.model_filename)
+            cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename)
             try:
                 cybercoach_obj = pickle.load(open(cybercoach_path, "rb"))
             except Exception as e:
@@ -149,7 +148,7 @@ def drive_select(request):
             return redirect('index')
         cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
         try:
-            cybercoach_obj = pickle.load(open(os.path.join(path_to_cybercoaches, cybercoach_model.model_filename), "rb"))
+            cybercoach_obj = pickle.load(open(os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename), "rb"))
         except Exception as e:
             return redirect('error')    # avoid exposing the error message to the user
 
@@ -191,7 +190,7 @@ def prediction(request):
             return redirect('index')
         cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
         try:
-            cybercoach_obj = pickle.load(open(os.path.join(path_to_cybercoaches, cybercoach_model.model_filename), "rb"))
+            cybercoach_obj = pickle.load(open(os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename), "rb"))
         except Exception as e:
             return redirect('error')    # avoid exposing the error message to the user
 
