@@ -4,9 +4,9 @@
 
 <div class="homepage">
     <h1>Welcome to Pygskin</h1>
-    <p>The Pygskin project aims to replicate the offensive playcalling habits of specific NCAA football coaches with the power of machine learning. The models are trained on several games of data, focused on a specific college football coach. The models use data like the current down, yardage situation, and offensive metrics to determine what type of play that coach might call in a given situation.</p>
+    <p>Explore college football with Pygskin! Check out <a href="#cybercoaches">Cybercoaches</a>, <a href="#coach-stats">coach statistics</a>, <a href="#conference-realignment">conference realignment</a>, and <a href="#team-rankings">team rankings</a> down below! You can also sign up for <a href="#email-list">email updates</a>.</p>
 
-    <section>
+    <section id="cybercoaches">
         <h2>Cybercoaches</h2>
         <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles.</p>
         <h3>Select a Cybercoach</h3>
@@ -17,7 +17,7 @@
         </form>
     </section>
 
-    <section>
+    <section id="coach-stats">
         <h2>Explore Coach Statistics</h2>
         <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
         <h3>Select a Coach</h3>
@@ -28,7 +28,19 @@
         </form>
     </section>
 
-    <section>
+    <section id="conference-realignment">
+        <h2>Visualize Conference Realignment</h2>
+        <p>Check out just how crazy conference realignment has become with maps of the new, far-reaching conferences.</p>
+        <a class="link-button" href="https://scottratchford.com/projects/conference_analysis_2024.html">Conference Realignment</a>
+    </section>
+
+    <section id="team-rankings">
+        <h2>Team Rankings</h2>
+        <p>Check out the latest Colley Matrix computer poll team rankings for the FBS.</p>
+        <a class="link-button" href="https://scottratchford.com/projects/colley_rankings_index.html">Colley Matrix</a>
+    </section>
+
+    <section id="email-list">
         <h2>Sign Up for Email Updates</h2>
         <p>Please see the <a href="{% url 'privacy' %}">privacy policy</a> for more information about how your data is processed.</p>
         <form action="{% url 'subscribed' %}" method="POST">
