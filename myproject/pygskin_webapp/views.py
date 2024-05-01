@@ -48,9 +48,6 @@ def subscribed(request):
             return redirect('index')
     else:
         return redirect('index')
-    # template = loader.get_template("pygskin_webapp/subscribed.html")
-    # context = {}
-    # return HttpResponse(template.render(context, request))
 
 def license(request):
     template = loader.get_template("pygskin_webapp/license.html")
