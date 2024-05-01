@@ -49,14 +49,6 @@ html {
     background-color: var(--sideline-green);
 }
 
-a {
-    color: #fff;
-}
-
-a:visited {
-    color: #3d1972;
-}
-
 a:hover {
     color: var(--goalpost-yellow)
 }
@@ -165,24 +157,4 @@ h3 {
 
 .scrollable-table tbody tr:nth-of-type(even) {
     background: #fff;
-}
-
-/* Form styles */
-.link-button {
-    background-color: var(--color-1);
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    text-decoration: none;
-    margin: 20px 15px;
-}
-
-.link-button a {
-    color: #fff;
-}
-
-.link-button a:visited {
-    color: #fff;
 }
