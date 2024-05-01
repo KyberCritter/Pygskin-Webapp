@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import RequestContext, loader
 
-from .forms import CoachSelectForm, CybercoachSelectForm
+from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm
 from .models import Coach, Cybercoach
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
@@ -32,8 +32,25 @@ def index(request):
     context = {
         "coach_form": CoachSelectForm(),
         "cybercoach_form": CybercoachSelectForm(),
+        "subscribe_form": SubscriberForm(),
     }
     return HttpResponse(template.render(context, request))
+
+def subscribed(request):
+    if request.method == 'POST':
+        form = SubscriberForm(request.POST)
+        if form.is_valid():
+            form.save()
+            template = loader.get_template("pygskin_webapp/subscribed.html")
+            context = {}
+            return HttpResponse(template.render(context, request))
+        else:
+            return redirect('index')
+    else:
+        return redirect('index')
+    # template = loader.get_template("pygskin_webapp/subscribed.html")
+    # context = {}
+    # return HttpResponse(template.render(context, request))
 
 def license(request):
     template = loader.get_template("pygskin_webapp/license.html")

@@ -115,6 +115,10 @@ h3 {
     text-decoration: none;
 }
 
+.navbar a:visited {
+    color: var(--sideline-green);
+}
+
 .navbar a:hover {
     color: var(--goalpost-yellow);
 }

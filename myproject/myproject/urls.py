@@ -34,6 +34,7 @@ urlpatterns = [
     path("drive_select/", views.drive_select, name="drive_select"),
     path("prediction/", views.prediction, name="prediction"),
     path("privacy/", views.privacy, name="privacy"),
+    path("subscribed/", views.subscribed, name="subscribed"),
 ]
 
 handler400 = "pygskin_webapp.views.handler400"

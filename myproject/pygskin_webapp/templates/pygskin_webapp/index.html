@@ -27,6 +27,24 @@
             <button type="submit">Select</button>
         </form>
     </section>
+
+    <section>
+        <h2>Sign Up for Email Updates</h2>
+        <p>Please see the <a href="{% url 'privacy' %}">privacy policy</a> for more information about how your data is processed.</p>
+        <form action="{% url 'subscribed' %}" method="POST">
+            {% csrf_token %}
+            {{ subscribe_form.as_p }}
+            <button type="submit">Subscribe</button>
+        </form>
+    </section>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        {% if subscription_success %}
+        alert('Thank you for subscribing!');
+        {% endif %}
+    });
+</script>
 
 {% endblock %}
