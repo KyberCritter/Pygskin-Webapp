@@ -33,6 +33,7 @@ urlpatterns = [
     path("cybercoach/", views.cybercoach, name="cybercoach"),
     path("drive_select/", views.drive_select, name="drive_select"),
     path("prediction/", views.prediction, name="prediction"),
+    path("privacy/", views.privacy, name="privacy"),
 ]
 
 handler400 = "pygskin_webapp.views.handler400"

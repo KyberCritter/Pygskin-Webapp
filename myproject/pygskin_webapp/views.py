@@ -40,6 +40,11 @@ def license(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
+def privacy(request):
+    template = loader.get_template("pygskin_webapp/privacy.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
 def coach(request):
     # Only proceed if this is a POST request
     if request.method == 'POST':
