@@ -13,6 +13,7 @@ numpy==1.26.2
 packaging==23.2
 pandas==2.1.4
 Pillow==10.1.0
+psycopg2-binary==2.9.9
 ./pygskin-0.1.0-py3-none-any.whl
 pyparsing==3.1.1
 PyQt6==6.6.1

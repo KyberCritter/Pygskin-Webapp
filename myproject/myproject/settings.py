@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG") == "TRUE"
 
 # Cybercoach loading
-PATH_TO_CYBERCOACHES = "/app/myproject/pygskin_webapp/cybercoaches" if os.getenv("RTE") == "PROD" else "./myproject/pygskin_webapp/cybercoaches"
+PATH_TO_CYBERCOACHES = "/app/myproject/pygskin_webapp/cybercoaches" if os.getenv("RUNNING_ON") == "DOCKER" else "./myproject/pygskin_webapp/cybercoaches"
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -85,10 +85,21 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'db',  # Use the service name defined in docker-compose.yml
+        'PORT': '5432',
     }
 }
 
@@ -137,7 +148,7 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # HTTPS
-CSRF_COOKIE_DOMAIN = 'pygskin.com' if not DEBUG else "127.0.0.1"
+CSRF_COOKIE_DOMAIN = 'pygskin.com' if not DEBUG else "localhost"
 CSRF_COOKIE_SECURE = True if not DEBUG else False
 SESSION_COOKIE_SECURE = True if not DEBUG else False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

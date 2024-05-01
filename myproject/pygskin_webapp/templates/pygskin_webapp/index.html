@@ -7,23 +7,23 @@
     <p>The Pygskin project aims to replicate the offensive playcalling habits of specific NCAA football coaches with the power of machine learning. The models are trained on several games of data, focused on a specific college football coach. The models use data like the current down, yardage situation, and offensive metrics to determine what type of play that coach might call in a given situation.</p>
 
     <section>
-        <h2>Explore Coach Statistics</h2>
-        <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
-        <h3>Select a Coach</h3>
-        <form action="{% url 'coach' %}" method="POST">
-            {% csrf_token %}
-            {{ coach_form.as_p }}
-            <button type="submit">Select</button>
-        </form>
-    </section>
-
-    <section>
         <h2>Cybercoaches</h2>
         <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles.</p>
         <h3>Select a Cybercoach</h3>
         <form action="{% url 'cybercoach' %}" method="POST">
             {% csrf_token %}
             {{ cybercoach_form.as_p }}
+            <button type="submit">Select</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Explore Coach Statistics</h2>
+        <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
+        <h3>Select a Coach</h3>
+        <form action="{% url 'coach' %}" method="POST">
+            {% csrf_token %}
+            {{ coach_form.as_p }}
             <button type="submit">Select</button>
         </form>
     </section>

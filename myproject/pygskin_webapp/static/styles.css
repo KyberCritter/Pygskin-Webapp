@@ -67,6 +67,14 @@ body {
     outline-width: 2px;
 }
 
+body a {
+    color: var(--color-1);
+}
+
+body a:visited {
+    color: var(--color-5);
+}
+
 .container {
     padding: 20px 7vw;
 }
