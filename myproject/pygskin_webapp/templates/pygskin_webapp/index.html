@@ -9,7 +9,6 @@
     <section id="cybercoaches">
         <h2>Cybercoaches</h2>
         <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles.</p>
-        <h3>Select a Cybercoach</h3>
         <form action="{% url 'cybercoach' %}" method="POST">
             {% csrf_token %}
             {{ cybercoach_form.as_p }}
@@ -20,7 +19,6 @@
     <section id="coach-stats">
         <h2>Explore Coach Statistics</h2>
         <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
-        <h3>Select a Coach</h3>
         <form action="{% url 'coach' %}" method="POST">
             {% csrf_token %}
             {{ coach_form.as_p }}
