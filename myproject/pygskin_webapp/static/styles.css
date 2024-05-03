@@ -11,11 +11,16 @@
     --goalpost-yellow: #ecec17;
     --pylon-orange: #ff2a00;
 
-    --background-color: rgb(255, 255, 255);
-    /* --background-color: var(--sideline-green); */
-    /* --text-color: #fff; */
+    --background-color: rgb(241, 241, 241);
+    --button-color: #0056b3;
+    --button-hover-color: #007bff;
     --text-color: rgb(32, 32, 32);
-    --mobile-view-max-width: 725px;
+
+
+    --form-background: #f8f9fa;
+    --form-outline: 1px solid #ccc;
+
+    --mobile-view-max-width: 768px;
 
     font-family: Tahoma, sans-serif;
 }
@@ -59,6 +64,7 @@ body {
     color: var(--text-color);
     outline-color: #fff;
     outline-width: 2px;
+    margin: 15px;
 }
 
 body a {
@@ -157,4 +163,130 @@ h3 {
 
 .scrollable-table tbody tr:nth-of-type(even) {
     background: #fff;
+}
+
+/* Forms styles */
+form {
+    background: var(--form-background);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+    width: 100%; /* full width */
+    padding: 8px;
+    border: var(--form-outline);
+    border-radius: 4px;
+    box-sizing: border-box; /* include padding and border in width */
+    margin-top: 5px;
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Styling for submit buttons */
+button[type="submit"] {
+    background-color: var(--button-hover-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--button-color);
+}
+
+/* Enhanced dropdown styling */
+select.form-control {
+    height: 40px;
+    background-color: #fff;
+    color: #333;
+}
+
+select.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+a.button-link, a.button-link:visited {
+    display: inline-block;
+    background-color: var(--button-hover-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+a.button-link:hover, a.button-link:focus {
+    background-color: var(--button-color);
+    color: white;
+    text-decoration: none;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-right: 10px;
+}
+
+.form-group:last-child {
+    padding-right: 0;
+}
+
+/* Ensure inputs take full width of their container */
+input[type="text"], input[type="email"], select {
+    width: 100%;
+}
+
+@media (max-width: var(--mobile-view-max-width)) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-right: 0;
+        padding-right: 0;
+    }
+}
+
+/* Ensure inputs and selects take full width of their container */
+.form-group input, .form-group select {
+    width: calc(100% - 20px); /* adjust width to account for padding */
+    padding: 8px;
+    border: var(--form-outline);
+    border-radius: 4px;
+}
+.form-group label {
+    margin-bottom: 5px;
+}
+
+.form-row-single {
+    display: flex;
+    margin-bottom: 15px;
+}
+
+.form-row-single .form-group {
+    flex: 1;  /* allows the form group to take full width */
+    padding-right: 5px; /* slight padding to align with the split form groups */
+}
+
+.form-row-single .form-group:last-child {
+    padding-right: 0;
 }

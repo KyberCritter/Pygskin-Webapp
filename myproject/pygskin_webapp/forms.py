@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import modelform_factory
+from django.forms import modelform_factory, ModelForm, TextInput
 from .models import Coach, Cybercoach, Subscriber
 
 class CoachSelectForm(forms.Form):
@@ -22,10 +22,20 @@ class CybercoachSelectForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
-class SubscriberForm(forms.ModelForm):
+class SubscriberForm(ModelForm):
     class Meta:
         model = Subscriber
         fields = ['first_name', 'last_name', 'email', 'reason_for_subscribing', 'identity']
+        widgets = {
+            'first_name': TextInput(attrs={'class': 'form-control'}),
+            'last_name': TextInput(attrs={'class': 'form-control'}),
+            'email': TextInput(attrs={'class': 'form-control'}),
+            'reason_for_subscribing': forms.Select(attrs={'class': 'form-control'}),
+            'identity': forms.Select(attrs={'class': 'form-control'}),
+        }
+        labels = {
+            'identity': 'Best describes me'
+        }
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
