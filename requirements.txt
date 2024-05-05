@@ -5,7 +5,7 @@ contourpy==1.2.0
 cycler==0.12.1
 Django==5.0.4
 fonttools==4.47.0
-gunicorn==21.2.0
+gunicorn==22.0.0
 joblib==1.4.0
 kiwisolver==1.4.5
 matplotlib==3.8.2
