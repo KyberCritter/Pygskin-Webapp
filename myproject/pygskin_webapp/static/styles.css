@@ -290,3 +290,21 @@ input[type="text"], input[type="email"], select {
 .form-row-single .form-group:last-child {
     padding-right: 0;
 }
+
+.vertically-centered-links {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.vertically-centered-links img {
+    max-width: 200px;
+    transition: transform 0.3s;
+    box-shadow: rgba(0, 0, 0, 0.1);
+}
+
+.vertically-centered-links img:hover {
+    transition: scale(1.1);
+}
