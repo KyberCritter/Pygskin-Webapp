@@ -12,7 +12,7 @@
         <form action="{% url 'cybercoach' %}" method="POST">
             {% csrf_token %}
             {{ cybercoach_form.as_p }}
-            <button type="submit">Select</button>
+            <button id="cybercoach-button" type="submit">Select</button>
         </form>
     </section>
 
@@ -22,25 +22,25 @@
         <form action="{% url 'coach' %}" method="POST">
             {% csrf_token %}
             {{ coach_form.as_p }}
-            <button type="submit">Select</button>
+            <button id="coach-button" type="submit">Select</button>
         </form>
     </section>
 
     <section id="conference-realignment">
         <h2>Visualize Conference Realignment</h2>
         <p>Check out just how crazy conference realignment has become with maps of the new, far-reaching conferences.</p>
-        <a href="https://scottratchford.com/projects/conference_analysis_2024.html" class="button-link">Conference Realignment</a>
+        <a id="conference-analysis-link" href="https://scottratchford.com/projects/conference_analysis_2024.html" class="button-link" data-umami-event="conference-analysis-link">Conference Realignment</a>
     </section>
 
     <section id="team-rankings">
         <h2>Team Rankings</h2>
         <p>Check out the latest Colley Matrix computer poll team rankings for the FBS.</p>
-        <a href="https://scottratchford.com/projects/colley_rankings_index.html" class="button-link">Colley Matrix</a>
+        <a id="colley-matrix-link" href="https://scottratchford.com/projects/colley_rankings_index.html" class="button-link" data-umami-event="colley-matrix-link">Colley Matrix</a>
     </section>
 
     <section id="email-list">
         <h2>Sign Up for Email Updates</h2>
-        <p>By submitting this form, you consent to receive marketing emails from Pygskin and Scott Ratchford. Please see the <a href="{% url 'privacy' %}">privacy policy</a> for more information about how your data is processed. To revoke your consent at any time, <a href="mailto:privacy@pygskin.com">email us</a> with the subject line "Data Deletion Request".</p>
+        <p>By submitting this form, you consent to receive marketing emails from Pygskin and Scott Ratchford. Please see the <a href="{% url 'privacy' %}">privacy policy</a> for more information about how your data is processed. To revoke your consent at any time, <a data-umami-event="clicked-privacy-mailto-link" href="mailto:privacy@pygskin.com?subject=Data Deletion Request&body=Please delete my email address from the Pygskin records.">email us</a> with the subject line "Data Deletion Request" from the email address to remove from our records.</p>
         <form action="{% url 'subscribed' %}" method="POST">
             {% csrf_token %}
             <div class="form-row">
@@ -69,7 +69,7 @@
                     {{ subscribe_form.identity }}
                 </div>
             </div>
-            <button type="submit">Subscribe</button>
+            <button type="submit" data-umami-event="email-subscribe">Subscribe</button>
         </form>        
     </section>
 </div>
