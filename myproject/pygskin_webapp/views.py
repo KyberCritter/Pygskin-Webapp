@@ -1,15 +1,14 @@
 import os
 import pickle
 
-import pandas as pd
 import pygskin
 from django.conf import settings as conf_settings
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.template import RequestContext, loader
+from django.template import loader
 
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm
-from .models import Coach, Cybercoach
+from .models import Cybercoach
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -93,15 +92,13 @@ def coach(request):
                 return redirect('error')    # avoid exposing the error message to the user
 
             # Gather playcalling statistics
-            play_dist = [value for value in cybercoach.play_distribution.values()]
+            play_dist = [cybercoach.play_distribution[key] for key in sorted(cybercoach.play_distribution.keys())]
             # play_dist_1st_down = [value for value in cybercoach.play_distribution_by_down[1].values()]
             # play_dist_2nd_down = [value for value in cybercoach.play_distribution_by_down[2].values()]
             # play_dist_3rd_down = [value for value in cybercoach.play_distribution_by_down[3].values()]
             play_dist_4th_down = [cybercoach.play_distribution_by_down[4][key] for key in sorted(cybercoach.play_distribution_by_down[4].keys())]
             play_types = [pygskin.PlayType(key).name for key in sorted(cybercoach.play_distribution.keys())]
             colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in sorted(cybercoach.play_distribution.keys())]
-
-            coach_bio = coach.biography
 
             # Prepare context data for rendering
             context = {
@@ -117,7 +114,7 @@ def coach(request):
                 # "play_dist_2nd_down": play_dist_2nd_down,
                 # "play_dist_3rd_down": play_dist_3rd_down,
                 "play_dist_4th_down": play_dist_4th_down,
-                "coach_bio": coach_bio,
+                "coach_bio": coach.biography,
             }
 
             # Render and return the template with context
