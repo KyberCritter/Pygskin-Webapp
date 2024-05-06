@@ -84,6 +84,10 @@ def coach(request):
 
             # Gather playcalling statistics
             play_dist = [value for value in cybercoach.play_distribution.values()]
+            # play_dist_1st_down = [value for value in cybercoach.play_distribution_by_down[1].values()]
+            # play_dist_2nd_down = [value for value in cybercoach.play_distribution_by_down[2].values()]
+            # play_dist_3rd_down = [value for value in cybercoach.play_distribution_by_down[3].values()]
+            play_dist_4th_down = [value for value in cybercoach.play_distribution_by_down[4].values()]
             play_types = [pygskin.PlayType(key).name for key in cybercoach.play_distribution.keys()]
             colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in cybercoach.play_distribution.keys()]
 
@@ -97,6 +101,10 @@ def coach(request):
                 "play_types": play_types,
                 "colors": colors,
                 "form": form,
+                # "play_dist_1st_down": play_dist_1st_down,
+                # "play_dist_2nd_down": play_dist_2nd_down,
+                # "play_dist_3rd_down": play_dist_3rd_down,
+                "play_dist_4th_down": play_dist_4th_down,
             }
 
             # Render and return the template with context

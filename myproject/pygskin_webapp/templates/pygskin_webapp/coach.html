@@ -36,24 +36,41 @@
 </div>
 
 <h2>Playcalling Tendencies</h2>
-<div id="playDistChart"></div>
+<div class="vertically-aligned-container">
+    <h3>Play Calls on All Downs</h3>
+    <div id="playDistChart"></div>
+    <h3>Play Calls on 4th Down</h3>
+    <div id="playDist4thDownChart"></div>
+</div>
 
 <script>
-    var data = [{
+    var all_play_dist = [{
         values: {{ play_dist|safe }},
+        labels: {{ play_types|safe }},
+        marker: { colors: {{ colors|safe }} },
+        type: 'pie'
+    }];
+    var play_dist_4th = [{
+        values: {{ play_dist_4th_down|safe }},
         labels: {{ play_types|safe }},
         marker: { colors: {{ colors|safe }} },
         type: 'pie'
     }];
 
     var layout = {
-        height: 400,
-        width: 500
+        plot_bgcolor: 'rgba(0, 0, 0, 0)',
+        paper_bgcolor: 'rgba(0, 0, 0, 0)',
+        margin: {
+            l: 10,
+            r: 10,
+            b: 10,
+            t: 10
+        },
     };
 
-    {% comment %} Load the JS last to ensure quick response time {% endcomment %}
     document.addEventListener('DOMContentLoaded', function() {
-        Plotly.newPlot("playDistChart", data, layout);
+        Plotly.newPlot("playDistChart", all_play_dist, layout);
+        Plotly.newPlot("playDist4thDownChart", play_dist_4th, layout);
     });
 </script>
 

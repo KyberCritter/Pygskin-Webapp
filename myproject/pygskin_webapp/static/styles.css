@@ -58,7 +58,6 @@ a:hover {
 }
 
 body {
-    /* background-color: var(--turf-green); */
     background-color: var(--background-color);
     color: var(--text-color);
     outline-color: #fff;
@@ -291,7 +290,7 @@ input[type="text"], input[type="email"], select {
     padding-right: 0;
 }
 
-.vertically-centered-links {
+.vertically-centered-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -299,12 +298,19 @@ input[type="text"], input[type="email"], select {
     gap: 20px;
 }
 
-.vertically-centered-links img {
+.vertically-centered-container img {
     max-width: 200px;
     transition: transform 0.3s;
     box-shadow: rgba(0, 0, 0, 0.1);
 }
 
-.vertically-centered-links img:hover {
+.vertically-centered-container img:hover {
     transition: scale(1.1);
+}
+
+.js-plotly-plot {
+    max-width: 500px;
+    min-width: 300px;
+    max-height: 400px;
+    min-height: 300px;
 }
