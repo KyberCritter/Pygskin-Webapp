@@ -9,6 +9,12 @@
 </head>
 
 <h1>{{ coach_name }} Statistics {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
+
+{% if coach_bio|length > 0 %}
+<h2>Coach Information</h2>
+<p>{{ coach_bio }}</p>
+{% endif %}
+
 <h2>Included Seasons</h2>
 <div class="scrollable-table">
 {% if coach_seasons %}

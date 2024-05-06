@@ -64,6 +64,16 @@ def project_information(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
+def conference_analysis(request):
+    template = loader.get_template("pygskin_webapp/conference_analysis_2024.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+def colley_matrix(request):
+    template = loader.get_template("pygskin_webapp/colley_matrix.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
 def coach(request):
     # Only proceed if this is a POST request
     if request.method == 'POST':
@@ -91,6 +101,8 @@ def coach(request):
             play_types = [pygskin.PlayType(key).name for key in cybercoach.play_distribution.keys()]
             colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in cybercoach.play_distribution.keys()]
 
+            coach_bio = coach.biography
+
             # Prepare context data for rendering
             context = {
                 "coach_name": f"{coach.first_name} {coach.last_name}",
@@ -105,6 +117,7 @@ def coach(request):
                 # "play_dist_2nd_down": play_dist_2nd_down,
                 # "play_dist_3rd_down": play_dist_3rd_down,
                 "play_dist_4th_down": play_dist_4th_down,
+                "coach_bio": coach_bio,
             }
 
             # Render and return the template with context

@@ -11,6 +11,7 @@ class Coach(models.Model):
     last_year_recorded = models.IntegerField(default=2001, validators=[MinValueValidator(2001), MaxValueValidator(2023)])
     # Filename of a cybercoach model of the coach, could use any of the model types (all models are stored in the same directory)
     default_cybercoach_filename = models.CharField(max_length=100, default="")
+    biography = models.TextField(max_length=1000, default="")
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
