@@ -248,7 +248,7 @@ def prediction(request):
 
         drive_df = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == selected_week) & (cybercoach_obj.original_play_df["drive_number"] == drive_number)]
         drive_dict = drive_df.to_dict(orient='records')
-        prediction = cybercoach_obj.call_drive(drive_df, len(drive_df) + 1).tolist()
+        prediction = cybercoach_obj.call_drive(drive_df, len(drive_df) + 2).tolist()
         actual_calls = drive_df["play_call"].tolist()
         predictions_and_actual = list(zip(prediction, actual_calls))
 
