@@ -236,6 +236,8 @@ a.button-link:hover, a.button-link:focus {
 .form-row {
     display: flex;
     margin-bottom: 15px;
+    gap: 10px;
+    flex-direction: row;
 }
 
 .form-group {
@@ -249,29 +251,34 @@ a.button-link:hover, a.button-link:focus {
     padding-right: 0;
 }
 
-/* Ensure inputs take full width of their container */
-input[type="text"], input[type="email"], select {
-    width: 100%;
-}
 
-@media (max-width: var(--mobile-view-max-width)) {
+@media (max-width: 768px) {
     .form-row {
         flex-direction: column;
     }
 
     .form-group {
-        margin-right: 0;
         padding-right: 0;
+        width: calc(100%);
     }
 }
 
-/* Ensure inputs and selects take full width of their container */
-.form-group input, .form-group select {
-    width: calc(100% - 20px); /* adjust width to account for padding */
+/* Ensure inputs take full width of their container */
+input[type="text"], input[type="email"], select {
+    width: 100%;
     padding: 8px;
     border: var(--form-outline);
     border-radius: 4px;
 }
+
+/* Ensure inputs and selects take full width of their container */
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: var(--form-outline);
+    border-radius: 4px;
+}
+
 .form-group label {
     margin-bottom: 5px;
 }
@@ -279,15 +286,13 @@ input[type="text"], input[type="email"], select {
 .form-row-single {
     display: flex;
     margin-bottom: 15px;
+    flex-direction: column;
+    flex: 1
 }
 
-.form-row-single .form-group {
+.form-group {
     flex: 1;  /* allows the form group to take full width */
     padding-right: 5px; /* slight padding to align with the split form groups */
-}
-
-.form-row-single .form-group:last-child {
-    padding-right: 0;
 }
 
 .vertically-centered-container {

@@ -44,33 +44,33 @@
         <form action="{% url 'subscribed' %}" method="POST">
             {% csrf_token %}
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group">
                     {{ subscribe_form.first_name.label_tag }}
                     {{ subscribe_form.first_name }}
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group">
                     {{ subscribe_form.last_name.label_tag }}
                     {{ subscribe_form.last_name }}
                 </div>
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-6">
+            <div class="form-row-single">
+                <div class="form-group">
                     {{ subscribe_form.email.label_tag }}
                     {{ subscribe_form.email }}
                 </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group">
                     {{ subscribe_form.reason_for_subscribing.label_tag }}
                     {{ subscribe_form.reason_for_subscribing }}
                 </div>
-                <div class="form-group col-md-6">
+                <div class="form-group">
                     {{ subscribe_form.identity.label_tag }}
                     {{ subscribe_form.identity }}
                 </div>
             </div>
             <button type="submit" data-umami-event="email-subscribe">Subscribe</button>
-        </form>        
+        </form>          
     </section>
 </div>
 
