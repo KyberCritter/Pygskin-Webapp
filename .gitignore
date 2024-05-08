@@ -164,3 +164,5 @@ cython_debug/
 /staticfiles
 # pushing certs to repo is a security risk
 /certs
+Pipfile
+Pipfile.lock

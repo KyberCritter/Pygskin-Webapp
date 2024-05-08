@@ -6,6 +6,8 @@ from django.conf import settings as conf_settings
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import loader
+from django_ratelimit.exceptions import Ratelimited
+from django_ratelimit.decorators import ratelimit
 
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm
 from .models import Cybercoach
@@ -26,6 +28,7 @@ def get_model_type_name(model_type):
     else:
         return model_type
 
+@ratelimit(key='ip', rate='10/m', block=True)
 def index(request):
     template = loader.get_template("pygskin_webapp/index.html")
     context = {
@@ -58,21 +61,24 @@ def privacy(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
-def project_information(request):
-    template = loader.get_template("pygskin_webapp/project_information.html")
+def about(request):
+    template = loader.get_template("pygskin_webapp/about.html")
     context = {}
     return HttpResponse(template.render(context, request))
 
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def conference_analysis(request):
     template = loader.get_template("pygskin_webapp/conference_analysis_2024.html")
     context = {}
     return HttpResponse(template.render(context, request))
 
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def colley_matrix(request):
     template = loader.get_template("pygskin_webapp/colley_matrix.html")
     context = {}
     return HttpResponse(template.render(context, request))
 
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def coach(request):
     # Only proceed if this is a POST request
     if request.method == 'POST':
@@ -127,6 +133,7 @@ def coach(request):
         # Adjust the redirect path as necessary
         return redirect('index')
 
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def cybercoach(request):
     # Only proceed if this is a POST request
     if request.method == 'POST':
@@ -181,6 +188,7 @@ def cybercoach(request):
         # Redirect or show an error for non-POST requests
         return redirect('index')
 
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def drive_select(request):
     # select a drive from the cybercoach
     if request.method == 'POST':
@@ -226,6 +234,7 @@ def drive_select(request):
         # Redirect or show an error for non-POST requests
         return redirect('index')
 
+@ratelimit(key='ip', rate='3/m', method=ratelimit.ALL)  # rate limit to 3 requests per minute because machine learning models are computationally expensive
 def prediction(request):
     if request.method == 'POST':
         if not request.session["cybercoach_id"]:
@@ -279,7 +288,9 @@ def prediction(request):
 def handler400(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/400.html"), status=400)
 
-def handler403(request, *args, **argv):
+def handler403(request, exception=None, *args, **argv):
+    if isinstance(exception, Ratelimited):
+        return rate_limit_error(request, *args, **argv)
     return HttpResponse(render(request, "pygskin_webapp/403.html"), status=403)
 
 def handler404(request, *args, **argv):
@@ -287,3 +298,6 @@ def handler404(request, *args, **argv):
 
 def generic_error(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/error.html"))
+
+def rate_limit_error(request, *args, **argv):
+    return HttpResponse(render(request, "pygskin_webapp/rate_limited.html"))

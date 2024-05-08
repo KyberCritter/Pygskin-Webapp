@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}About Pygskin{% endblock %}
+
+{% block content %}
+
+<h1>About Pygskin</h1>
+
+<p>Pygskin is a college football analysis project that uses machine learning and data science techniques to reveal interesting trends and information about the sport we love. Scott Ratchford created the Pygskin project during the 2023 FBS postseason and began posting his findings online soon afterwards.</p>
+
+<h2>About Scott</h2>
+
+<p>Scott Ratchford is a software developer based in the United States. He graduated from the University of Alabama with his Bachelor's degree in Computer Science in 2024. He is finishing his Master's in Business Administration there in 2025. Scott is a full-stack developer with a passion for college football. He combined his interests to make this website and showcase his talents. You can visit his website by clicking <a href="https://scottratchford.com" data-umami-event="scott-website-link">here</a> or clicking "by Scott Ratchford" in the navigation bar.</p>
+
+<h2>Contact Scott</h2>
+
+<div class="vertically-centered-container">
+    <a href="mailto:contact@scottratchford.com" style="font-size:xx-large;margin:0px;">Email Scott</a>
+    <a href="https://www.linkedin.com/in/scott-ratchford/" data-umami-event="linkedin-link"><img src="{% static "linkedin.png" %}" alt="Linkedin logo"></a>
+    <a href="https://github.com/KyberCritter" data-umami-event="github-link"><img src="{% static "github.png" %}" alt="GitHub logo"></a>
+    <a href="https://www.youtube.com/@scottratchford6119" data-umami-event="youtube-link"><img src="{% static "youtube.png" %}" alt="YouTube logo"></a>
+</div>
+
+<h2>Technical Details</h2>
+
+<p>Check back later for more details.</p>
+
+<h2>Special Thanks</h2>
+
+<p>Thank you to <a href="https://www.linkedin.com/in/will-heldman/">Will Heldman</a> for cybersecurity consulting. Will Heldman has a cybersecurity degree from the University of Alabama and helped ensure the integrity of the Pygskin project.</p>
+
+{% endblock %}

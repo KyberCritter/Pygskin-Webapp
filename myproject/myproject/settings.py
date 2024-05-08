@@ -145,3 +145,7 @@ CSRF_COOKIE_DOMAIN = 'pygskin.com' if not DEBUG else "localhost"
 CSRF_COOKIE_SECURE = True if not DEBUG else False
 SESSION_COOKIE_SECURE = True if not DEBUG else False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Rate limiting
+RATELIMIT_ENABLE = True
+RATELIMIT_VIEW = "pygskin_webapp.views.rate_limit_error"
