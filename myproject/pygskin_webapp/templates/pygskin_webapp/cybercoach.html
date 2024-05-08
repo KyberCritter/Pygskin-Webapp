@@ -12,19 +12,23 @@
     <h2>Select a Game to Predict</h2>
     <form action="{% url 'drive_select' %}" method="POST">
         {% csrf_token %}
-        <label for="year-select">Choose a year:</label>
-        <select id="year-select" name="year" onchange="updateOpponentDropdown()">
-            {% for year, x in opponents_by_year.items %}
-                <option value="{{ year }}">{{ year }}</option>
-            {% endfor %}
-        </select>
-
-        <label for="opponent-select">Choose an opponent:</label>
-        <select id="opponent-select" name="opponent">
-            <!-- Options will be added here based on the first dropdown's selection -->
-        </select>
-
-        <button type="submit">Submit</button>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="year-select">Choose a year:</label>
+                <select id="year-select" name="year" onchange="updateOpponentDropdown()" class="form-control">
+                    {% for year, x in opponents_by_year.items %}
+                        <option value="{{ year }}">{{ year }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="opponent-select">Choose an opponent:</label>
+                <select id="opponent-select" name="opponent" class="form-control">
+                    <!-- Options will be added here based on the first dropdown's selection -->
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
 

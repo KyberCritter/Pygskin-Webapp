@@ -29,10 +29,16 @@ urlpatterns = [
     path("400/", views.handler400, name="error_400"),
     path("500/", views.generic_error, name="error_500"),
     path("error/", views.generic_error, name="error"),
+    path("rate_limited/", views.rate_limit_error, name="rate_limited"),
     path("coach/", views.coach, name="coach"),
     path("cybercoach/", views.cybercoach, name="cybercoach"),
     path("drive_select/", views.drive_select, name="drive_select"),
     path("prediction/", views.prediction, name="prediction"),
+    path("privacy/", views.privacy, name="privacy"),
+    path("subscribed/", views.subscribed, name="subscribed"),
+    path("about/", views.about, name="about"),
+    path("conference_analysis/", views.conference_analysis, name="conference_analysis"),
+    path("colley_matrix/", views.colley_matrix, name="colley_matrix"),
 ]
 
 handler400 = "pygskin_webapp.views.handler400"

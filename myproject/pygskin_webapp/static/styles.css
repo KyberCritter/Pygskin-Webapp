@@ -11,11 +11,17 @@
     --goalpost-yellow: #ecec17;
     --pylon-orange: #ff2a00;
 
-    --background-color: rgb(255, 255, 255);
-    /* --background-color: var(--sideline-green); */
-    /* --text-color: #fff; */
+    --background-color: rgb(241, 241, 241);
+    --button-color: #0056b3;
+    --button-hover-color: #007bff;
     --text-color: rgb(32, 32, 32);
-    --mobile-view-max-width: 725px;
+
+    --form-background: #f8f9fa;
+    --form-outline: 1px solid #ccc;
+
+    --mobile-view-max-width: 768px;
+
+    font-family: Tahoma, sans-serif;
 }
 
 /* Common styles */
@@ -47,24 +53,24 @@ html {
     background-color: var(--sideline-green);
 }
 
-a {
-    color: #fff;
-}
-
-a:visited {
-    color: #3d1972;
-}
-
 a:hover {
     color: var(--goalpost-yellow)
 }
 
 body {
-    /* background-color: var(--turf-green); */
     background-color: var(--background-color);
     color: var(--text-color);
     outline-color: #fff;
     outline-width: 2px;
+    margin: 15px;
+}
+
+body a {
+    color: var(--color-1);
+}
+
+body a:visited {
+    color: var(--color-5);
 }
 
 .container {
@@ -90,34 +96,36 @@ h3 {
 /* Navbar styles */
 .navbar {
     position: sticky;
-    display: grid;
-    gap: 10px;
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
     justify-content: center;
     align-items: center;
-    gap: 10px;
     background-color: var(--turf-green);
     padding: 10px 10px;
     box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.5);
 }
 
-.navbar #navLinks {
-    display: flex;
-    flex-direction: row;
-    flex-grow: 1;
+.navbar a {
+    color: var(--sideline-green);
+    text-shadow: 1px 1px 1px #000;
+    font-size: x-large;
+    text-decoration: none;
 }
 
-.navbar a {
-    color: #fff;
-    padding: 2.5vh 1.5vw;
-    margin-inline-start: 1vw;
-    font-size: large;
-    outline-style: solid;
-    text-decoration: none;
+.navbar a:visited {
+    color: var(--sideline-green);
 }
 
 .navbar a:hover {
     color: var(--goalpost-yellow);
+}
+
+.navbar img {
+    max-height: 80px;
+    min-height: 30px;
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
 }
 
 /* Table styles */
@@ -153,4 +161,169 @@ h3 {
 
 .scrollable-table tbody tr:nth-of-type(even) {
     background: #fff;
+}
+
+/* Forms styles */
+form {
+    background: var(--form-background);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-control {
+    width: 100%; /* full width */
+    padding: 8px;
+    border: var(--form-outline);
+    border-radius: 4px;
+    box-sizing: border-box; /* include padding and border in width */
+    margin-top: 5px;
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+    font-size: larger;
+}
+
+/* Styling for submit buttons */
+button[type="submit"] {
+    background-color: var(--button-hover-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--button-color);
+}
+
+/* Enhanced dropdown styling */
+select.form-control {
+    height: 40px;
+    background-color: #fff;
+    color: #333;
+}
+
+select.form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+a.button-link, a.button-link:visited {
+    display: inline-block;
+    background-color: var(--button-hover-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+a.button-link:hover, a.button-link:focus {
+    background-color: var(--button-color);
+    color: white;
+    text-decoration: none;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom: 15px;
+    gap: 10px;
+    flex-direction: row;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-right: 10px;
+}
+
+.form-group:last-child {
+    padding-right: 0;
+}
+
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-group {
+        padding-right: 0;
+        width: calc(100%);
+    }
+}
+
+/* Ensure inputs take full width of their container */
+input[type="text"], input[type="email"], select {
+    width: 100%;
+    padding: 8px;
+    border: var(--form-outline);
+    border-radius: 4px;
+}
+
+/* Ensure inputs and selects take full width of their container */
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: var(--form-outline);
+    border-radius: 4px;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+}
+
+.form-row-single {
+    display: flex;
+    margin-bottom: 15px;
+    flex-direction: column;
+    flex: 1
+}
+
+.form-group {
+    flex: 1;
+    padding-right: 5px; /* slight padding to align with the split form groups */
+}
+
+.form-checkbox-and-label {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.vertically-centered-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.vertically-centered-container img {
+    max-width: 200px;
+    transition: transform 0.3s;
+    box-shadow: rgba(0, 0, 0, 0.1);
+}
+
+.vertically-centered-container img:hover {
+    transition: scale(1.1);
+}
+
+.js-plotly-plot {
+    max-width: 500px;
+    min-width: 300px;
+    max-height: 400px;
+    min-height: 300px;
 }

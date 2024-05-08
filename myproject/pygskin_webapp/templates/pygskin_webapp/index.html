@@ -4,28 +4,77 @@
 
 <div class="homepage">
     <h1>Welcome to Pygskin</h1>
-    <p>The Pygskin project aims to replicate the offensive playcalling habits of specific NCAA football coaches with the power of machine learning. The models are trained on several games of data, focused on a specific college football coach. The models use data like the current down, yardage situation, and offensive metrics to determine what type of play that coach might call in a given situation.</p>
+    <p>Explore college football with Pygskin! Check out <a href="#cybercoaches">Cybercoaches</a>, <a href="#coach-stats">coach statistics</a>, <a href="#conference-realignment">conference realignment</a>, and <a href="#team-rankings">team rankings</a> down below! You can also sign up for <a href="#email-list">email updates</a>. For more information about Pygskin, its creator, or for technical details, visit the <a href="{% url 'about' %}">about page</a>.</p>
 
-    <section>
-        <h2>Explore Coach Statistics</h2>
-        <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
-        <h3>Select a Coach</h3>
-        <form action="{% url 'coach' %}" method="POST">
-            {% csrf_token %}
-            {{ coach_form.as_p }}
-            <button type="submit">Select</button>
-        </form>
-    </section>
-
-    <section>
+    <section id="cybercoaches">
         <h2>Cybercoaches</h2>
-        <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles.</p>
-        <h3>Select a Cybercoach</h3>
+        <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles. The drop-down menu lists Cybercoaches in the format: "Coach Name (model type)". Different model types will differ in their predictions and accuracy, but each coach's models were trained on the same data.</p>
         <form action="{% url 'cybercoach' %}" method="POST">
             {% csrf_token %}
             {{ cybercoach_form.as_p }}
-            <button type="submit">Select</button>
+            <button id="cybercoach-button" type="submit">Select</button>
         </form>
+    </section>
+
+    <section id="coach-stats">
+        <h2>Explore Coach Statistics</h2>
+        <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
+        <form action="{% url 'coach' %}" method="POST">
+            {% csrf_token %}
+            {{ coach_form.as_p }}
+            <button id="coach-button" type="submit">Select</button>
+        </form>
+    </section>
+
+    <section id="conference-realignment">
+        <h2>Visualize Conference Realignment</h2>
+        <p>Check out just how crazy conference realignment has become with maps of the new, far-reaching conferences.</p>
+        <a id="conference-analysis-link" href="{% url 'conference_analysis' %}" class="button-link" data-umami-event="conference-analysis-link">Conference Realignment</a>
+    </section>
+
+    <section id="team-rankings">
+        <h2>Team Rankings</h2>
+        <p>Check out the latest Colley Matrix computer poll team rankings for the FBS.</p>
+        <a id="colley-matrix-link" href="{% url 'colley_matrix' %}" class="button-link" data-umami-event="colley-matrix-link">Colley Matrix</a>
+    </section>
+
+    <section id="email-list">
+        <h2>Sign Up for Email Updates</h2>
+        <p>By submitting this form, you consent to receive marketing emails from Pygskin and Scott Ratchford. Please see the <a href="{% url 'privacy' %}">privacy policy</a> for more information about how your data is processed. To revoke your consent at any time, <a data-umami-event="clicked-privacy-mailto-link" href="mailto:privacy@pygskin.com?subject=Data Deletion Request&body=Please delete my email address from the Pygskin records.">email us</a> with the subject line "Data Deletion Request" from the email address to remove from our records.</p>
+        <form action="{% url 'subscribed' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group">
+                    {{ subscribe_form.first_name.label_tag }}
+                    {{ subscribe_form.first_name }}
+                </div>
+                <div class="form-group">
+                    {{ subscribe_form.last_name.label_tag }}
+                    {{ subscribe_form.last_name }}
+                </div>
+            </div>
+            <div class="form-row-single">
+                <div class="form-group">
+                    {{ subscribe_form.email.label_tag }}
+                    {{ subscribe_form.email }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ subscribe_form.reason_for_subscribing.label_tag }}
+                    {{ subscribe_form.reason_for_subscribing }}
+                </div>
+                <div class="form-group">
+                    {{ subscribe_form.identity.label_tag }}
+                    {{ subscribe_form.identity }}
+                </div>
+            </div>
+            <div class="form-checkbox-and-label">
+                {{ subscribe_form.age_confirmation.label_tag }}
+                {{ subscribe_form.age_confirmation }}
+            </div>
+            <button type="submit" data-umami-event="email-subscribe">Subscribe</button>
+        </form>        
     </section>
 </div>
 

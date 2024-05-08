@@ -9,17 +9,22 @@
 <p>You selected {{ current_team }} vs. {{ selected_opponent }} in week {{ selected_week }} of {{ selected_year }}.</p>
 <p>The next step is to pick a drive to predict the play calls for.</p>
 
-<h2>Select a Drive to Predict</h2>
-<form action="{% url 'prediction' %}" method="POST">
-    {% csrf_token %}
-    <label for="drive-select">Choose a drive:</label>
-    <select id="drive-select" name="drive-number">
-        {% for x in drive_numbers %}
-            <option value="{{ x }}">{{ x }}</option>
-        {% endfor %}
-    </select>
-
-    <button type="submit">Submit</button>
-</form>
+<div class="coach-selector">
+    <h2>Select a Game to Predict</h2>
+    <form action="{% url 'prediction' %}" method="POST">
+        {% csrf_token %}
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="drive-select">Choose a drive:</label>
+                <select id="drive-select" name="drive-number" class="form-control">
+                    {% for x in drive_numbers %}
+                        <option value="{{ x }}">{{ x }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 
 {% endblock %}

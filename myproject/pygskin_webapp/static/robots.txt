@@ -1,3 +1,5 @@
 User-agent: *
 Disallow: /
-Allow: /$
+Allow: /index.html
+Allow: /about.html
+Allow: /conference_analysis.html

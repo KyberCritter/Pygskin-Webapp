@@ -1,15 +1,18 @@
 import os
 import pickle
 
-import pandas as pd
 import pygskin
+from django.conf import settings as conf_settings
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.template import RequestContext, loader
+from django.template import loader
+from django_ratelimit.exceptions import Ratelimited
+from django_ratelimit.decorators import ratelimit
 
-from .forms import CoachSelectForm, CybercoachSelectForm
-from .models import Coach, Cybercoach
+from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm
+from .models import Cybercoach
 
+PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
 def get_model_type_name(model_type):
     if model_type == "DECISION_TREE":
@@ -25,27 +28,62 @@ def get_model_type_name(model_type):
     else:
         return model_type
 
+@ratelimit(key='ip', rate='10/m', block=True)
 def index(request):
     template = loader.get_template("pygskin_webapp/index.html")
     context = {
         "coach_form": CoachSelectForm(),
         "cybercoach_form": CybercoachSelectForm(),
+        "subscribe_form": SubscriberForm(),
     }
     return HttpResponse(template.render(context, request))
+
+def subscribed(request):
+    if request.method == 'POST':
+        form = SubscriberForm(request.POST)
+        if form.is_valid():
+            form.save()
+            template = loader.get_template("pygskin_webapp/subscribed.html")
+            context = {}
+            return HttpResponse(template.render(context, request))
+        else:
+            return redirect('index')
+    else:
+        return redirect('index')
 
 def license(request):
     template = loader.get_template("pygskin_webapp/license.html")
     context = {}
     return HttpResponse(template.render(context, request))
 
-# TODO: find a better way to store the paths
-path_to_cybercoaches = "/app/myproject/pygskin_webapp/cybercoaches"
+def privacy(request):
+    template = loader.get_template("pygskin_webapp/privacy.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
 
+def about(request):
+    template = loader.get_template("pygskin_webapp/about.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
+def conference_analysis(request):
+    template = loader.get_template("pygskin_webapp/conference_analysis_2024.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
+def colley_matrix(request):
+    template = loader.get_template("pygskin_webapp/colley_matrix.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def coach(request):
     # Only proceed if this is a POST request
     if request.method == 'POST':
         form = CoachSelectForm(request.POST)
-
+        
         if form.is_valid():
             # Extract the selected coach and model type from the POST request
             coach = form.cleaned_data.get('coach')
@@ -53,16 +91,20 @@ def coach(request):
             cybercoach_obj = Cybercoach.objects.filter(coach=coach).first()
             if cybercoach_obj is None:
                 return redirect('error')    # avoid exposing the error message to the user
-            cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_obj.model_filename)
+            cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_obj.model_filename)
             try:
                 cybercoach = pickle.load(open(cybercoach_path, "rb"))
-            except Exception as e:
+            except Exception as e:                
                 return redirect('error')    # avoid exposing the error message to the user
 
             # Gather playcalling statistics
-            play_dist = [value for value in cybercoach.play_distribution.values()]
-            play_types = [pygskin.PlayType(key).name for key in cybercoach.play_distribution.keys()]
-            colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in cybercoach.play_distribution.keys()]
+            play_dist = [cybercoach.play_distribution[key] for key in sorted(cybercoach.play_distribution.keys())]
+            # play_dist_1st_down = [value for value in cybercoach.play_distribution_by_down[1].values()]
+            # play_dist_2nd_down = [value for value in cybercoach.play_distribution_by_down[2].values()]
+            # play_dist_3rd_down = [value for value in cybercoach.play_distribution_by_down[3].values()]
+            play_dist_4th_down = [cybercoach.play_distribution_by_down[4][key] for key in sorted(cybercoach.play_distribution_by_down[4].keys())]
+            play_types = [pygskin.PlayType(key).name for key in sorted(cybercoach.play_distribution.keys())]
+            colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in sorted(cybercoach.play_distribution.keys())]
 
             # Prepare context data for rendering
             context = {
@@ -74,6 +116,11 @@ def coach(request):
                 "play_types": play_types,
                 "colors": colors,
                 "form": form,
+                # "play_dist_1st_down": play_dist_1st_down,
+                # "play_dist_2nd_down": play_dist_2nd_down,
+                # "play_dist_3rd_down": play_dist_3rd_down,
+                "play_dist_4th_down": play_dist_4th_down,
+                "coach_bio": coach.biography,
             }
 
             # Render and return the template with context
@@ -86,6 +133,7 @@ def coach(request):
         # Adjust the redirect path as necessary
         return redirect('index')
 
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def cybercoach(request):
     # Only proceed if this is a POST request
     if request.method == 'POST':
@@ -97,7 +145,7 @@ def cybercoach(request):
             # Load the cybercoach from the path
             if cybercoach_model is None:
                 return redirect('error')    # avoid exposing the error message to the user
-            cybercoach_path = os.path.join(path_to_cybercoaches, cybercoach_model.model_filename)
+            cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename)
             try:
                 cybercoach_obj = pickle.load(open(cybercoach_path, "rb"))
             except Exception as e:
@@ -140,6 +188,7 @@ def cybercoach(request):
         # Redirect or show an error for non-POST requests
         return redirect('index')
 
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def drive_select(request):
     # select a drive from the cybercoach
     if request.method == 'POST':
@@ -149,7 +198,7 @@ def drive_select(request):
             return redirect('index')
         cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
         try:
-            cybercoach_obj = pickle.load(open(os.path.join(path_to_cybercoaches, cybercoach_model.model_filename), "rb"))
+            cybercoach_obj = pickle.load(open(os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename), "rb"))
         except Exception as e:
             return redirect('error')    # avoid exposing the error message to the user
 
@@ -185,13 +234,14 @@ def drive_select(request):
         # Redirect or show an error for non-POST requests
         return redirect('index')
 
+@ratelimit(key='ip', rate='3/m', method=ratelimit.ALL)  # rate limit to 3 requests per minute because machine learning models are computationally expensive
 def prediction(request):
     if request.method == 'POST':
         if not request.session["cybercoach_id"]:
             return redirect('index')
         cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
         try:
-            cybercoach_obj = pickle.load(open(os.path.join(path_to_cybercoaches, cybercoach_model.model_filename), "rb"))
+            cybercoach_obj = pickle.load(open(os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename), "rb"))
         except Exception as e:
             return redirect('error')    # avoid exposing the error message to the user
 
@@ -207,7 +257,7 @@ def prediction(request):
 
         drive_df = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == selected_week) & (cybercoach_obj.original_play_df["drive_number"] == drive_number)]
         drive_dict = drive_df.to_dict(orient='records')
-        prediction = cybercoach_obj.call_drive(drive_df, len(drive_df) + 1).tolist()
+        prediction = cybercoach_obj.call_drive(drive_df, len(drive_df) + 2).tolist()
         actual_calls = drive_df["play_call"].tolist()
         predictions_and_actual = list(zip(prediction, actual_calls))
 
@@ -238,7 +288,9 @@ def prediction(request):
 def handler400(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/400.html"), status=400)
 
-def handler403(request, *args, **argv):
+def handler403(request, exception=None, *args, **argv):
+    if isinstance(exception, Ratelimited):
+        return rate_limit_error(request, *args, **argv)
     return HttpResponse(render(request, "pygskin_webapp/403.html"), status=403)
 
 def handler404(request, *args, **argv):
@@ -246,3 +298,6 @@ def handler404(request, *args, **argv):
 
 def generic_error(request, *args, **argv):
     return HttpResponse(render(request, "pygskin_webapp/error.html"))
+
+def rate_limit_error(request, *args, **argv):
+    return HttpResponse(render(request, "pygskin_webapp/rate_limited.html"))

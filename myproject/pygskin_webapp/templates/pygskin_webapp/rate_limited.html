@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Rate Limited{% endblock %}
+
+{% block content %}
+
+<h1>Rate Limited</h1>
+<p>Please try again in a moment. You've loaded too many pages too quickly. We limit usage to keep loading times down for all users.</p>
+<img src="{% static 'referee.jpg' %}" style="max-width: 50vw;" alt="A football referee calling a foul">
+<p>"Unsportsmanlike conduct, offense, number 1. 15-yard penalty, automatic first down."</p>
+
+{% endblock %}
