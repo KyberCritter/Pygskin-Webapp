@@ -69,8 +69,12 @@
                     {{ subscribe_form.identity }}
                 </div>
             </div>
+            <div class="form-checkbox-and-label">
+                {{ subscribe_form.age_confirmation.label_tag }}
+                {{ subscribe_form.age_confirmation }}
+            </div>
             <button type="submit" data-umami-event="email-subscribe">Subscribe</button>
-        </form>          
+        </form>        
     </section>
 </div>
 

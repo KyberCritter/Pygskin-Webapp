@@ -23,9 +23,15 @@ class CybercoachSelectForm(forms.Form):
     )
 
 class SubscriberForm(ModelForm):
+    age_confirmation = forms.BooleanField(
+        label="I confirm that I am at least 13 years old.",
+        required=True,
+        error_messages={'required': "You must confirm that you are at least 13 years old."}
+    )
+    
     class Meta:
         model = Subscriber
-        fields = ['first_name', 'last_name', 'email', 'reason_for_subscribing', 'identity']
+        fields = ['first_name', 'last_name', 'email', 'reason_for_subscribing', 'identity', 'age_confirmation']
         widgets = {
             'first_name': TextInput(attrs={'class': 'form-control'}),
             'last_name': TextInput(attrs={'class': 'form-control'}),

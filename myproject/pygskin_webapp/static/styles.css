@@ -291,8 +291,16 @@ input[type="text"], input[type="email"], select {
 }
 
 .form-group {
-    flex: 1;  /* allows the form group to take full width */
+    flex: 1;
     padding-right: 5px; /* slight padding to align with the split form groups */
+}
+
+.form-checkbox-and-label {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
 .vertically-centered-container {
