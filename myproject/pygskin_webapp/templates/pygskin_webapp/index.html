@@ -8,7 +8,7 @@
 
     <section id="cybercoaches">
         <h2>Cybercoaches</h2>
-        <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles.</p>
+        <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles. The drop-down menu lists Cybercoaches in the format: "Coach Name (model type)". Different model types will differ in their predictions and accuracy, but each coach's models were trained on the same data.</p>
         <form action="{% url 'cybercoach' %}" method="POST">
             {% csrf_token %}
             {{ cybercoach_form.as_p }}
