@@ -2,12 +2,13 @@ import os
 import pickle
 
 import pygskin
+import requests
 from django.conf import settings as conf_settings
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.template import loader
-from django_ratelimit.exceptions import Ratelimited
 from django_ratelimit.decorators import ratelimit
+from django_ratelimit.exceptions import Ratelimited
 
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm
 from .models import Cybercoach
@@ -38,13 +39,24 @@ def index(request):
     }
     return HttpResponse(template.render(context, request))
 
+def send_newsletter_signup(target_email: str):
+	return requests.post(
+		f"https://api.mailgun.net/v3/{conf_settings.MAILGUN_DOMAIN}/messages",
+		auth=("api", conf_settings.MAILGUN_API_KEY),
+		data={"from": f"Pygskin <mailgun@{conf_settings.MAILGUN_DOMAIN}>",
+			"to": [target_email],
+			"subject": "You have signed up for the Pygskin newsletter!",
+			"text": f"Thank you for signing up for the Pygskin newsletter! We will keep you updated on the latest news and features. To visit the Pygskin website, click here: https://pygskin.com?utm_source=newsletter&utm_medium=post&utm_campaign=initial_launch."})
+
+@ratelimit(key='ip', rate='1/m', method=ratelimit.ALL)
 def subscribed(request):
     if request.method == 'POST':
         form = SubscriberForm(request.POST)
         if form.is_valid():
-            form.save()
+            model = form.save()
             template = loader.get_template("pygskin_webapp/subscribed.html")
             context = {}
+            print(send_newsletter_signup(model.email))  # send a confirmation email to the new subscriber
             return HttpResponse(template.render(context, request))
         else:
             return redirect('index')
