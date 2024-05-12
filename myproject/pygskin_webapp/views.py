@@ -43,10 +43,10 @@ def send_newsletter_signup(target_email: str):
 	return requests.post(
 		f"https://api.mailgun.net/v3/{conf_settings.MAILGUN_DOMAIN}/messages",
 		auth=("api", conf_settings.MAILGUN_API_KEY),
-		data={"from": f"Pygskin <mailgun@{conf_settings.MAILGUN_DOMAIN}>",
+		data={"from": f"Pygskin <newsletter@{conf_settings.MAILGUN_DOMAIN}>",
 			"to": [target_email],
-			"subject": "You have signed up for the Pygskin newsletter!",
-			"text": f"Thank you for signing up for the Pygskin newsletter! We will keep you updated on the latest news and features. To visit the Pygskin website, click here: https://pygskin.com?utm_source=newsletter&utm_medium=post&utm_campaign=initial_launch."})
+			"subject": "Welcome to the Pygskin newsletter!",
+			"template": "Newsletter Confirmation",})
 
 @ratelimit(key='ip', rate='1/m', method=ratelimit.ALL)
 def subscribed(request):
