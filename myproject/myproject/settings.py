@@ -149,3 +149,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Rate limiting
 RATELIMIT_ENABLE = True
 RATELIMIT_VIEW = "pygskin_webapp.views.rate_limit_error"
+
+# Email subscription
+MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY")
+MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN")
+TARGET_EMAIL = os.getenv("TARGET_EMAIL")    # For testing purposes

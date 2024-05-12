@@ -1,6 +1,9 @@
 from django import forms
-from django.forms import modelform_factory, ModelForm, TextInput
+from django.core.validators import validate_email
+from django.forms import ModelForm, TextInput, modelform_factory
+
 from .models import Coach, Cybercoach, Subscriber
+
 
 class CoachSelectForm(forms.Form):
     # Create a choice field populated with coach names
@@ -47,4 +50,8 @@ class SubscriberForm(ModelForm):
         email = self.cleaned_data.get('email')
         if Subscriber.objects.filter(email=email).exists():
             raise forms.ValidationError("This email has already been subscribed.")
+        try:
+            validate_email(email)
+        except forms.ValidationError as e:
+            raise forms.ValidationError("Please enter a valid email address.")
         return email
