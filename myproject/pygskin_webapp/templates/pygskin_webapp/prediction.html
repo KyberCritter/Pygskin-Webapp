@@ -7,8 +7,8 @@
 <h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
 
 <h2>Cybercoach Statistics</h2>
-<p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was {{ model_accuracy }}% accurate on the evaluation data set.</p>
-<p>You selected drive {{ drive_number }} of {{ current_team }} vs. {{ selected_opponent }} in week {{ selected_week }} of {{ selected_year }}.</p>
+<p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
+<p>You selected drive {{ drive_number }} of <em>{{ current_team }} vs. {{ selected_opponent }}</em> in week {{ selected_week }} of {{ selected_year }}.</p>
 <p>These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that drive.</p>
 
 <h2>Predicted and Actual Play Calls</h2>
@@ -36,11 +36,12 @@
 </div>
 
 <h2>Drive Data</h2>
+<p>This is all of the data for the selected drive. Not all of the data was used to train the Cybercoach. Certain data, like the play text, are only present to show what plays really happened. Some "plays" from the database, like timeouts, were removed before the training phase. This is responsible for any inconsistent numbering in the "play_number" column.</p>
+<p><strong>Scroll to the right</strong> to see more of the data for each play.</p>
 <div class="scrollable-table">
     <table>
         <thead>
             <tr>
-                <!-- Dynamically add table headers -->
                 {% if drive_dict %}
                     {% for key in drive_dict.0.keys %}
                         <th>{{ key }}</th>
@@ -49,7 +50,6 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Iterate over each row in the drive_dict -->
             {% for row in drive_dict %}
                 <tr>
                     {% for value in row.values %}
