@@ -5,11 +5,12 @@
 {% block content %}
 
 <h1>{{ model_type }} Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
-<p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was {{ model_accuracy }}% accurate on the evaluation data set.</p>
-<p>The next step is to select a game to predict plays from.</p>
+<p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
+<p><strong>Next, pick a year and a game.</strong></p>
 
 <div class="coach-selector">
-    <h2>Select a Game to Predict</h2>
+    <h2>Select a Year and Game</h2>
+    <p>Conference, non-conference, and conference championships (if applicable) are available. Postseason (playoff and bowl) games will be added at a later date. Week 0 games are listed as Week 1.</p>
     <form action="{% url 'drive_select' %}" method="POST">
         {% csrf_token %}
         <div class="form-row">
@@ -22,7 +23,7 @@
                 </select>
             </div>
             <div class="form-group col-md-6">
-                <label for="opponent-select">Choose an opponent:</label>
+                <label for="opponent-select">Choose a game:</label>
                 <select id="opponent-select" name="opponent" class="form-control">
                     <!-- Options will be added here based on the first dropdown's selection -->
                 </select>
