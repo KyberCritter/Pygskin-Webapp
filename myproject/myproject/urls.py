@@ -34,6 +34,7 @@ urlpatterns = [
     path("cybercoach/", views.cybercoach, name="cybercoach"),
     path("drive_select/", views.drive_select, name="drive_select"),
     path("prediction/", views.prediction, name="prediction"),
+    path("custom_prediction/", views.custom_prediction, name="custom_prediction"),
     path("privacy/", views.privacy, name="privacy"),
     path("subscribed/", views.subscribed, name="subscribed"),
     path("about/", views.about, name="about"),

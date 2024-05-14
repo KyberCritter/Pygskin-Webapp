@@ -55,3 +55,107 @@ class SubscriberForm(ModelForm):
         except forms.ValidationError as e:
             raise forms.ValidationError("Please enter a valid email address.")
         return email
+
+
+class CustomScenarioForm(forms.Form):
+    TIMEOUTS_CHOICES = [(i, str(i)) for i in range(0, 4)]
+    QUARTER_CHOICES = [(i, str(i)) for i in range(1, 5)]
+    DOWN_CHOICES = [(i, str(i)) for i in range(1, 5)]
+
+    yard_line = forms.IntegerField(
+        label="Yard Line",
+        initial=25,
+        min_value=0,
+        max_value=100,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control'}),
+        help_text="0 is the offense's end zone and 100 is the defense's end zone."
+    )
+    down = forms.ChoiceField(
+        label="Down",
+        choices=DOWN_CHOICES,
+        initial=1,
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    distance = forms.IntegerField(
+        label="Distance to First Down",
+        min_value=1,
+        max_value=99,
+        initial=10,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    period = forms.ChoiceField(
+        label="Quarter",
+        choices=QUARTER_CHOICES,
+        initial=1,
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    minutes_remaining_in_quarter = forms.IntegerField(
+        label="Minutes Remaining",
+        min_value=0,
+        max_value=15,
+        initial=15,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    seconds_remaining_in_quarter = forms.IntegerField(
+        label="Seconds Remaining",
+        min_value=0,
+        max_value=59,
+        initial=0,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    offense_score = forms.IntegerField(
+        label="Offense Score",
+        min_value=0,
+        initial=0,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    defense_score = forms.IntegerField(
+        label="Defense Score",
+        min_value=0,
+        initial=0,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    offense_timeouts = forms.ChoiceField(
+        label="Offense Timeouts",
+        choices=TIMEOUTS_CHOICES,
+        initial=3,
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    defense_timeouts = forms.ChoiceField(
+        label="Defense Timeouts",
+        choices=TIMEOUTS_CHOICES,
+        initial=3,
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    rushing_yards_per_attempt = forms.FloatField(
+        label="Rushing Yards per Attempt",
+        min_value=-100,
+        max_value=100,
+        initial=3,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+    passing_yards_per_attempt = forms.FloatField(
+        label="Passing Yards per Attempt",
+        min_value=-100,
+        max_value=100,
+        initial=5,
+        required=True,
+        widget=forms.NumberInput(attrs={'class': 'form-control'})
+    )
+
+    def clean_time_remaining(self):
+        time_remaining_in_quarter = self.cleaned_data['time_remaining']
+        if time_remaining_in_quarter.minute > 15 or time_remaining_in_quarter.second > 59:
+            raise forms.ValidationError("Invalid time remaining. Must be within a quarter duration.")
+        return time_remaining_in_quarter
