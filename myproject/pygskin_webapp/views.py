@@ -1,6 +1,7 @@
 import os
 import pickle
 
+import pandas as pd
 import pygskin
 import requests
 from django.conf import settings as conf_settings
@@ -10,7 +11,7 @@ from django.template import loader
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
-from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm
+from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
 from .models import Cybercoach
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
@@ -56,7 +57,6 @@ def subscribed(request):
             model = form.save()
             template = loader.get_template("pygskin_webapp/subscribed.html")
             context = {}
-            print(send_newsletter_signup(model.email))  # send a confirmation email to the new subscriber
             return HttpResponse(template.render(context, request))
         else:
             return redirect('index')
@@ -137,6 +137,7 @@ def coach(request):
 
             # Render and return the template with context
             return render(request, "pygskin_webapp/coach.html", context)
+        
         else:
             # Redirect or show an error for invalid form data
             return redirect('index')
@@ -187,8 +188,11 @@ def cybercoach(request):
                 "model_accuracy": round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2),
                 "cybercoach_id": cybercoach_model.id,
                 "model_type": get_model_type_name(cybercoach_model.model_type),
+                "custom_scenario_form": CustomScenarioForm()  # Add the form to the context
             }
             for key, value in context.items():
+                if key == "custom_scenario_form":
+                    continue
                 request.session[key] = value
 
             # Render and return the template with context
@@ -298,6 +302,82 @@ def prediction(request):
         return render(request, "pygskin_webapp/prediction.html", context)
     else:
         # Redirect or show an error for non-POST requests
+        return redirect('index')
+    
+@ratelimit(key='ip', rate='3/m', method=ratelimit.ALL)  # rate limit to 3 requests per minute because machine learning models are computationally expensive
+def custom_prediction(request):
+    if request.method == 'POST':
+        if not request.session.get("cybercoach_id"):
+            return redirect('index')
+        form = CustomScenarioForm(request.POST)
+        if form.is_valid():
+            cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
+            try:
+                cybercoach_obj = pickle.load(open(os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename), "rb"))
+            except Exception as e:
+                return redirect('error')    # avoid exposing the error message to the user
+            
+            form_data = form.cleaned_data
+            # Default values for the fields not included in the form
+            scenario_values = {
+                'id': 0,
+                'drive_id': 0,
+                'game_id': 0,
+                'drive_number': 1,
+                'play_number': 1,
+                'offense': "Placeholder Offense Team",
+                'offense_conference': 'N/A',
+                'offense_score': form_data['offense_score'],
+                'defense': "Placeholder Defense Team",
+                'home': "Placeholder Home Team",
+                'away': "Placeholder Away Team",
+                'defense_conference': 'N/A',
+                'defense_score': form_data['defense_score'],
+                'period': form_data['period'],
+                'clock': {'minutes': form_data["minutes_remaining_in_quarter"], 'seconds': form_data["seconds_remaining_in_quarter"]},
+                'offense_timeouts': form_data['offense_timeouts'],
+                'defense_timeouts': form_data['defense_timeouts'],
+                'yard_line': form_data['yard_line'],
+                'yards_to_goal': 100 - form_data['yard_line'],
+                'down': form_data['down'],
+                'distance': form_data['distance'],
+                'yards_gained': 0,
+                'scoring': False,
+                'play_type': "Rush", # must have a value, but it doesn't matter
+                'play_text': 'N/A',
+                'ppa': 0.0,
+                'wallclock': '2024-05-14T00:00:00.000Z',
+                'week': 1,
+                'season': 2024,
+                'seconds_remaining': form_data["minutes_remaining_in_quarter"] * 60 + form_data["seconds_remaining_in_quarter"],
+                'score_diff': form_data['offense_score'] - form_data['defense_score'],
+                'passing_yards_per_attempt': form_data['passing_yards_per_attempt'],
+                'rushing_yards_per_attempt': form_data['rushing_yards_per_attempt'],
+                'play_call': 5, # must have a value, but it doesn't matter
+            }
+            
+            # Create a single-item DataFrame
+            scenario_df = pd.DataFrame([scenario_values])
+
+            # Prediction using the model
+            prediction = cybercoach_obj.call_drive(scenario_df, 1)
+
+            context = {
+                "drive_dict": scenario_df.to_dict(orient='records'),
+                "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
+                "first_year": cybercoach_obj.coach.first_year,
+                "last_year": cybercoach_obj.coach.last_year,
+                "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
+                "model_accuracy": round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2),
+                "model_type": get_model_type_name(cybercoach_model.model_type),
+                "cybercoach_id": cybercoach_model.id,
+                "prediction": prediction,
+            }
+            
+            return render(request, "pygskin_webapp/custom_prediction.html", context)
+        else:
+            return redirect('index')
+    else:
         return redirect('index')
 
 def handler400(request, *args, **argv):
