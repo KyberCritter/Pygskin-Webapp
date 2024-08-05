@@ -6,11 +6,11 @@
 
 <h1>{{ model_type }} Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
 <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
-<p><strong>Next, input a custom scenario OR pick a year and a game.</strong></p>
+<p><strong>Next, <a href="#play-input">input a custom scenario</a> OR <a href="#coach-selector">pick a year and a game</a>.</strong></p>
 
-<div class="play-input">
+<div class="play-input" id="play-input">
     <h2>Input a Custom Scenario</h2>
-    <p>Placeholder text.</p>
+    <p>Fill out the options below to predict what play {{ coach_name }} would call in a particular scenario.</p>
     <form action="{% url 'custom_prediction' %}" method="POST">
         {% csrf_token %}
         {{ custom_scenario_form.as_p }}
@@ -18,7 +18,7 @@
     </form>
 </div>
 
-<div class="coach-selector">
+<div class="coach-selector" id="coach-selector">
     <h2>Select a Year and Game</h2>
     <p>Conference, non-conference, and conference championships (if applicable) are available. Postseason (playoff and bowl) games will be added at a later date. Week 0 games are listed as Week 1.</p>
     <form action="{% url 'drive_select' %}" method="POST">
