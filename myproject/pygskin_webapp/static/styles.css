@@ -47,6 +47,8 @@ footer {
     margin-top: 40px;
     background-color: var(--turf-green);
     color: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
 html {
@@ -133,6 +135,7 @@ h3 {
     overflow-x: scroll;
     white-space: nowrap;
     width: 100%;
+    text-align: center;
 }
 
 .scrollable-table table {
