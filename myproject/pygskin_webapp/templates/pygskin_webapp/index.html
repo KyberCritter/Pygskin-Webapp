@@ -27,7 +27,7 @@
     </section>
 
     <section id="conference-realignment">
-        <h2>Visualize Conference Realignment</h2>
+        <h2><a href="{% url 'conference_analysis' %}" data-umami-event="conference-analysis-link">Visualize Conference Realignment</a></h2>
         <p>Check out just how crazy conference realignment has become with maps of the new, far-reaching conferences. This page provides an in-depth explanation of clustering techniques and how they can be applied to athletic conferences.</p>
         <div class="centered-button-container">
             <a id="conference-analysis-link" href="{% url 'conference_analysis' %}" class="button-link" data-umami-event="conference-analysis-link">Conference Realignment</a>
@@ -35,7 +35,7 @@
     </section>
     
     <section id="team-rankings">
-        <h2>Team Rankings</h2>
+        <h2><a href="{% url 'colley_matrix' %}" data-umami-event="colley-matrix-link">Team Rankings</a></h2>
         <p>Check out the latest Colley Matrix computer poll team rankings for the FBS. These results were computer generated using the original version of the Colley Matrix formula.</p>
         <div class="centered-button-container">
             <a id="colley-matrix-link" href="{% url 'colley_matrix' %}" class="button-link" data-umami-event="colley-matrix-link">Colley Matrix</a>
@@ -49,33 +49,27 @@
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group">
-                    {{ subscribe_form.first_name.label_tag }}
-                    {{ subscribe_form.first_name }}
+                    {{ subscribe_form.first_name.as_field_group }}
                 </div>
                 <div class="form-group">
-                    {{ subscribe_form.last_name.label_tag }}
-                    {{ subscribe_form.last_name }}
+                    {{ subscribe_form.last_name.as_field_group }}
                 </div>
             </div>
             <div class="form-row-single">
                 <div class="form-group">
-                    {{ subscribe_form.email.label_tag }}
-                    {{ subscribe_form.email }}
+                    {{ subscribe_form.email.as_field_group }}
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    {{ subscribe_form.reason_for_subscribing.label_tag }}
-                    {{ subscribe_form.reason_for_subscribing }}
+                    {{ subscribe_form.reason_for_subscribing.as_field_group }}
                 </div>
                 <div class="form-group">
-                    {{ subscribe_form.identity.label_tag }}
-                    {{ subscribe_form.identity }}
+                    {{ subscribe_form.identity.as_field_group }}
                 </div>
             </div>
             <div class="form-checkbox-and-label">
-                {{ subscribe_form.age_confirmation.label_tag }}
-                {{ subscribe_form.age_confirmation }}
+                {{ subscribe_form.age_confirmation.as_field_group }}
             </div>
             <button type="submit" data-umami-event="email-subscribe">Subscribe</button>
         </form>        

@@ -67,11 +67,11 @@ body {
     margin: 15px;
 }
 
-body a {
+body > a {
     color: var(--color-1);
 }
 
-body a:visited {
+body > a:visited {
     color: var(--color-5);
 }
 
@@ -88,6 +88,10 @@ h1 {
 h2 {
     color: var(--pylon-orange);
     font-size: x-large;
+}
+
+h2 a:visited {
+    color: var(--pylon-orange);
 }
 
 h3 {
