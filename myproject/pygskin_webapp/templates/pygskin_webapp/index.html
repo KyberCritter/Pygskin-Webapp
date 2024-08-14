@@ -29,14 +29,18 @@
     <section id="conference-realignment">
         <h2>Visualize Conference Realignment</h2>
         <p>Check out just how crazy conference realignment has become with maps of the new, far-reaching conferences. This page provides an in-depth explanation of clustering techniques and how they can be applied to athletic conferences.</p>
-        <a id="conference-analysis-link" href="{% url 'conference_analysis' %}" class="button-link" data-umami-event="conference-analysis-link">Conference Realignment</a>
+        <div class="centered-button-container">
+            <a id="conference-analysis-link" href="{% url 'conference_analysis' %}" class="button-link" data-umami-event="conference-analysis-link">Conference Realignment</a>
+        </div>
     </section>
-
+    
     <section id="team-rankings">
         <h2>Team Rankings</h2>
         <p>Check out the latest Colley Matrix computer poll team rankings for the FBS. These results were computer generated using the original version of the Colley Matrix formula.</p>
-        <a id="colley-matrix-link" href="{% url 'colley_matrix' %}" class="button-link" data-umami-event="colley-matrix-link">Colley Matrix</a>
-    </section>
+        <div class="centered-button-container">
+            <a id="colley-matrix-link" href="{% url 'colley_matrix' %}" class="button-link" data-umami-event="colley-matrix-link">Colley Matrix</a>
+        </div>
+    </section>    
 
     <section id="email-list">
         <h2>Sign Up for Email Updates</h2>

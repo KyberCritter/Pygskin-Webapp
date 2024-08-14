@@ -219,6 +219,13 @@ select.form-control:focus {
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
+.centered-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 a.button-link, a.button-link:visited {
     display: inline-block;
     background-color: var(--button-hover-color);
@@ -228,6 +235,9 @@ a.button-link, a.button-link:visited {
     text-align: center;
     text-decoration: none;
     transition: background-color 0.3s ease;
+    margin: 0 auto;
+    width: 50%;
+    max-width: 75vw;
 }
 
 a.button-link:hover, a.button-link:focus {
