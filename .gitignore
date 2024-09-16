@@ -168,3 +168,6 @@ Pipfile
 Pipfile.lock
 /notes.txt
 /notes.md
+
+#macOS DS Store
+.DS_Store
