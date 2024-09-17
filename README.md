@@ -1,7 +1,7 @@
 # Setup
 
 1. Clone the pygskin-webapp repo's cs-project branch.
-2. Create `.env` file at the root with the dummy contents from the # .env section of `README.md`.
+2. Create `.env` file at the root with the dummy contents from the **.env** section of `README.md`.
 3. Download `pygskin-0.1.1-py3-none-any.whl` from Pygskin releases page and copy to root of repo.
 4. Create an empty directory called `certs` in the root of the repo.
 5. Run `docker compose build` from root.
