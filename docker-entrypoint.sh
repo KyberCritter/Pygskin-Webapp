@@ -1,7 +1,7 @@
 #!/bin/sh
 
 echo "Waiting for Postgres to be ready..."
-while ! nc -z db 5432; do
+while ! ncat -z db 5432; do
   sleep 0.1
 done
 echo "Postgres is ready."
