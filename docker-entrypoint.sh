@@ -1,11 +1,5 @@
 #!/bin/sh
 
-echo "Waiting for Postgres to be ready..."
-while ! ncat -z db 5432; do
-  sleep 0.1
-done
-echo "Postgres is ready."
-
 # Check if the database is initialized
 echo "Checking if the database exists..."
 RESULT=$(PGPASSWORD=$POSTGRES_PASSWORD psql -h db -U $POSTGRES_USER -tc "SELECT 1 FROM pg_database WHERE datname='$POSTGRES_DB'")
