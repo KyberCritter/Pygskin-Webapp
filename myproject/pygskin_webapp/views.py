@@ -146,6 +146,56 @@ def coach(request):
         # Adjust the redirect path as necessary
         return redirect('index')
 
+# @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
+def coach_stats(request):
+    form = CoachSelectForm(request.GET)  # Initialize form with GET data
+    coach_data = None
+    play_dist = None
+    play_dist_4th_down = None
+    play_types = None
+    colors = None
+    coach_seasons = None
+
+    if 'coach' in request.GET:  # Check if 'coach' is in the GET data
+        if form.is_valid():
+            selected_coach = form.cleaned_data['coach']
+            # Load the cybercoach data
+            cybercoach_obj = Cybercoach.objects.filter(coach=selected_coach).first()
+            if cybercoach_obj:
+                cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_obj.model_filename)
+                try:
+                    with open(cybercoach_path, "rb") as f:
+                        cybercoach = pickle.load(f)
+
+                    # Gather playcalling statistics
+                    play_dist = [cybercoach.play_distribution[key] for key in sorted(cybercoach.play_distribution.keys())]
+                    play_dist_4th_down = [cybercoach.play_distribution_by_down[4][key] for key in sorted(cybercoach.play_distribution_by_down[4].keys())]
+                    play_types = [pygskin.PlayType(key).name for key in sorted(cybercoach.play_distribution.keys())]
+                    colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in sorted(cybercoach.play_distribution.keys())]
+
+                    # Gather coach data
+                    coach_data = {
+                        "name": f"{selected_coach.first_name} {selected_coach.last_name}",
+                        "biography": selected_coach.biography,
+                        "first_year": cybercoach.coach.first_year,
+                        "last_year": cybercoach.coach.last_year,
+                    }
+                    coach_seasons = cybercoach.coach.coach_dict["seasons"]
+
+                except Exception as e:
+                    return redirect('error')  # Avoid exposing errors to the user
+
+    context = {
+        "coach_form": form,
+        "coach_data": coach_data,
+        "play_dist": play_dist,
+        "play_dist_4th_down": play_dist_4th_down,
+        "play_types": play_types,
+        "colors": colors,
+        "coach_seasons": coach_seasons,
+    }
+    return render(request, 'pygskin_webapp/coach_stats.html', context)
+
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def cybercoach(request):
     # Only proceed if this is a POST request

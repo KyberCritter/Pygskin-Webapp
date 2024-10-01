@@ -40,6 +40,7 @@ urlpatterns = [
     path("about/", views.about, name="about"),
     path("conference_analysis/", views.conference_analysis, name="conference_analysis"),
     path("colley_matrix/", views.colley_matrix, name="colley_matrix"),
+    path("coach_stats/", views.coach_stats, name="coach_stats"),
 ]
 
 handler400 = "pygskin_webapp.views.handler400"

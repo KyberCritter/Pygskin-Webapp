@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Hello World{% endblock %}
+
+{% block content %}
+    <h1>Form Proof of Concept</h1>
+    <p>The goal of this is to be able to select a coach and see their information. This will be used for the coach statistics page.</p>
+
+    <section id="coach-stats">
+        <form action="{% url 'coach_stats' %}" id="id_coach" method="GET">
+            {{ coach_form.as_p }}
+        </form>
+    </section>
+
+    {% if coach_data %}
+    <section id="coach-info">
+        <h2>{{ coach_data.name }} Statistics</h2>
+        <p>{{ coach_data.biography }}</p>
+
+        <h2>Included Seasons</h2>
+        <div class="scrollable-table">
+        {% if coach_seasons %}
+            <table>
+                <thead>
+                    <tr>
+                    {% for key in coach_seasons.0.keys %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in coach_seasons %}
+                    <tr>
+                        {% for value in item.values %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No items found.</p>
+        {% endif %}
+        </div>
+
+        <h2>Playcalling Tendencies</h2>
+        <div class="vertically-aligned-container">
+            
+            <h3>Play Calls on 4th Down</h3>
+            <div id="playDist4thDownChart"></div>
+            <h3>Play Calls on All Downs</h3>
+            <div id="playDistChart"></div>
+        </div>
+
+        <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" charset="utf-8"></script>
+        <script>
+            var all_play_dist = [{
+                values: {{ play_dist|safe }},
+                labels: {{ play_types|safe }},
+                marker: { colors: {{ colors|safe }} },
+                type: 'pie'
+            }];
+            var play_dist_4th = [{
+                values: {{ play_dist_4th_down|safe }},
+                labels: {{ play_types|safe }},
+                marker: { colors: {{ colors|safe }} },
+                type: 'pie'
+            }];
+
+            var layout = {
+                plot_bgcolor: 'rgba(0, 0, 0, 0)',
+                paper_bgcolor: 'rgba(0, 0, 0, 0)',
+                margin: {
+                    l: 20,
+                    r: 20,
+                    b: 20,
+                    t: 20
+                },
+            };
+
+            document.addEventListener('DOMContentLoaded', function() {
+                Plotly.newPlot("playDistChart", all_play_dist, layout);
+                Plotly.newPlot("playDist4thDownChart", play_dist_4th, layout);
+            });
+        </script>
+    </section>
+    {% endif %}
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const coachSelect = document.querySelector('#id_coach');
+            if (coachSelect) {
+               coachSelect.addEventListener('change', function () {
+                   document.getElementById('id_coach').submit();
+               });
+            }
+        });
+    </script>
+
+    {% endblock %}
