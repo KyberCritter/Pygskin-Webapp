@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG") == "TRUE"
+DEBUG = os.getenv("DEBUG").upper() == "TRUE"
 
 # Cybercoach loading
 PATH_TO_CYBERCOACHES = "/app/myproject/pygskin_webapp/cybercoaches" if os.getenv("RUNNING_ON") == "DOCKER" else "./myproject/pygskin_webapp/cybercoaches"
