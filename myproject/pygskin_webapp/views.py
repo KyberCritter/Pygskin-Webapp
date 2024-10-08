@@ -105,7 +105,11 @@ def coach(request):
                 return redirect('error')    # avoid exposing the error message to the user
             cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_obj.model_filename)
             try:
+                #if(cybercoach_path.find('..')):
+                    #raise RuntimeError("Pls do not hack my server")
+                
                 cybercoach = pickle.load(open(cybercoach_path, "rb"))
+
             except Exception as e:                
                 return redirect('error')    # avoid exposing the error message to the user
 
