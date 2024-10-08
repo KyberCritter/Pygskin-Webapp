@@ -15,8 +15,17 @@
 
 {% if coach_name %}
 <section id="coach-info">
-    <h2>{{ model_type }} Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{
-        first_year }}-{{ last_year }}){% endif %}</h2>
+    <h2>
+        {{ model_type }} Cybercoach of {{ coach_name }} 
+        {% if first_year and last_year %}
+          {% if first_year == last_year %}
+            ({{ first_year }})
+          {% else %}
+            ({{ first_year }}-{{ last_year }})
+          {% endif %}
+        {% endif %}
+      </h2>
+      
     <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the
         beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were
         withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{
@@ -167,20 +176,6 @@
 
     groupDrivesByYearAndWeek(playData, firstYear);
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const cybercoachSelect = document.querySelector('#id_cybercoach');
-        if (cybercoachSelect) {
-            cybercoachSelect.addEventListener('change', function () {
-                document.getElementById('cybercoach-form').submit();
-            });
-            updateOpponentDropdown();
-        }
-        var cybercoachId = getURLParameter('cybercoach'); // Get the 'cybercoach' id from URL
-        if (cybercoachId) {
-            document.getElementById('cybercoach_id').value = cybercoachId; // Set the value of the hidden input field to pass cybercoach ID to prediction page
-        }
-    });
-
     function updateOpponentDropdown() {
         const yearSelect = document.getElementById('year-select');
         const opponentSelect = document.getElementById('opponent-select');
@@ -235,6 +230,25 @@
             }
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const cybercoachSelect = document.querySelector('#id_cybercoach');
+        if (cybercoachSelect) {
+            cybercoachSelect.addEventListener('change', function () {
+                const selectedValue = cybercoachSelect.value;
+                if (selectedValue && selectedValue !== 'None') {
+                    document.getElementById('cybercoach-form').submit();
+                }
+            });
+            updateOpponentDropdown();
+        }
+
+        // If cybercoach_id is None or invalid, don't proceed
+        var cybercoachId = getURLParameter('cybercoach'); // Get 'cybercoach' id from URL
+        if (cybercoachId && cybercoachId !== 'None') {
+            document.getElementById('cybercoach_id').value = cybercoachId; // Set hidden input
+        }
+    });
 
     function getURLParameter(name) {
         const urlParams = new URLSearchParams(window.location.search);

@@ -268,6 +268,14 @@ def cybercoach_select(request):
     opponents_by_year = None
     serialized_play_data = None
 
+    # Redirect to default first cybercoach if no 'cybercoach' is in the GET request
+    if 'cybercoach' not in request.GET or not request.GET['cybercoach']:
+        # Fetch the first available cybercoach
+        first_cybercoach = Cybercoach.objects.first()
+        if first_cybercoach:
+            # Redirect to the page with the first cybercoach selected
+            return redirect(f'/cybercoach_select/?cybercoach={first_cybercoach.id}')
+
     if 'cybercoach' in request.GET:  # Check if 'cybercoach' is in the GET data
         if form.is_valid():
             selected_cybercoach = form.cleaned_data['cybercoach']
