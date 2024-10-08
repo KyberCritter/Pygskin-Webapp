@@ -146,7 +146,7 @@ def coach(request):
         # Adjust the redirect path as necessary
         return redirect('index')
 
-# @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
+@ratelimit(key='ip', rate='10/m', method=ratelimit.ALL)
 def coach_stats(request):
     form = CoachSelectForm(request.GET)  # Initialize form with GET data
     coach_data = None
@@ -253,6 +253,61 @@ def cybercoach(request):
     else:
         # Redirect or show an error for non-POST requests
         return redirect('index')
+
+@ratelimit(key='ip', rate='10/m', method=ratelimit.ALL)
+def cybercoach_select(request):
+    form = CybercoachSelectForm(request.GET)  # Initialize form with GET data
+    custom_scenario_form = None
+    coach_name = None
+    model_type = None
+    first_year = None
+    last_year = None
+    model_accuracy = None
+    opponents_by_year = None
+
+    if 'cybercoach' in request.GET:  # Check if 'cybercoach' is in the GET data
+        if form.is_valid():
+            selected_cybercoach = form.cleaned_data['cybercoach']
+            if selected_cybercoach:
+                cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, selected_cybercoach.model_filename)
+                try:
+                    with open(cybercoach_path, "rb") as f:
+                        cybercoach_obj = pickle.load(f)
+
+                    # Gather details about the coach and model
+                    coach_name = f"{selected_cybercoach.coach.first_name} {selected_cybercoach.coach.last_name}"
+                    model_type = selected_cybercoach.model_type
+                    first_year = cybercoach_obj.coach.first_year
+                    last_year = cybercoach_obj.coach.last_year
+                    model_accuracy = round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2)
+                    custom_scenario_form = CustomScenarioForm()
+
+                    # Gather opponents by year data
+                    opponents_by_year = {}
+                    for year in range(first_year, last_year + 1):
+                        opponent_list = []
+                        current_team = cybercoach_obj.coach.coach_school_dict[year]
+                        for game in cybercoach_obj.coach.games_list:
+                            if game.game_dict["season"] == year and game.game_dict["home_team"] == current_team and (game.game_dict["away_team"], game.game_dict["week"]) not in opponent_list:
+                                opponent_list.append((game.game_dict["away_team"], game.game_dict["week"]))
+                            elif game.game_dict["season"] == year and game.game_dict["away_team"] == current_team and (game.game_dict["home_team"], game.game_dict["week"]) not in opponent_list:
+                                opponent_list.append((game.game_dict["home_team"], game.game_dict["week"]))
+                        opponents_by_year[year] = opponent_list
+
+                except Exception as e:
+                    return redirect('error')  # Avoid exposing errors to the user
+
+    context = {
+        "cybercoach_form": form,
+        "custom_scenario_form": custom_scenario_form,
+        "coach_name": coach_name,
+        "model_type": model_type,
+        "first_year": first_year,
+        "last_year": last_year,
+        "model_accuracy": model_accuracy,
+        "opponents_by_year": opponents_by_year,
+    }
+    return render(request, 'pygskin_webapp/cybercoach_select.html', context)
 
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def drive_select(request):
