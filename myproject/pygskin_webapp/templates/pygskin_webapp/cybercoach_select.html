@@ -92,6 +92,9 @@
             and bowl) games will be added at a later date. Week 0 games are listed as Week 1.</p>
         <form action="{% url 'prediction' %}" method="POST">
             {% csrf_token %}
+
+            <input type="hidden" id="cybercoach_id" name="cybercoach_id" value="1">
+            
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <label for="year-select">Choose a year:</label>
@@ -172,6 +175,10 @@
             });
             updateOpponentDropdown();
         }
+        var cybercoachId = getURLParameter('cybercoach'); // Get the 'cybercoach' id from URL
+        if (cybercoachId) {
+            document.getElementById('cybercoach_id').value = cybercoachId; // Set the value of the hidden input field to pass cybercoach ID to prediction page
+        }
     });
 
     function updateOpponentDropdown() {
@@ -227,6 +234,11 @@
                 driveSelect.appendChild(option);
             }
         }
+    }
+
+    function getURLParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
     }
 </script>
 

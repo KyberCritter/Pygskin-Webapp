@@ -367,36 +367,48 @@ def drive_select(request):
         # Redirect or show an error for non-POST requests
         return redirect('index')
 
-@ratelimit(key='ip', rate='3/m', method=ratelimit.ALL)  # rate limit to 3 requests per minute because machine learning models are computationally expensive
+@ratelimit(key='ip', rate='10/m', method=ratelimit.ALL)
 def prediction(request):
     if request.method == 'POST':
-        if not request.session["cybercoach_id"]:
-            return redirect('index')
-        cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
+        # Get the cybercoach ID, year, opponent, and drive from the form
+        cybercoach_id = request.POST.get('cybercoach_id')
+        selected_year = int(request.POST.get('year'))
+        selected_opponent = request.POST.get('opponent')
+        drive_number = int(request.POST.get('drive-number'))
+
         try:
+            # Load the cybercoach object
+            cybercoach_model = Cybercoach.objects.get(id=cybercoach_id)
             cybercoach_obj = pickle.load(open(os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename), "rb"))
         except Exception as e:
-            return redirect('error')    # avoid exposing the error message to the user
+            return redirect('error')
 
-        selected_opponent = request.session['selected_opponent']
-        current_team = request.session['current_team']
+        # Split the opponent and week from the opponent input
         current_opponent = selected_opponent.split(",")[0]
-        selected_week = request.session['selected_week']
-        selected_year = request.session['selected_year']
-        try:
-            drive_number = int(request.POST.get('drive-number'))
-        except Exception as e:
-            return redirect('error')    # avoid exposing the error message to the user
+        selected_week = int(selected_opponent.split(",")[1])
 
-        drive_df = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == selected_week) & (cybercoach_obj.original_play_df["drive_number"] == drive_number)]
+        # Determine the current team based on the selected year
+        current_team = cybercoach_obj.coach.coach_school_dict[selected_year]
+
+        # Filter the plays for the selected drive
+        drive_df = cybercoach_obj.original_play_df[
+            (cybercoach_obj.original_play_df["season"] == selected_year) &
+            (cybercoach_obj.original_play_df["offense"] == current_team) &
+            (cybercoach_obj.original_play_df["defense"] == current_opponent) &
+            (cybercoach_obj.original_play_df["week"] == selected_week) &
+            (cybercoach_obj.original_play_df["drive_number"] == drive_number)
+        ]
+
+        # Call the model's prediction function and compare with the actual plays
         prediction = cybercoach_obj.call_drive(drive_df, len(drive_df) + 100).tolist()
         actual_calls = drive_df["play_call"].tolist()
         predictions_and_actual = list(zip(prediction, actual_calls))
 
-        # remove columns that don't need to be displayed to the user
+        # Remove columns that aren't needed for display
         drive_df = drive_df.drop(columns=["id", "drive_id", "game_id"], axis=1, errors='ignore')
         drive_dict = drive_df.to_dict(orient='records')
 
+        # Prepare the context for rendering the page
         context = {
             "selected_year": selected_year,
             "selected_week": selected_week,
@@ -404,22 +416,19 @@ def prediction(request):
             "current_team": current_team,
             "drive_dict": drive_dict,
             "predictions_and_actual": predictions_and_actual,
-            "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
+            "coach_name": f"{cybercoach_obj.coach.coach_dict['first_name']} {cybercoach_obj.coach.coach_dict['last_name']}",
             "first_year": cybercoach_obj.coach.first_year,
             "last_year": cybercoach_obj.coach.last_year,
-            "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
             "drive_number": drive_number,
             "model_accuracy": round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2),
             "model_type": get_model_type_name(cybercoach_model.model_type),
             "cybercoach_id": cybercoach_model.id,
         }
-        for key, value in context.items():
-            request.session[key] = value
-        
+
         return render(request, "pygskin_webapp/prediction.html", context)
     else:
-        # Redirect or show an error for non-POST requests
         return redirect('index')
+
     
 @ratelimit(key='ip', rate='3/m', method=ratelimit.ALL)  # rate limit to 3 requests per minute because machine learning models are computationally expensive
 def custom_prediction(request):
