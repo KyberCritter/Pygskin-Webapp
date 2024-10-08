@@ -110,6 +110,55 @@
 {{ opponents_by_year|json_script:"opponentYearsData" }}
 
 <script>
+
+function groupDrivesByYearAndWeek(playData, firstYear) {
+        const drivesByYearAndWeek = {};
+        let currentYear = firstYear;  // Start with the first year
+        let previousWeek = 0;         // Initialize a variable to track the last week processed
+
+        // Iterate over the playData["drive_number"] and playData["week"]
+        for (let i = 0; i < playData["drive_number"].length; i++) {
+            let week = playData["week"][i];        // Get the current week
+            let drive = playData["drive_number"][i]; // Get the drive number
+
+            // If the current week is less than the previous week, increment the year
+            if (week < previousWeek) {
+                currentYear += 1;
+            }
+
+            // Initialize the current year in the drivesByYearAndWeek object if it doesn't exist
+            if (!drivesByYearAndWeek[currentYear]) {
+                drivesByYearAndWeek[currentYear] = {};
+            }
+
+            // Initialize the current week in the current year if it doesn't exist
+            if (!drivesByYearAndWeek[currentYear][week]) {
+                drivesByYearAndWeek[currentYear][week] = new Set();
+            }
+
+            // Add the drive number to the corresponding year and week
+            drivesByYearAndWeek[currentYear][week].add(drive);
+
+            // Update previousWeek to the current week for the next iteration
+            previousWeek = week;
+        }
+
+        // Print the results in the desired format
+        for (let year in drivesByYearAndWeek) {
+            console.log(`Year ${year}:`);
+            for (let week in drivesByYearAndWeek[year]) {
+                const drivesArray = Array.from(drivesByYearAndWeek[year][week]);
+                console.log(`  Week ${week}: ${drivesArray.join(', ')}`);
+            }
+        }
+    }
+
+    const firstYear = {{ first_year }};
+    const playData = JSON.parse('{{ play_data|escapejs }}');
+    
+    groupDrivesByYearAndWeek(playData, firstYear);
+    // PASS IT EACH YEAR OF THE COACH'S TENURE. ONLY PASS IT THE DRIVE AND WEEK DATA******FIXME HERE
+
     document.addEventListener('DOMContentLoaded', function () {
         const cybercoachSelect = document.querySelector('#id_cybercoach');
         if (cybercoachSelect) {

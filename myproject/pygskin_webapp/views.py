@@ -1,6 +1,8 @@
 import os
 import pickle
 
+import json
+
 import pandas as pd
 import pygskin
 import requests
@@ -264,6 +266,7 @@ def cybercoach_select(request):
     last_year = None
     model_accuracy = None
     opponents_by_year = None
+    serialized_play_data = None
 
     if 'cybercoach' in request.GET:  # Check if 'cybercoach' is in the GET data
         if form.is_valid():
@@ -281,6 +284,14 @@ def cybercoach_select(request):
                     last_year = cybercoach_obj.coach.last_year
                     model_accuracy = round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2)
                     custom_scenario_form = CustomScenarioForm()
+
+                    filtered_play_data = cybercoach_obj.original_play_df[
+                        (cybercoach_obj.original_play_df["season"] >= first_year) &
+                        (cybercoach_obj.original_play_df["season"] <= last_year)
+                    ][['drive_number', 'week', 'season']].to_dict(orient="list")  # Convert to dictionary
+
+                    # Serialize the filtered play data
+                    serialized_play_data = json.dumps(filtered_play_data)
 
                     # Gather opponents by year data
                     opponents_by_year = {}
@@ -306,6 +317,7 @@ def cybercoach_select(request):
         "last_year": last_year,
         "model_accuracy": model_accuracy,
         "opponents_by_year": opponents_by_year,
+        "play_data": serialized_play_data,
     }
     return render(request, 'pygskin_webapp/cybercoach_select.html', context)
 
