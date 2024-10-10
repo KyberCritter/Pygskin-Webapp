@@ -3,8 +3,8 @@
 {% block content %}
 
 <section id="login-form">
-    {% if user_logged_in %}
-        <h2>{{ first_name }} {{ last_name }} is logged in</h2>
+    {% if user.is_authenticated %}
+        <h2>{{ user.first_name }} {{ user.last_name }} is logged in</h2>
         <form method="POST" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-danger">Logout</button>

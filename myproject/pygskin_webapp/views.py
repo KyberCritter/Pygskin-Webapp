@@ -81,13 +81,14 @@ def signup_view(request):
     }
     return HttpResponse(template.render(context, request))
     
+from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.shortcuts import render, redirect
+
 def login_view(request):
     if request.user.is_authenticated:
-        return render(request, 'pygskin_webapp/login.html', {
-            'user_logged_in': True,
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-        })
+        return render(request, 'pygskin_webapp/login.html')
 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -99,12 +100,18 @@ def login_view(request):
             if user is not None:
                 auth_login(request, user)
                 return redirect('login')
-            
+            else:
+                messages.error(request, "Invalid username or password.")
         else:
             messages.error(request, "Invalid username or password.")
-        
+
     form = AuthenticationForm()
-    return render(request, 'pygskin_webapp/login.html', {'form': form, 'user_logged_in': False})
+    return render(request, 'pygskin_webapp/login.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)  # Log out the user
+    return redirect('logout')  # Redirect to the logged-out page
 
 def license(request):
     template = loader.get_template("pygskin_webapp/license.html")
