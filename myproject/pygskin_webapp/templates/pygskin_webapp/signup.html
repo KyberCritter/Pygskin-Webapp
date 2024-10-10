@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="homepage">
+    <section id="email-list">
+        <h2>Create an Account</h2>
+        <p>By submitting this form, you consent to receive marketing emails from Pygskin and Scott Ratchford. Please see the <a href="{% url 'privacy' %}">privacy policy</a> for more information about how your data is processed. To revoke your consent at any time, <a data-umami-event="clicked-privacy-mailto-link" href="mailto:privacy@mail.pygskin.com?subject=Data Deletion Request&body=Please delete my email address from the Pygskin records.">email us</a> with the subject line "Data Deletion Request" from the email address to remove from our records.</p>
+        <form action="{% url 'subscribed' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group">
+                    {{ subscribe_form.first_name.as_field_group }}
+                </div>
+                <div class="form-group">
+                    {{ subscribe_form.last_name.as_field_group }}
+                </div>
+            </div>
+            <div class="form-row-single">
+                <div class="form-group">
+                    {{ subscribe_form.email.as_field_group }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    {{ subscribe_form.reason_for_subscribing.as_field_group }}
+                </div>
+                <div class="form-group">
+                    {{ subscribe_form.identity.as_field_group }}
+                </div>
+            </div>
+            <div class="form-checkbox-and-label">
+                {{ subscribe_form.age_confirmation.as_field_group }}
+            </div>
+            <button type="submit" data-umami-event="email-subscribe">Subscribe</button>
+        </form> 
+    </section>
+    
+    <section id="login-section">
+        <h2>Already have an account?</h2>
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+    </section>
+</div>
+
+
+{% endblock %}

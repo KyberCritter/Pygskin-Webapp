@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section id="login-form">
+    {% if user_logged_in %}
+        <h2>{{ first_name }} {{ last_name }} is logged in</h2>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    {% else %}
+        <h2>Login</h2>
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+
+        <!-- Display errors -->
+        {% if messages %}
+        <div class="alert alert-danger">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endif %}
+</section>
+
+{% endblock %}

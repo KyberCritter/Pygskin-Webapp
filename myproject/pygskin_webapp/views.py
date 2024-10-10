@@ -13,6 +13,13 @@ from django.template import loader
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
+# Brooks imported libraries
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import logout
+from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
 from .models import Cybercoach
 
@@ -64,6 +71,38 @@ def subscribed(request):
             return redirect('index')
     else:
         return redirect('index')
+
+def signup_view(request):
+    template = loader.get_template("pygskin_webapp/signup.html")
+    context = {
+        "subscribe_form": SubscriberForm(),
+    }
+    return HttpResponse(template.render(context, request))
+    
+def login_view(request):
+    if request.user.is_authenticated:
+        return render(request, 'pygskin_webapp/login.html', {
+            'user_logged_in': True,
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+        })
+
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                auth_login(request, user)
+                return redirect('login')
+            
+        else:
+            messages.error(request, "Invalid username or password.")
+        
+    form = AuthenticationForm()
+    return render(request, 'pygskin_webapp/login.html', {'form': form, 'user_logged_in': False})
 
 def license(request):
     template = loader.get_template("pygskin_webapp/license.html")

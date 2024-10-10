@@ -42,6 +42,8 @@ urlpatterns = [
     path("colley_matrix/", views.colley_matrix, name="colley_matrix"),
     path("coach_stats/", views.coach_stats, name="coach_stats"),
     path("cybercoach_select/", views.cybercoach_select, name="cybercoach_select"),
+    path("login/", views.login_view, name="login"),
+    path("signup/", views.signup_view, name="signup"),
 ]
 
 handler400 = "pygskin_webapp.views.handler400"
