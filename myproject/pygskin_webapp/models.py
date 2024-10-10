@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from pygskin import ModelType
+from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import User
 
 class Coach(models.Model):
     """Model representing a coach."""
@@ -51,11 +53,15 @@ class Subscriber(models.Model):
         ('OTHER', 'Other'),
     ]
 
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True) # Links Djangos built-in User model
+    username = models.CharField(max_length=100, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     reason_for_subscribing = models.CharField(max_length=50, choices=REASON_CHOICES, default='CFB')
     identity = models.CharField(max_length=50, choices=IDENTITY_CHOICES, default='FAN')
+    email_updates = models.BooleanField(default=True)
     date_subscribed = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

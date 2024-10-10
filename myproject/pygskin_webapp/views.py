@@ -14,14 +14,15 @@ from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
 # Brooks imported libraries
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from django.contrib.auth.models import User
 
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
-from .models import Cybercoach
+from .models import Cybercoach, Subscriber
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -63,12 +64,13 @@ def subscribed(request):
     if request.method == 'POST':
         form = SubscriberForm(request.POST)
         if form.is_valid():
-            model = form.save()
+            form.save()
             template = loader.get_template("pygskin_webapp/subscribed.html")
             context = {}
             return HttpResponse(template.render(context, request))
         else:
-            return redirect('index')
+            messages.error(request, "This was an error with your submission.")
+            return render(request, 'pygskin_webapp/index.html', {'subscribe_form': form})
     else:
         return redirect('index')
 

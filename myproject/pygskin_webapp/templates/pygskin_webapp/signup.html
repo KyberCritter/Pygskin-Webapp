@@ -10,6 +10,14 @@
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group">
+                    {{ subscribe_form.username.as_field_group }}
+                </div>
+                <div class="form-group">
+                    {{ subscribe_form.password.as_field_group }}
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
                     {{ subscribe_form.first_name.as_field_group }}
                 </div>
                 <div class="form-group">
