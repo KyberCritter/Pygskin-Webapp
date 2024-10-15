@@ -3,6 +3,7 @@
 {% block content %}
 <section id="logged-out-message">
     <h2>You have been logged out.</h2>
-    <a href="{% url 'login' %}" class="btn btn-primary">Login Again</a>
+    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+    <a href="{% url index %}" class="btn btn-primary">Return to home page</a>
 </section>
 {% endblock %}

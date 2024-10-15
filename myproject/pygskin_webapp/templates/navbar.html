@@ -19,7 +19,14 @@
         <a href="{% url 'colley_matrix' %}" class="{% if request.path == '/colley_matrix/' %}active{% endif %}">Team Rankings</a>
     </div>
 
-    <div class="navbar-menu">
+    <!-- <div class="navbar-menu">
         <a href="{% url 'signup' %}" class="{% if request.path == '/signup/' %}active{% endif %}">Login</a>
+    </div> -->
+    <div class="navbar-menu">
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="{% if request.path == '/profile/' %}active{% endif %}">Profile</a>
+        {% else %}
+            <a href="{% url 'signup' %}" class="{% if request.path == '/signup/' %}active{% endif %}">Login</a>
+        {% endif %}
     </div>
 </div>
