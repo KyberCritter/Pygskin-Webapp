@@ -86,7 +86,8 @@ def signup_view(request):
 def login_view(request):
     # If user already logged in, redirect to login page with name displayed
     if request.user.is_authenticated:
-        return render(request, 'pygskin_webapp/login.html')
+        #return render(request, 'pygskin_webapp/login.html')
+        return redirect('profile')
 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
@@ -101,7 +102,7 @@ def login_view(request):
             # Should change this later to profile page
             if user is not None:
                 auth_login(request, user)
-                return redirect('login')
+                return redirect('profile')
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -118,6 +119,18 @@ def logout_view(request):
     # Should add in a page that notifies user of successful logout
     # and has an option to return back to the home page
     return redirect('index')
+
+def profile_view(request):
+    # Make sure user is authenticated before accessing profile page
+    # If not authenticated, redirect to login page
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    return render(request, 'pygskin_webapp/profile.html', {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'email': request.user.email
+    })
 
 def license(request):
     template = loader.get_template("pygskin_webapp/license.html")
