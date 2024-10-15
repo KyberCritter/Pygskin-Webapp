@@ -21,7 +21,19 @@
 
     --mobile-view-max-width: 768px;
 
-    font-family: Tahoma, sans-serif;
+    /* For the all caps text: */
+    font-family: 'Fugaz One', sans-serif;
+    font-weight: 400;
+
+    /* For the bold body text: */
+    /*
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700; */
+
+    /* For the regular body text: */
+    /*
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400; */
 }
 
 /* Common styles */
@@ -40,6 +52,8 @@ header {
 }
 
 footer {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -119,8 +133,8 @@ h3 {
 }
 
 .navbar-menu a {
-    font-family: 'Inter', sans-serif;
-    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
     color: #333333;
     text-decoration: none;
     padding: 8px 16px;
@@ -369,4 +383,26 @@ input[type="text"], input[type="email"], select {
     min-width: 300px;
     max-height: 400px;
     min-height: 300px;
+}
+
+/* New fonts*/
+@font-face {
+    font-family: 'DM Sans';
+    src: url("fonts/DM_Sans/DMSans_18pt-Regular.ttf") format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DM Sans';
+    src: url("fonts/DM_Sans/DMSans_18pt-Bold.ttf") format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fugaz One';
+    src: url("fonts/Fugaz_One/FugazOne-Regular.ttf") format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }
