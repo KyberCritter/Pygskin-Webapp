@@ -20,6 +20,7 @@ from django.contrib.auth import login as auth_login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
 from .models import Cybercoach, Subscriber
@@ -80,23 +81,24 @@ def signup_view(request):
         "subscribe_form": SubscriberForm(),
     }
     return HttpResponse(template.render(context, request))
-    
-from django.contrib.auth import authenticate, login as auth_login
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib import messages
-from django.shortcuts import render, redirect
 
+@ensure_csrf_cookie
 def login_view(request):
+    # If user already logged in, redirect to login page with name displayed
     if request.user.is_authenticated:
         return render(request, 'pygskin_webapp/login.html')
 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
+            # If the form is valid, get username and password from form
+            # and authenticate with Djangos built-in system
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=username, password=password)
 
+            # If user exists, redirect to login page
+            # Should change this later to profile page
             if user is not None:
                 auth_login(request, user)
                 return redirect('login')
@@ -111,7 +113,11 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)  # Log out the user
-    return redirect('logout')  # Redirect to the logged-out page
+    
+    # For now, we will redirect to the index page.
+    # Should add in a page that notifies user of successful logout
+    # and has an option to return back to the home page
+    return redirect('index')
 
 def license(request):
     template = loader.get_template("pygskin_webapp/license.html")
