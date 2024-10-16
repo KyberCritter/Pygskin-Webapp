@@ -19,7 +19,7 @@ class CybercoachSelectForm(forms.Form):
     # Create a choice field populated with cybercoach names
     cybercoach = forms.ModelChoiceField(
         queryset=Cybercoach.objects.all(),
-        label="Select a Cybercoach",
+        label="SELECT A CYBERCOACH",
         empty_label="Choose a cybercoach",
         to_field_name="id",
         widget=forms.Select(attrs={'class': 'form-control'})
