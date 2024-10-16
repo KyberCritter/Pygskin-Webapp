@@ -31,6 +31,10 @@
 
     label {
         color: #FFCC00 !important;
+        font-size: 28px !important;
+        flex: 0 0 35%;
+        margin-bottom: 0px !important;
+        margin-top: 5px !important;
     }
 
     section#cybercoaches {
@@ -40,12 +44,22 @@
     p {
         display: flex;
     }
+
+    .form-control {
+        margin-bottom: 5px;
+    }
+
+    select.form-control {
+        margin-bottom: 5px !important;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+    }
 </style>
 
 <div class="cybercoach-container">
     <div class="cybercoach-header">
         <section id="cybercoaches">
-            <form action="{% url 'cybercoach_select' %}" id="cybercoach-form" style="background-color:#008703; margin-top: 0px; margin-bottom: 0px;" method="GET">
+            <form action="{% url 'cybercoach_select' %}" id="cybercoach-form" style="background-color:#008703; margin-top: 0px; margin-bottom: 0px; padding-top:5px; padding-bottom: 5px;" method="GET">
                 {{ cybercoach_form.as_p }}
             </form>
         </section>
