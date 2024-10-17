@@ -4,61 +4,110 @@
 
 {% block content %}
 
-<h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
+<style>
+    p {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+    }
 
-<h2>Cybercoach Statistics</h2>
-<p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
-<p>You selected drive {{ drive_number }} of <em>{{ current_team }} vs. {{ selected_opponent }}</em> in week {{ selected_week }} of {{ selected_year }}.</p>
-<p>These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that drive.</p>
+    .header-container {
+        background-color: #006106;
+        border-radius: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .group {
+        display: block !important;
+        padding: 20px !important;
+        border-radius: 15px;
+        background-color: #008703;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin: 10px;
+    }
 
-<h2>Predicted and Actual Play Calls</h2>
-<div class="scrollable-table">
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Play #</th>
-                <th>Predicted</th>
-                <th>Actual</th>
-                <th>Correct</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for pred, actual in predictions_and_actual %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{% if pred == 0 %}Pass{% elif pred == 1 %}Rush{% elif pred == 2 %}Field Goal{% elif pred == 3 %}PAT{% elif pred == 4 %}Punt{% else %}Other{% endif %}</td>
-                    <td>{% if actual == 0 %}Pass{% elif actual == 1 %}Rush{% elif actual == 2 %}Field Goal{% elif actual == 3 %}PAT{% elif actual == 4 %}Punt{% else %}Other{% endif %}</td>
-                    <td>{% if pred == actual %}✅{% else %}❌{% endif %}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    h1 {
+        font-family: 'Fugaz One', sans-serif;
+        font-weight: 700;
+        color: #FFDE21 !important;
+        margin-bottom: 10px;
+        text-align: center;
+        text-shadow: none !important;
+    }
+
+    .table-container {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .scrollable-table {
+        flex: 1;
+        overflow-x: auto;
+        max-height: 400px;
+    }
+</style>
+<div class="header-container">
+    <div class="group">
+        <h1>{{ coach_name|upper }} CYBERCOACH FOR DRIVE {{ drive_number }} OF {{ current_team|upper }} VS. {{ selected_opponent|upper }} (WEEK {{ selected_week }}, {{ selected_year }})</h1>
+    </div>
+    <div class="group" style="color:white;">
+        <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
+        <p>These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that drive.</p>
+    </div>
 </div>
 
-<h2>Drive Data</h2>
-<p>This is all of the data for the selected drive. Not all of the data was used to train the Cybercoach. Certain data, like the play text, are only present to show what plays really happened. Some "plays" from the database, like timeouts, were removed before the training phase. This is responsible for any inconsistent numbering in the "play_number" column.</p>
-<p><strong>Scroll to the right</strong> to see more of the data for each play.</p>
-<div class="scrollable-table">
-    <table>
-        <thead>
-            <tr>
-                {% if drive_dict %}
-                    {% for key in drive_dict.0.keys %}
-                        <th>{{ key }}</th>
-                    {% endfor %}
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in drive_dict %}
+<div class="table-container">
+    <div class="scrollable-table" style="flex: 0 0 30%">
+        <table border="1">
+            <thead>
                 <tr>
-                    {% for value in row.values %}
-                        <td>{{ value }}</td>
-                    {% endfor %}
+                    <th>Play #</th>
+                    <th>Predicted</th>
+                    <th>Actual</th>
+                    <th>Correct</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for pred, actual in predictions_and_actual %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{% if pred == 0 %}Pass{% elif pred == 1 %}Rush{% elif pred == 2 %}Field Goal{% elif pred == 3 %}PAT{% elif pred == 4 %}Punt{% else %}Other{% endif %}</td>
+                        <td>{% if actual == 0 %}Pass{% elif actual == 1 %}Rush{% elif actual == 2 %}Field Goal{% elif actual == 3 %}PAT{% elif actual == 4 %}Punt{% else %}Other{% endif %}</td>
+                        <td>{% if pred == actual %}✅{% else %}❌{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <div class="scrollable-table" style="flex: 0 0 70%">
+        <table border="1">
+            <thead>
+                <tr>
+                    {% if drive_dict %}
+                        {% for key in drive_dict.0.keys %}
+                            <th>{{ key }}</th>
+                        {% endfor %}
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in drive_dict %}
+                    <tr>
+                        {% for value in row.values %}
+                            <td>{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 {% endblock %}

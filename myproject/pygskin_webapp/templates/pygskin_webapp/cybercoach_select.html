@@ -146,6 +146,14 @@
         height: 100%;
     }
 
+    h1 {
+        font-family: 'Fugaz One', sans-serif;
+        font-weight: 700;
+        color: #FFDE21 !important;
+        margin-bottom: 10px;
+        text-align: center;
+        text-shadow: none !important;
+    }
 </style>
 
 <div class="cybercoach-container">
@@ -183,24 +191,24 @@
             <div class="first-column">
                 <div class="form-row" style="margin-bottom:0px;">
                     <div class="form-group" style="padding:0px !important;">
-                        <h3>CREATE A CUSTOM SCENARIO</h3>
+                        <h1>CREATE A CUSTOM SCENARIO</h1>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <h3>OFFENSE</h3>
+                        <h1>OFFENSE</h1>
                         {{ custom_scenario_form.offense_score.as_field_group }}
                         {{ custom_scenario_form.offense_timeouts.as_field_group }}
                     </div>
                     <div class="form-group">
-                        <h3>DEFENSE</h3>
+                        <h1>DEFENSE</h1>
                         {{ custom_scenario_form.defense_score.as_field_group }}
                         {{ custom_scenario_form.defense_timeouts.as_field_group }}
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <h3>BALL MOVEMENT</h3>
+                        <h1>BALL MOVEMENT</h1>
                         {{ custom_scenario_form.rushing_yards_per_attempt.as_field_group }}
                         {{ custom_scenario_form.passing_yards_per_attempt.as_field_group }}
                     </div>
@@ -209,7 +217,7 @@
             <div class="second-column">
                 <div class="form-row">
                     <div class="form-group">
-                        <h3>GAME</h3>
+                        <h1>GAME</h1>
                         {{ custom_scenario_form.yard_line.as_field_group }}
                         {{ custom_scenario_form.down.as_field_group }}
                         {{ custom_scenario_form.distance.as_field_group }}
@@ -234,7 +242,7 @@
             <input type="hidden" id="cybercoach_id" name="cybercoach_id" value="1">
             <div class="form-row">
                 <div class="form-group" style="padding:0px !important;">
-                    <h3>SEE MACHINE LEARNING PREDICTIONS FROM A HISTORIC DRIVE</h3>
+                    <h1>SEE MACHINE LEARNING PREDICTIONS FROM A HISTORIC DRIVE</h1>
                 </div>
             </div>
             <div class="form-row">
