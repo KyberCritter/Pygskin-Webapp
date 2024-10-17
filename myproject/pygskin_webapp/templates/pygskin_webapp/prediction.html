@@ -47,10 +47,71 @@
         gap: 20px;
     }
 
-    .scrollable-table {
+    /* Table wrapper styles */
+    .scrollable-table { 
         flex: 1;
         overflow-x: auto;
         max-height: 400px;
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* Table styles */
+    .scrollable-table table {
+        width: 100%;
+        border-collapse: separate; /* Ensures border-radius will work */
+        border-spacing: 10px; /* Adds space between table cells */
+        background-color: #006106; /* Background for the entire table */
+        border-radius: 15px; /* Rounds the corners of the table */
+        padding: 10px;
+        margin: auto; /* Centers the table */
+    }
+
+    /* Header cell styles */
+    .scrollable-table th {
+        background-color: #008703;
+        color: #FFCC00;
+        font-family: 'Fugaz One', sans-serif;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 10px;
+        text-transform: uppercase;
+    }
+
+    /* Body cell styles */
+    .scrollable-table td {
+        background-color: #F1EFEF;
+        font-family: 'Fugaz One', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 10px;
+        text-transform: uppercase;
+        color: #006106;
+    }
+
+    /* Odd rows */
+    .scrollable-table tbody tr:nth-of-type(odd) td {
+        background-color: #F1EFEF;
+        color: #008703;
+    }
+
+    /* Even rows */
+    .scrollable-table tbody tr:nth-of-type(even) td {
+        background-color: #F1EFEF;
+        color: #008703;
+    }
+
+    /* Styles for special elements */
+    .scrollable-table td.correct {
+        color: #008703 !important;
+        font-weight: bold;
+    }
+
+    .scrollable-table td.incorrect {
+        color: red !important;
+        font-weight: bold;
     }
 </style>
 <div class="header-container">
@@ -69,9 +130,8 @@
             <thead>
                 <tr>
                     <th>Play #</th>
-                    <th>Predicted</th>
-                    <th>Actual</th>
-                    <th>Correct</th>
+                    <th>Predicted Play</th>
+                    <th>Actual Play</th>
                 </tr>
             </thead>
             <tbody>
@@ -79,8 +139,7 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{% if pred == 0 %}Pass{% elif pred == 1 %}Rush{% elif pred == 2 %}Field Goal{% elif pred == 3 %}PAT{% elif pred == 4 %}Punt{% else %}Other{% endif %}</td>
-                        <td>{% if actual == 0 %}Pass{% elif actual == 1 %}Rush{% elif actual == 2 %}Field Goal{% elif actual == 3 %}PAT{% elif actual == 4 %}Punt{% else %}Other{% endif %}</td>
-                        <td>{% if pred == actual %}✅{% else %}❌{% endif %}</td>
+                        <td class="{% if pred == actual %}correct{% else %}incorrect{% endif %}">{% if actual == 0 %}Pass{% elif actual == 1 %}Rush{% elif actual == 2 %}Field Goal{% elif actual == 3 %}PAT{% elif actual == 4 %}Punt{% else %}Other{% endif %}</td>
                     </tr>
                 {% endfor %}
             </tbody>
