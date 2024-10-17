@@ -63,7 +63,7 @@ class CustomScenarioForm(forms.Form):
     DOWN_CHOICES = [(i, str(i)) for i in range(1, 5)]
 
     yard_line = forms.IntegerField(
-        label="Yard Line",
+        label="YARD LINE",
         initial=25,
         min_value=0,
         max_value=100,
@@ -72,14 +72,14 @@ class CustomScenarioForm(forms.Form):
         # help_text="0 is the offense's end zone and 100 is the defense's end zone."
     )
     down = forms.ChoiceField(
-        label="Down",
+        label="DOWN",
         choices=DOWN_CHOICES,
         initial=1,
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     distance = forms.IntegerField(
-        label="Distance to First Down",
+        label="DISTANCE TO 1ST",
         min_value=1,
         max_value=99,
         initial=10,
@@ -87,14 +87,14 @@ class CustomScenarioForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     period = forms.ChoiceField(
-        label="Quarter",
+        label="QUARTER",
         choices=QUARTER_CHOICES,
         initial=1,
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     minutes_remaining_in_quarter = forms.IntegerField(
-        label="Minutes Remaining",
+        label="MINUTES REMAINING",
         min_value=0,
         max_value=15,
         initial=15,
@@ -102,7 +102,7 @@ class CustomScenarioForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     seconds_remaining_in_quarter = forms.IntegerField(
-        label="Seconds Remaining",
+        label="SECONDS REMAINING",
         min_value=0,
         max_value=59,
         initial=0,
@@ -110,35 +110,35 @@ class CustomScenarioForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     offense_score = forms.IntegerField(
-        label="Offense Score",
+        label="SCORE",
         min_value=0,
         initial=0,
         required=True,
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     defense_score = forms.IntegerField(
-        label="Defense Score",
+        label="SCORE",
         min_value=0,
         initial=0,
         required=True,
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     offense_timeouts = forms.ChoiceField(
-        label="Offense Timeouts",
+        label="TIMEOUTS",
         choices=TIMEOUTS_CHOICES,
         initial=3,
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     defense_timeouts = forms.ChoiceField(
-        label="Defense Timeouts",
+        label="TIMEOUTS",
         choices=TIMEOUTS_CHOICES,
         initial=3,
         required=True,
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     rushing_yards_per_attempt = forms.FloatField(
-        label="Rushing Yards per Attempt",
+        label="RUSHING YARDS PER ATTEMPT",
         min_value=-100,
         max_value=100,
         initial=3,
@@ -146,7 +146,7 @@ class CustomScenarioForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     passing_yards_per_attempt = forms.FloatField(
-        label="Passing Yards per Attempt",
+        label="PASSING YARDS PER ATTEMPT",
         min_value=-100,
         max_value=100,
         initial=5,
