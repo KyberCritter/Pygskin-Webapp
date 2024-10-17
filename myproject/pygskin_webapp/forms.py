@@ -69,7 +69,7 @@ class CustomScenarioForm(forms.Form):
         max_value=100,
         required=True,
         widget=forms.NumberInput(attrs={'class': 'form-control'}),
-        help_text="0 is the offense's end zone and 100 is the defense's end zone."
+        # help_text="0 is the offense's end zone and 100 is the defense's end zone."
     )
     down = forms.ChoiceField(
         label="Down",
