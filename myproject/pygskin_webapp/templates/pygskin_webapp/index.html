@@ -83,6 +83,87 @@
             object-fit: cover;
         }
 
+        .hero-section-bottom-text {
+            flex: none;
+            height: 125px;
+            left: 378px;
+            overflow: visible;
+            position: absolute;
+            top: 861px;
+            width: 458px;
+        }
+
+        .hero-section-bottom-text-div {
+            flex: none;
+            height: 75px;
+            left: 0;
+            position: absolute;
+            top: 0;
+            white-space: pre-wrap;
+            width: 458px;
+            word-break: break-word;
+            word-wrap: break-word;
+        }
+
+        .hero-section-bottom-text-div p {
+            font-family: 'Fugaz One', sans-serif;
+            font-size: 24px; /* Adjust size based on your preference */
+            font-weight: 700; /* Very bold font weight */
+            text-transform: uppercase; /* Make all text uppercase */
+            color: rgba(1, 96, 6, 1);
+            display: inline-block;
+            text-align: left;
+            text-wrap: wrap;
+            vertical-align: middle;
+            padding: 0;
+            line-height: 1;
+            margin: 0 auto;
+        }
+
+        .hero-section-bottom-button {
+            align-content: flex-start;
+            align-items: flex-start;
+            background-color: #016006;
+            border-radius: 6px;
+            display: flex;
+            flex: none;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            gap: 10px;
+            height: min-content;
+            justify-content: flex-start;
+            left: 0;
+            overflow: visible;
+            padding: 12px 32px;
+            position: absolute;
+            text-decoration: none;
+            top: 63px;
+            width: min-content;
+        }
+
+        .hero-section-bottom-button-box {
+            flex: none;
+            height: auto;
+            position: relative;
+            white-space: pre;
+            width: auto;
+        }
+
+        .hero-section-bottom-button-box p {
+            font-family: 'Fugaz One', sans-serif;
+            font-size: 20px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            color: rgb(255, 222, 33);
+            display: inline-block;
+            text-align: left;
+            text-wrap: wrap;
+            vertical-align: middle;
+            padding: 0;
+            line-height: 1;
+            margin: 0 auto;
+        }
+
         .middle-picture {
             aspect-ratio: .6238532110091743 / 1;
             flex: none;
@@ -121,6 +202,16 @@
         <div class="middle-picture">
             <div class="middle-picture-div">
                 <img src="{% static "coach_background_index.png" %}" alt="Coach Middle Background">
+            </div>
+        </div>
+        <div class="hero-section-bottom-text">
+            <div class="hero-section-bottom-text-div">
+                <p>WHAT WOULD KALEN DEBOER DO ON 4TH AND 3 IN THE 4TH QUARTER?</p>
+                <a class="hero-section-bottom-button" href="{% url "coach" %}">
+                    <div class="hero-section-bottom-button-box">
+                        <p>VIEW CYBERCOACHES</p>
+                    </div>
+                </a>
             </div>
         </div>
     </div>
