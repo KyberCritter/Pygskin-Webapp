@@ -445,11 +445,11 @@ def prediction(request):
 @ratelimit(key='ip', rate='3/m', method=ratelimit.ALL)  # rate limit to 3 requests per minute because machine learning models are computationally expensive
 def custom_prediction(request):
     if request.method == 'POST':
-        if not request.session.get("cybercoach_id"):
+        if not request.POST["cybercoach_id"]:
             return redirect('index')
         form = CustomScenarioForm(request.POST)
         if form.is_valid():
-            cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
+            cybercoach_model = Cybercoach.objects.get(id=request.POST["cybercoach_id"]) # not working
             try:
                 cybercoach_obj = pickle.load(open(os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename), "rb"))
             except Exception as e:
