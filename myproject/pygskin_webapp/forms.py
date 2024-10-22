@@ -138,7 +138,7 @@ class CustomScenarioForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     rushing_yards_per_attempt = forms.FloatField(
-        label="RUSHING YARDS PER ATTEMPT",
+        label="RUSH YARDS/ATTEMPT",
         min_value=-100,
         max_value=100,
         initial=3,
@@ -146,7 +146,7 @@ class CustomScenarioForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'form-control'})
     )
     passing_yards_per_attempt = forms.FloatField(
-        label="PASSING YARDS PER ATTEMPT",
+        label="PASS YARDS/ATTEMPT",
         min_value=-100,
         max_value=100,
         initial=5,

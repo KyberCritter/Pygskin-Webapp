@@ -78,14 +78,6 @@
         font-size: 20px !important;
     }
 
-    .form-group select {
-        width: 90% !important;
-    }
-
-    .form-group input {
-        width: 90% !important;
-    }
-
     h2 {
         color: #FFDE21 !important;
     }
@@ -175,6 +167,16 @@
         text-align: center;
         text-shadow: none !important;
     }
+
+    .down-and-distance {
+        display: flex;
+        align-items: center;
+    }
+
+    .time-remaining {
+        display: flex;
+        align-items: center;
+    }
 </style>
 
 <div class="cybercoach-container">
@@ -241,11 +243,16 @@
                     <div class="form-group">
                         <h2>GAME</h2>
                         {{ custom_scenario_form.yard_line.as_field_group }}
-                        {{ custom_scenario_form.down.as_field_group }}
-                        {{ custom_scenario_form.distance.as_field_group }}
+                        <div class="down-and-distance">
+                            {{ custom_scenario_form.down.as_field_group }}
+                            {{ custom_scenario_form.distance.as_field_group }}
+                        </div>
                         {{ custom_scenario_form.period.as_field_group }}
-                        {{ custom_scenario_form.minutes_remaining_in_quarter.as_field_group }}
-                        {{ custom_scenario_form.seconds_remaining_in_quarter.as_field_group }}
+                        <label id="will-be-for-time">TIME REMAINING:</label>
+                        <div class="time-remaining">
+                            {{ custom_scenario_form.minutes_remaining_in_quarter.as_field_group }}
+                            {{ custom_scenario_form.seconds_remaining_in_quarter.as_field_group }}
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">
@@ -414,11 +421,55 @@
             document.getElementById('cybercoach_id').value = cybercoachId; // Set hidden input
             document.getElementById('cybercoach_id2').value = cybercoachId;
         }
+        adjustDownAndDistanceLayout();
     });
 
     function getURLParameter(name) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(name);
+    }
+
+    function adjustDownAndDistanceLayout() {
+        const downInput = document.getElementById('id_down');
+        const downLabel = document.querySelector('label[for="id_down"]');
+        
+        const distanceInput = document.getElementById('id_distance');
+        const distanceLabel = document.querySelector('label[for="id_distance"]');
+        
+        downLabel.style.display = 'none';
+        distanceLabel.innerHTML = 'AND';
+        distanceLabel.style = "margin-top:0px !important;";
+        
+        const minsInput = document.getElementById('id_minutes_remaining_in_quarter');
+        const minsLabel = document.querySelector('label[for="id_minutes_remaining_in_quarter"]');
+        
+        const secsInput = document.getElementById('id_seconds_remaining_in_quarter');
+        const secsLabel = document.querySelector('label[for="id_seconds_remaining_in_quarter"]');
+
+        minsLabel.innerHTML = 'TIME REMAINING:';
+        // secsLabel.innerHTML = ':';
+        // secsLabel.style.display = 'none';
+
+        if (secsLabel) {
+            secsLabel.remove();
+        }
+        if (minsLabel) {
+            minsLabel.remove();
+            document.getElementById("will-be-for-time").htmlFor = "id_minutes_remaining_in_quarter";
+        }
+        
+        // Select the parent element (the div containing the inputs)
+        var parentDiv = document.querySelector('.time-remaining');
+
+        // Create a new h2 element
+        var newHeading = document.createElement('h2');
+        newHeading.innerHTML = '&nbsp;:&nbsp;';
+
+        // Select the second input (the seconds input)
+        var secondInput = document.getElementById('id_seconds_remaining_in_quarter');
+
+        // Insert the new h2 before the second input
+        parentDiv.insertBefore(newHeading, secondInput);
     }
 </script>
 
