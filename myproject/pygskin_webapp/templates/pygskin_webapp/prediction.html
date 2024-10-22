@@ -8,23 +8,24 @@
     p {
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
+        color: white;
     }
 
     .header-container {
         background-color: #006106;
         border-radius: 20px;
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding: 10px;
         margin-bottom: 20px;
         text-align: center;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     }
     
+    .header-container .group {
+        padding: 20px !important;
+    }
+    
     .group {
         display: block !important;
-        padding: 20px !important;
         border-radius: 15px;
         background-color: #008703;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
@@ -40,12 +41,13 @@
         text-align: center;
         text-shadow: none !important;
     }
-    
+
     h2 {
         font-family: 'Fugaz One', sans-serif;
         font-weight: 700;
         color: #FFDE21 !important;
         margin-bottom: 10px;
+        margin-top: 10px;
         text-align: center;
         text-shadow: none !important;
     }
@@ -60,10 +62,9 @@
     .scrollable-table { 
         flex: 1;
         overflow-x: auto;
-        max-height: 400px;
         width: 100%;
         text-align: center;
-        padding: 20px;
+        padding-top: 20px;
     }
 
     /* Table styles */
@@ -80,7 +81,7 @@
     /* Header cell styles */
     .scrollable-table th {
         background-color: #008703;
-        color: #FFCC00;
+        color: #FFDE21;
         font-family: 'Fugaz One', sans-serif;
         font-size: 18px;
         padding: 10px;
@@ -127,22 +128,23 @@
     <div class="group">
         <h1>{{ coach_name|upper }} CYBERCOACH FOR DRIVE {{ drive_number }} OF {{ current_team|upper }} VS. {{ selected_opponent|upper }} (WEEK {{ selected_week }}, {{ selected_year }})</h1>
     </div>
-    <div class="group" style="color:white;">
+    <div class="group">
         <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
         <p>These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that drive.</p>
     </div>
 </div>
 
-<div class="table-container" style="background-color:#006106; border-radius: 20px;">
-    <div class="group" style="flex: 0 0 30%">
-        <h2>THE MACHINE LEARNING MODEL CORRECTLY PREDICTED #/# PLAYS</h2>
+<div class="table-container" style="background-color:#006106; border-radius: 20px; gap:0px;">
+    <div class="group" style="flex: 1 1 40%">
+        <h2 id="prediction-stat">THE MACHINE LEARNING MODEL CORRECTLY PREDICTED #/# PLAYS</h2>
     </div>
-    <div class="group" style="flex: 0 0 70%">
-        <h2>SEE HOW THE REAL DRIVE PLAYED OUT BELOW:</h2>
+    <div class="group" style="flex: 1 1 60%">
+        <h2>SEE HOW THE REAL DRIVE PLAYED OUT BELOW</h2>
+        <p><u>Scroll to the right</u> to see more data for each play.</p>
     </div>
 </div>
 <div class="table-container">
-    <div class="scrollable-table" style="flex: 0 0 30%">
+    <div class="scrollable-table" id="prediction-table" style="flex: 1 1 40%">
         <table border="1">
             <thead>
                 <tr>
@@ -162,7 +164,7 @@
             </tbody>
         </table>
     </div>
-    <div class="scrollable-table" style="flex: 0 0 70%">
+    <div class="scrollable-table" style="flex: 1 1 60%">
         <table border="1">
             <thead>
                 <tr>
@@ -185,5 +187,18 @@
         </table>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const correctCells = document.querySelectorAll('.correct');
+        const incorrectCells = document.querySelectorAll('.incorrect');
+
+        const correctCount = correctCells.length;
+        const incorrectCount = incorrectCells.length;
+        const totalCells = correctCount + incorrectCount;
+
+        document.getElementById("prediction-stat").innerHTML = "THE MACHINE LEARNING MODEL CORRECTLY PREDICTED " + correctCount + "/" + totalCells + " PLAYS";
+    });
+</script>
 
 {% endblock %}
