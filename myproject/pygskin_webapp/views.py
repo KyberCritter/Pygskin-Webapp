@@ -45,16 +45,13 @@ def get_model_type_name(model_type):
 # index view. Keeping the old one below for now just in case.
 @ratelimit(key='ip', rate='10/m', block=True)
 def index(request):
-    return render(request, "pygskin_webapp/index.html")
-
-# def index(request):
-#     template = loader.get_template("pygskin_webapp/index.html")
-#     context = {
-#         "coach_form": CoachSelectForm(),
-#         "cybercoach_form": CybercoachSelectForm(),
-#         "subscribe_form": SubscriberForm(),
-#     }
-#     return HttpResponse(template.render(context, request))
+    template = loader.get_template("pygskin_webapp/index.html")
+    context = {
+        "coach_form": CoachSelectForm(),
+        "cybercoach_form": CybercoachSelectForm(),
+        "subscribe_form": SubscriberForm(),
+    }
+    return HttpResponse(template.render(context, request))
 
 def send_newsletter_signup(target_email: str):
 	return requests.post(

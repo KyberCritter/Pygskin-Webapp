@@ -1,193 +1,100 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
-
-<div class="homepage">
     <style>
-        .homepage {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
+        html, body{
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        .container {
+            background-color: #f1efef !important;
+            flex: none !important;
+            height: 800px !important;
+            left: -40px !important;
+            position: absolute !important;
+            top: 92px !important;
+            width: 1670px !important;
+            padding: 0px 0px !important;
         }
 
         .hero-section {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-between;
-            width: 60%;
-        }
-
-        .hero-content {
-            text-align: left;
-        }
-
-        .hero-section h1{
-            font-size: 3em;
-            font-weight: bold;
-            color: #004000;
-        }
-
-        .hero-subtext {
-            font-size: 1.2em;
-            margin-top: 20px;
-            color: #004000;
-        }
-
-        .btn-primary {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #004000;
-            color: white;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-decoration: none;
-            margin-top: 20px;
-            border-radius: 5px;
-        }
-
-        .btn-primary:hover {
-            background-color: #003300;
-        }
-
-        .hero-image img {
-            width: 300px;
-            height: auto;
-        }
-
-        .right-sidebar {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 30%;
-        }
-
-        .sidebar-item {
-            margin-bottom: 20px;
-        }
-
-        .sidebar-content {
-            position: relative;
-            text-align: center;
-        }
-
-        .sidebar-text {
+            flex: none;
+            height: 1054px;
+            left: -266px;
+            overflow: visible;
             position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(0, 64, 0, 0.7);
-            color: white;
-            font-weight: bold;
-            padding: 10px;
-            border-radius: 5px;
+            top: -233px;
+            width: 1244px;
+        }
+
+        .hero-section-text-box {
+            flex: none;
+            height: auto;
+            left: 401px;
+            position: absolute;
+            top: 437px;
+            width: 470px;
+            word-break: break-word;
+            word-wrap: break-word;
+        }
+
+        .hero-section-text-box p {
+            font-family: 'Fugaz One', sans-serif;
+            font-size: 80px; /* Adjust size based on your preference */
+            font-weight: 400; /* Very bold font weight */
+            text-transform: uppercase; /* Make all text uppercase */
+            background: linear-gradient(to bottom, #000000 10%, #006106 50%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+            text-align: left;
+            text-wrap: wrap;
+            vertical-align: middle;
+            padding: 0;
+            line-height: 1;
+            margin: 0 auto;
+        }
+
+        .hero-section-background {
+            aspect-ratio: 1.0857938843180555 / 1;
+            flex: none;
+            left: 133px;
+            mix-blend-mode: luminosity;
+            opacity: .08;
+            position: absolute;
+            top: 153px;
+            width: 812px;
+            transform: rotate(-30deg);
+        }
+
+        .hero-section-background-div {
+            position: absolute;
+            border-radius: inherit;
+            inset: 0px;
+        }
+
+        .hero-section-background-div img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            object-position: center center;
+            object-fit: cover;
         }
     </style>
 
-    <section class="hero-section">
-        <div class="hero-content">
-            <h1>SEE HOW COACHES THINK</h1>
-            <p class="hero-subtext">What would Kalen DeBoer do on 4th and 3 in the 4th quarter?</p>
-            <a href="{% url 'cybercoach' %}" class="btn-primary">VIEW CYBERCOACHES</a>
-        </div>
-        <div class="hero-image">
-            <img src="{% static 'coach_background_index.png' %}" alt="Coach background image">
-        </div>
-    </section>
-
-    <section class="right-sidebar">
-        <!-- Coach stats section -->
-        <div class="sidebar-item">
-            <a href="{% url 'coach' %}">
-                <div class="sidebar-content">
-                    <img src="{% static 'view_coach_stats.png' %}" alt="Coach Stats Image">
-                    <div class="sidebar-text">VIEW COACH STATISTICS</div>
-                </div>
-            </a>
-        </div>
-        <!-- Visualize Realignment section -->
-        <div class="sidebar-item">
-            <a href="{% url 'conference_analysis' %}">
-                <div class="sidebar-content">
-                    <img src="{% static 'visualize_realignment.png' %}" alt="Realignment Image">
-                    <div class="sidebar-text">VISUALIZE REALIGNMENT</div>
-                </div>
-            </a>
-        </div>
-    </section>
-</div>
-
-    <!-- <h1>Welcome to Pygskin</h1>
-    <p>Explore college football with Pygskin! Check out <a href="#cybercoaches">Cybercoaches</a>, <a href="#coach-stats">coach statistics</a>, <a href="#conference-realignment">conference realignment</a>, and <a href="#team-rankings">team rankings</a> down below! You can also sign up for <a href="#email-list">email updates</a>. For more information about Pygskin, its creator, or for technical details, visit the <a href="{% url 'about' %}">about page</a>.</p>
-
-    <section id="cybercoaches">
-        <h2>Cybercoaches</h2>
-        <p>Want to see how famous coaches think? Experience the power of machine learning with Cybercoaches. These models are trained on specific coaches and can call offensive plays based on their individual styles. The drop-down menu lists Cybercoaches in the format: "Coach Name (model type)". Different model types will differ in their predictions and accuracy, but each coach's models were trained on the same data.</p>
-        <form action="{% url 'cybercoach' %}" method="POST">
-            {% csrf_token %}
-            {{ cybercoach_form.as_p }}
-            <button id="cybercoach-button" type="submit">Select</button>
-        </form>
-    </section>
-
-    <section id="coach-stats">
-        <h2>Explore Coach Statistics</h2>
-        <p>Discover in-depth statistics and analysis for college football coaches. Gain insights into their performance, strategies, and historical data.</p>
-        <form action="{% url 'coach' %}" method="POST">
-            {% csrf_token %}
-            {{ coach_form.as_p }}
-            <button id="coach-button" type="submit">Select</button>
-        </form>
-    </section>
-
-    <section id="conference-realignment">
-        <h2><a href="{% url 'conference_analysis' %}" data-umami-event="conference-analysis-link">Visualize Conference Realignment</a></h2>
-        <p>Check out just how crazy conference realignment has become with maps of the new, far-reaching conferences. This page provides an in-depth explanation of clustering techniques and how they can be applied to athletic conferences.</p>
-        <div class="centered-button-container">
-            <a id="conference-analysis-link" href="{% url 'conference_analysis' %}" class="button-link" data-umami-event="conference-analysis-link">Conference Realignment</a>
-        </div>
-    </section>
-    
-    <section id="team-rankings">
-        <h2><a href="{% url 'colley_matrix' %}" data-umami-event="colley-matrix-link">Team Rankings</a></h2>
-        <p>Check out the latest Colley Matrix computer poll team rankings for the FBS. These results were computer generated using the original version of the Colley Matrix formula.</p>
-        <div class="centered-button-container">
-            <a id="colley-matrix-link" href="{% url 'colley_matrix' %}" class="button-link" data-umami-event="colley-matrix-link">Colley Matrix</a>
-        </div>
-    </section>    
-
-    <section id="email-list">
-        <h2>Sign Up for Email Updates</h2>
-        <p>By submitting this form, you consent to receive marketing emails from Pygskin and Scott Ratchford. Please see the <a href="{% url 'privacy' %}">privacy policy</a> for more information about how your data is processed. To revoke your consent at any time, <a data-umami-event="clicked-privacy-mailto-link" href="mailto:privacy@mail.pygskin.com?subject=Data Deletion Request&body=Please delete my email address from the Pygskin records.">email us</a> with the subject line "Data Deletion Request" from the email address to remove from our records.</p>
-        <form action="{% url 'subscribed' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-row">
-                <div class="form-group">
-                    {{ subscribe_form.first_name.as_field_group }}
-                </div>
-                <div class="form-group">
-                    {{ subscribe_form.last_name.as_field_group }}
-                </div>
+    <div class="hero-section">
+        <div class="hero-section-background">
+            <div class="hero-section-background-div">
+                <img src="{% static "favicon.ico" %}" alt="Football Background">
             </div>
-            <div class="form-row-single">
-                <div class="form-group">
-                    {{ subscribe_form.email.as_field_group }}
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    {{ subscribe_form.reason_for_subscribing.as_field_group }}
-                </div>
-                <div class="form-group">
-                    {{ subscribe_form.identity.as_field_group }}
-                </div>
-            </div>
-            <div class="form-checkbox-and-label">
-                {{ subscribe_form.age_confirmation.as_field_group }}
-            </div>
-            <button type="submit" data-umami-event="email-subscribe">Subscribe</button>
-        </form>        
-    </section>
-</div> -->
+        </div>
+        <div class="hero-section-text-box">
+            <p>SEE HOW COACHES THINK</p>
+        </div>
+    </div>
 
 {% endblock %}
