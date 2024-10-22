@@ -83,8 +83,41 @@
             border-radius: 5px;
         }
     </style>
-    
-    <h1>Welcome to Pygskin</h1>
+
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>SEE HOW COACHES THINK</h1>
+            <p class="hero-subtext">What would Kalen DeBoer do on 4th and 3 in the 4th quarter?</p>
+            <a href="{% url 'cybercoach' %}" class="btn-primary">VIEW CYBERCOACHES</a>
+        </div>
+        <div class="hero-image">
+            <img src="{% static 'coach_background_index.png' %}" alt="Coach background image">
+        </div>
+    </section>
+
+    <section class="right-sidebar">
+        <!-- Coach stats section -->
+        <div class="sidebar-item">
+            <a href="{% url 'coach' %}">
+                <div class="sidebar-content">
+                    <img src="{% static 'view_coach_stats.png' %}" alt="Coach Stats Image">
+                    <div class="sidebar-text">VIEW COACH STATISTICS</div>
+                </div>
+            </a>
+        </div>
+        <!-- Visualize Realignment section -->
+        <div class="sidebar-item">
+            <a href="{% url 'conference_analysis' %}">
+                <div class="sidebar-content">
+                    <img src="{% static 'visualize_realignment.png' %}" alt="Realignment Image">
+                    <div class="sidebar-text">VISUALIZE REALIGNMENT</div>
+                </div>
+            </a>
+        </div>
+    </section>
+</div>
+
+    <!-- <h1>Welcome to Pygskin</h1>
     <p>Explore college football with Pygskin! Check out <a href="#cybercoaches">Cybercoaches</a>, <a href="#coach-stats">coach statistics</a>, <a href="#conference-realignment">conference realignment</a>, and <a href="#team-rankings">team rankings</a> down below! You can also sign up for <a href="#email-list">email updates</a>. For more information about Pygskin, its creator, or for technical details, visit the <a href="{% url 'about' %}">about page</a>.</p>
 
     <section id="cybercoaches">
@@ -155,6 +188,6 @@
             <button type="submit" data-umami-event="email-subscribe">Subscribe</button>
         </form>        
     </section>
-</div>
+</div> -->
 
 {% endblock %}
