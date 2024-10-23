@@ -213,21 +213,34 @@
             justify-content: space-between;
         }
 
-        .sidebar-top-item {
+        .sidebar-heading {
+            height: 52px;
+            font-family: 'Fugaz One', sans-serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: rgb(255, 222, 33);
+            text-align: center;
+            margin: 0;
+            padding-top: 10px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-top-item,
+        .sidebar-bottom-item {
             flex: none;
             width: 100%;
-            height: auto;
-            margin-top: 52px;
+            display: flex;
+            height: 272px;
+            justify-content: center;
+            align-items: center;
             text-decoration: none;
         }
 
-        .sidebar-top-item img {
-            display: block;
-            width: 90%;
-            height: auto;
-            padding: 20px;
+        .sidebar-top-item img,
+        .sidebar-bottom-item img {
+            max-height: 80%;
+            max-width: 80%;
             border-radius: inherit;
-            object-position: center;
             object-fit: cover;
         }
     </style>
@@ -258,8 +271,13 @@
         </div>
     </div>
     <div class="sidebar">
+        <h2 class="sidebar-heading">VIEW COACH STATISTICS</h2>
         <a class="sidebar-top-item" href="{% url 'coach' %}">
             <img src="{% static "view_coach_stats.png" %}">
+        </a>
+        <h2 class="sidebar-heading">VISUALIZE REALIGNMENT</h2>
+        <a class="sidebar-bottom-item" href="{% url 'conference_analysis' %}">
+            <img src="{% static "visualize_realignment.png" %}">
         </a>
     </div>
 
