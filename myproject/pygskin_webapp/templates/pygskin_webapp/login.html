@@ -2,19 +2,84 @@
 
 {% block content %}
 
+<style>
+    form {
+    background-color: #016006 !important;
+
+    }
+
+    form label {
+        text-transform: uppercase !important; 
+        color: rgb(255, 222, 33) !important;
+    }
+
+    .custom-button {
+    align-content: flex-start !important;
+    align-items: flex-start !important;
+    background-color: #016006 !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    flex: none !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    height: min-content !important;
+    justify-content: flex-start !important;
+    overflow: visible !important;
+    padding: 12px 32px !important;
+    text-decoration: none !important;
+    position: relative !important;
+    border: none !important;
+    cursor: pointer !important;
+    }
+
+    .custom-button-box {
+        flex: none !important;
+        height: auto !important;
+        position: relative !important;
+        white-space: pre !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .custom-button-box p {
+        font-family: 'Fugaz One', sans-serif !important;
+        font-size: 20px !important; 
+        font-weight: 700 !important; 
+        text-transform: uppercase !important; 
+        color: rgb(255, 222, 33) !important;
+        display: inline-block !important;
+        text-align: left !important;
+        vertical-align: middle !important;
+        padding: 18px !important;
+        line-height: 1 !important;
+        margin: 0 auto !important;
+    }
+</style>
+
 <section id="login-form">
     {% if user.is_authenticated %}
         <h2>{{ user.first_name }} {{ user.last_name }} is logged in</h2>
         <form method="POST" action="{% url 'logout' %}">
             {% csrf_token %}
-            <button type="submit" class="btn btn-danger">Logout</button>
+            <button type="submit" class="custom-button">
+                <div class="custom-button-box">
+                    <p>LOGOUT</p>
+                </div>
+            </button>
         </form>
     {% else %}
-        <h2>Login</h2>
+        <h2>LOGIN</h2>
         <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Login</button>
+            <button type="submit" class="custom-button">
+                <div class="custom-button-box">
+                    <p>LOGIN</p>
+                </div>
+            </button>
         </form>
 
         <!-- Display errors -->
