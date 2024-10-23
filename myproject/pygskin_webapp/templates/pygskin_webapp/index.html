@@ -14,7 +14,7 @@
             flex: none !important;
             height: 800px !important;
             left: 0px !important;
-            position: absolute !important;
+            position: static !important;
             width: 1670px !important;
         }
 
@@ -137,8 +137,8 @@
             padding: 12px 32px;
             position: absolute;
             text-decoration: none;
-            top: 63px;
-            width: min-content;
+            /* top: 63px; */
+            /* width: min-content; */
         }
 
         .hero-section-bottom-button-box {
@@ -146,7 +146,10 @@
             height: auto;
             position: relative;
             white-space: pre;
-            width: auto;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .hero-section-bottom-button-box p {
@@ -159,7 +162,7 @@
             text-align: left;
             text-wrap: wrap;
             vertical-align: middle;
-            padding: 0;
+            padding: 18px;
             line-height: 1;
             margin: 0 auto;
         }
@@ -188,6 +191,45 @@
             object-position: center center;
             object-fit: cover;
         }
+
+        .sidebar {
+            --border-bottom-width: 8px;
+            --border-color: #016006;
+            --border-left-width: 8px;
+            --border-right-width: 8px;
+            --border-style: solid;
+            --border-top-width: 8px;
+            background-color: #016006;
+            border-radius: 20px;
+            box-shadow: 0 4px 4px #00000040;
+            flex: none;
+            height: 648px;
+            right: 50px;
+            position: absolute;
+            top: 167px;
+            width: 401px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .sidebar-top-item {
+            flex: none;
+            width: 100%;
+            height: auto;
+            margin-top: 52px;
+            text-decoration: none;
+        }
+
+        .sidebar-top-item img {
+            display: block;
+            width: 90%;
+            height: auto;
+            padding: 20px;
+            border-radius: inherit;
+            object-position: center;
+            object-fit: cover;
+        }
     </style>
 
     <div class="hero-section">
@@ -207,13 +249,18 @@
         <div class="hero-section-bottom-text">
             <div class="hero-section-bottom-text-div">
                 <p>WHAT WOULD KALEN DEBOER DO ON 4TH AND 3 IN THE 4TH QUARTER?</p>
-                <a class="hero-section-bottom-button" href="{% url "coach" %}">
+                <a class="hero-section-bottom-button" href="{% url 'coach' %}">
                     <div class="hero-section-bottom-button-box">
                         <p>VIEW CYBERCOACHES</p>
                     </div>
                 </a>
             </div>
         </div>
+    </div>
+    <div class="sidebar">
+        <a class="sidebar-top-item" href="{% url 'coach' %}">
+            <img src="{% static "view_coach_stats.png" %}">
+        </a>
     </div>
 
 {% endblock %}
