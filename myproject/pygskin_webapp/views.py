@@ -47,9 +47,9 @@ def get_model_type_name(model_type):
 def index(request):
     template = loader.get_template("pygskin_webapp/index.html")
     context = {
-        "coach_form": CoachSelectForm(),
-        "cybercoach_form": CybercoachSelectForm(),
-        "subscribe_form": SubscriberForm(),
+        # "coach_form": CoachSelectForm(),
+        # "cybercoach_form": CybercoachSelectForm(),
+        # "subscribe_form": SubscriberForm(),
     }
     return HttpResponse(template.render(context, request))
 
