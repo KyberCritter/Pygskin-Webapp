@@ -115,6 +115,8 @@ h3 {
 
 /* Navbar styles */
 .navbar {
+    z-index: 10;
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
