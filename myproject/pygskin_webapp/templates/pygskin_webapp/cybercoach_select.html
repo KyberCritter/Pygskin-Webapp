@@ -177,6 +177,35 @@
         display: flex;
         align-items: center;
     }
+
+
+    @media (max-width: 768px) {
+        .forms-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .play-input, .coach-selector {
+            width: 100%; /* Ensure the form takes up full width */
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column for mobile */
+            gap: 10px;
+        }
+
+        .down-and-distance, .time-remaining {
+            flex-direction: column; /* Stack inputs vertically */
+            align-items: flex-start; /* Align to the start on mobile */
+        }
+
+        .or-text {
+            font-size: 60px; /* Adjust the size of the text for mobile */
+            margin: 20px 0;
+        }
+    }
 </style>
 
 <div class="cybercoach-container">
@@ -448,8 +477,6 @@
         const secsLabel = document.querySelector('label[for="id_seconds_remaining_in_quarter"]');
 
         minsLabel.innerHTML = 'TIME REMAINING:';
-        // secsLabel.innerHTML = ':';
-        // secsLabel.style.display = 'none';
 
         if (secsLabel) {
             secsLabel.remove();
@@ -461,17 +488,10 @@
 
         document.getElementById("will-be-for-down").htmlFor = "id_down";
         
-        // Select the parent element (the div containing the inputs)
         var parentDiv = document.querySelector('.time-remaining');
-
-        // Create a new h2 element
         var newHeading = document.createElement('h2');
         newHeading.innerHTML = '&nbsp;:&nbsp;';
-
-        // Select the second input (the seconds input)
         var secondInput = document.getElementById('id_seconds_remaining_in_quarter');
-
-        // Insert the new h2 before the second input
         parentDiv.insertBefore(newHeading, secondInput);
     }
 </script>
