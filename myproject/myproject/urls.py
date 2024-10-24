@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 from pygskin_webapp import views, urls
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -41,7 +42,11 @@ urlpatterns = [
     path("conference_analysis/", views.conference_analysis, name="conference_analysis"),
     path("colley_matrix/", views.colley_matrix, name="colley_matrix"),
     path("coach_stats/", views.coach_stats, name="coach_stats"),
-    path("cybercoach_select/", views.cybercoach_select, name="cybercoach_select"),
+    path("cybercoach_select/", views.cybercoach_select, name="cybercoach_select"),    
+    path("signup/", views.signup_view, name="signup"),
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
+    path("profile/", views.profile_view, name="profile")
 ]
 
 handler400 = "pygskin_webapp.views.handler400"

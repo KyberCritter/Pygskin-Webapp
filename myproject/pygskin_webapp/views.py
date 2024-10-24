@@ -13,8 +13,17 @@ from django.template import loader
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
+# Brooks imported libraries
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth import logout
+from django.contrib.auth import login as auth_login, authenticate
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import ensure_csrf_cookie
+
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
-from .models import Cybercoach
+from .models import Cybercoach, Subscriber
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -32,13 +41,15 @@ def get_model_type_name(model_type):
     else:
         return model_type
 
+# Since new index pages does not need to pass form data, this should be the new
+# index view. Keeping the old one below for now just in case.
 @ratelimit(key='ip', rate='10/m', block=True)
 def index(request):
     template = loader.get_template("pygskin_webapp/index.html")
     context = {
-        "coach_form": CoachSelectForm(),
-        "cybercoach_form": CybercoachSelectForm(),
-        "subscribe_form": SubscriberForm(),
+        # "coach_form": CoachSelectForm(),
+        # "cybercoach_form": CybercoachSelectForm(),
+        # "subscribe_form": SubscriberForm(),
     }
     return HttpResponse(template.render(context, request))
 
@@ -56,14 +67,72 @@ def subscribed(request):
     if request.method == 'POST':
         form = SubscriberForm(request.POST)
         if form.is_valid():
-            model = form.save()
+            form.save()
             template = loader.get_template("pygskin_webapp/subscribed.html")
             context = {}
             return HttpResponse(template.render(context, request))
         else:
-            return redirect('index')
+            messages.error(request, "This was an error with your submission.")
+            return render(request, 'pygskin_webapp/index.html', {'subscribe_form': form})
     else:
         return redirect('index')
+
+def signup_view(request):
+    template = loader.get_template("pygskin_webapp/signup.html")
+    context = {
+        "subscribe_form": SubscriberForm(),
+    }
+    return HttpResponse(template.render(context, request))
+
+@ensure_csrf_cookie
+def login_view(request):
+    # If user already logged in, redirect to login page with name displayed
+    if request.user.is_authenticated:
+        #return render(request, 'pygskin_webapp/login.html')
+        return redirect('profile')
+
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            # If the form is valid, get username and password from form
+            # and authenticate with Djangos built-in system
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+
+            # If user exists, redirect to login page
+            # Should change this later to profile page
+            if user is not None:
+                auth_login(request, user)
+                return redirect('profile')
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+
+    form = AuthenticationForm()
+    return render(request, 'pygskin_webapp/login.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)  # Log out the user
+    
+    # For now, we will redirect to the index page.
+    # Should add in a page that notifies user of successful logout
+    # and has an option to return back to the home page
+    return redirect('index')
+
+def profile_view(request):
+    # Make sure user is authenticated before accessing profile page
+    # If not authenticated, redirect to login page
+    if not request.user.is_authenticated:
+        return redirect('login')
+
+    return render(request, 'pygskin_webapp/profile.html', {
+        'first_name': request.user.first_name,
+        'last_name': request.user.last_name,
+        'email': request.user.email
+    })
 
 def license(request):
     template = loader.get_template("pygskin_webapp/license.html")

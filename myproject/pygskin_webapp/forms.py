@@ -2,6 +2,11 @@ from django import forms
 from django.core.validators import validate_email
 from django.forms import ModelForm, TextInput, modelform_factory
 
+# Brooks imported libraries
+from django.contrib.auth.models import User
+from django.core.validators import validate_email
+from django.contrib.auth.hashers import make_password
+
 from .models import Coach, Cybercoach, Subscriber
 
 
@@ -26,16 +31,29 @@ class CybercoachSelectForm(forms.Form):
     )
 
 class SubscriberForm(ModelForm):
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        label="Password",
+        required=True
+    )
+
     age_confirmation = forms.BooleanField(
         label="I confirm that I am at least 13 years old.",
         required=True,
         error_messages={'required': "You must confirm that you are at least 13 years old."}
     )
+
+    email_updates = forms.BooleanField(
+        label="Sign up for email updates",
+        required=False,
+        initial=True
+    )
     
     class Meta:
         model = Subscriber
-        fields = ['first_name', 'last_name', 'email', 'reason_for_subscribing', 'identity', 'age_confirmation']
+        fields = ['username', 'first_name', 'last_name', 'email', 'reason_for_subscribing', 'identity', 'age_confirmation', 'email_updates']
         widgets = {
+            'username': TextInput(attrs={'class': 'form-control'}),
             'first_name': TextInput(attrs={'class': 'form-control'}),
             'last_name': TextInput(attrs={'class': 'form-control'}),
             'email': TextInput(attrs={'class': 'form-control'}),
@@ -48,13 +66,34 @@ class SubscriberForm(ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if Subscriber.objects.filter(email=email).exists():
+        if Subscriber.objects.filter(email=email).exists() or User.objects.filter(email=email).exists():
             raise forms.ValidationError("This email has already been subscribed.")
-        try:
-            validate_email(email)
-        except forms.ValidationError as e:
-            raise forms.ValidationError("Please enter a valid email address.")
         return email
+    
+    def clean_username(self):
+        username = self.cleaned_data.get('username')
+        if User.objects.filter(username=username).exists():
+            raise forms.ValidationError("This username is already taken.")
+        return username
+    
+    def save(self, commit=True):
+        # Create a User instance for authentication
+        user = User.objects.create(
+            username=self.cleaned_data['username'],
+            email=self.cleaned_data['email'],
+            first_name=self.cleaned_data['first_name'],
+            last_name=self.cleaned_data['last_name'],
+            password=make_password(self.cleaned_data['password']),  # Hash the password
+        )
+        
+        # Link the subscriber to the newly created user
+        subscriber = super().save(commit=False)
+        subscriber.user = user
+
+        if commit:
+            subscriber.save()
+
+        return subscriber
 
 
 class CustomScenarioForm(forms.Form):
