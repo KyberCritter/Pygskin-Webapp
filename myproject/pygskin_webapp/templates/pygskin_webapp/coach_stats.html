@@ -1,23 +1,103 @@
 {% extends "base.html" %}
 
-{% block title %}Hello World{% endblock %}
+{% block title %}Coach Stats{% endblock %}
 
 {% block content %}
-    <h1>Form Proof of Concept</h1>
-    <p>The goal of this is to be able to select a coach and see their information. This will be used for the coach statistics page.</p>
 
+<style>
+   
+
+    .color-box {
+        background-color: #006106; /* Change this to any color you like */
+        color: white; /* Text color */
+        padding: 20px; /* Spacing inside the box */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    }
+    
+    .scrollable-table {
+        flex: 1;
+        overflow-x: auto;
+        max-height: 400px;
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+    }
+
+    /* Table styles */
+
+    .scrollable-table table {
+        width: 100%;
+        border-collapse: separate; /* Ensures border-radius will work */
+        border-spacing: 10px; /* Adds space between table cells */
+        background-color: #006106; /* Background for the entire table */
+        border-radius: 15px; /* Rounds the corners of the table */
+        padding: 10px;
+        margin: auto; /* Centers the table */
+    }
+
+    /* Header cell styles */
+
+    .scrollable-table th {
+        background-color: #008703;
+        color: #FFCC00;
+        font-family: 'Fugaz One', sans-serif;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 10px;
+        text-transform: uppercase;
+    }
+
+    /* Body cell styles */
+
+    .scrollable-table td {
+        background-color: #F1EFEF;
+        font-family: 'Fugaz One', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 10px;
+        text-transform: uppercase;
+        color: #006106;
+    }
+
+    /* Odd rows */
+
+    .scrollable-table tbody tr:nth-of-type(odd) td {
+        background-color: #F1EFEF;
+        color: #008703;
+    }
+
+    /* Even rows */
+
+    .scrollable-table tbody tr:nth-of-type(even) td {
+        background-color: #F1EFEF;
+        color: #008703;
+    }
+
+</style>
+
+<!-----------------------------------HTML--------------------------------------->
+
+<!--Green Coach Select Box-->
+<div class="color-box">
     <section id="coach-stats">
-        <form action="{% url 'coach_stats' %}" id="id_coach" method="GET">
-            {{ coach_form.as_p }}
-        </form>
+        <h2>
+            <form action="{% url 'coach_stats' %}" id="id_coach" method="GET">
+                {{ coach_form.as_p }}
+            </form>
+        </h2>
     </section>
 
     {% if coach_data %}
-    <section id="coach-info">
-        <h2>{{ coach_data.name }} Statistics</h2>
-        <p>{{ coach_data.biography }}</p>
 
-        <h2>Included Seasons</h2>
+    <p> {{ coach_data.biography }} </p>
+
+</div>
+
+    <section id="coach-info">
+
+        <h2>INCLUDED SEASONS</h2>
         <div class="scrollable-table">
         {% if coach_seasons %}
             <table>
@@ -43,12 +123,12 @@
         {% endif %}
         </div>
 
-        <h2>Playcalling Tendencies</h2>
+        <h2>PLAYCALLING TENDENCIES</h2>
         <div class="vertically-aligned-container">
             
-            <h3>Play Calls on 4th Down</h3>
+            <h3>PLAY CALLS ON 4TH DOWN</h3>
             <div id="playDist4thDownChart"></div>
-            <h3>Play Calls on All Downs</h3>
+            <h3>PLAY CALLS ON ALL DOWNS</h3>
             <div id="playDistChart"></div>
         </div>
 
@@ -87,10 +167,12 @@
                 Plotly.newPlot("playDist4thDownChart", play_dist_4th, layout);
             });
         </script>
+
+
     </section>
     {% endif %}
     
-    <script>
+   <script>
         document.addEventListener('DOMContentLoaded', function () {
             const coachSelect = document.querySelector('#id_coach');
             if (coachSelect) {
@@ -101,4 +183,4 @@
         });
     </script>
 
-    {% endblock %}
+{% endblock %}
