@@ -5,8 +5,41 @@
 {% block content %}
 
 <style>
-   
 
+    #select-form {
+        display: flex;
+        align-items: center;
+        background-color: #008703;
+        color: #FFCC00;
+        font-family: 'Fugaz One', sans-serif;
+        text-transform: uppercase;
+        font-size: 18px;
+        height: 41px; /* must be 41 or greater unless you change size of select box */
+        width: 100%;
+        border: 40px;
+        border-radius: 40px;
+        padding: 0px;
+    }
+    
+    #id_coach {
+        border: none;
+        border-radius: 5px;
+        background-color: #008703;
+        color: #FFCC00;
+        font-family: 'Fugaz One', sans-serif;
+        text-transform: uppercase;
+        padding: 10px;
+        flex-grow: 1;
+        width: 100%;
+        max-width: 1000px;
+        margin-top: 15px;
+        margin-left: 15px;
+    }
+    
+    #coach-info {
+        font-family: 'DM Sans', sans-serif;
+        margin-left: 5px;
+    }
     .color-box {
         background-color: #006106; /* Change this to any color you like */
         color: white; /* Text color */
@@ -75,6 +108,19 @@
         color: #008703;
     }
 
+    #select-form label {
+        display: none;
+    }
+
+   /* 
+    !! setting the errorlist to display none -
+        bit of a weird fix, before you select a coach it says
+        "* this field is required", you can delete it and see
+    */
+   .errorlist {
+        display: none;
+    }
+
 </style>
 
 <!-----------------------------------HTML--------------------------------------->
@@ -83,7 +129,7 @@
 <div class="color-box">
     <section id="coach-stats">
         <h2>
-            <form action="{% url 'coach_stats' %}" id="id_coach" method="GET">
+            <form action="{% url 'coach_stats' %}" id="select-form" method="GET">
                 {{ coach_form.as_p }}
             </form>
         </h2>
@@ -91,11 +137,11 @@
 
     {% if coach_data %}
 
-    <p> {{ coach_data.biography }} </p>
+    <p id="coach-info"> {{ coach_data.biography }} </p>
 
 </div>
 
-    <section id="coach-info">
+    <section id="coach-table-info">
 
         <h2>INCLUDED SEASONS</h2>
         <div class="scrollable-table">
