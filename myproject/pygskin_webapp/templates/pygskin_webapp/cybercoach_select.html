@@ -243,13 +243,14 @@
                     <div class="form-group">
                         <h2>GAME</h2>
                         {{ custom_scenario_form.yard_line.as_field_group }}
+                        <label id="will-be-for-down">DOWN:</label>
                         <div class="down-and-distance">
                             {{ custom_scenario_form.down.as_field_group }}
                             {{ custom_scenario_form.distance.as_field_group }}
                         </div>
                         {{ custom_scenario_form.period.as_field_group }}
                         <label id="will-be-for-time">TIME REMAINING:</label>
-                        <div class="time-remaining">
+                        <div class="time-remaining" style="height: 55px;">
                             {{ custom_scenario_form.minutes_remaining_in_quarter.as_field_group }}
                             {{ custom_scenario_form.seconds_remaining_in_quarter.as_field_group }}
                         </div>
@@ -457,6 +458,8 @@
             minsLabel.remove();
             document.getElementById("will-be-for-time").htmlFor = "id_minutes_remaining_in_quarter";
         }
+
+        document.getElementById("will-be-for-down").htmlFor = "id_down";
         
         // Select the parent element (the div containing the inputs)
         var parentDiv = document.querySelector('.time-remaining');
