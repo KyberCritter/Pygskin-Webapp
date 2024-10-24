@@ -220,10 +220,10 @@
     
    <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const coachSelect = document.querySelector('#id_coach');
+            const coachSelect = document.querySelector('#select-form');
             if (coachSelect) {
                coachSelect.addEventListener('change', function () {
-                   document.getElementById('id_coach').submit();
+                   document.getElementById('select-form').submit();
                });
             }
         });
