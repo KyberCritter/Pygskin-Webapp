@@ -31,8 +31,7 @@
         padding: 10px;
         flex-grow: 1;
         width: 100%;
-        margin-top: 15px;
-        margin-left: 15px;
+        margin-top: 10px;
     }
     
     #coach-info {
@@ -47,6 +46,7 @@
         padding: 20px; /* Spacing inside the box */
         border-radius: 8px; /* Rounded corners */
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        min-width: 1200px;
     }
     
     .scrollable-table {
@@ -134,12 +134,11 @@
                 {{ coach_form.as_p }}
             </form>
         </h2>
+
+        {% if coach_data %}
+
+        <p id="coach-info"> {{ coach_data.biography }} </p>
     </section>
-
-    {% if coach_data %}
-
-    <p id="coach-info"> {{ coach_data.biography }} </p>
-
 </div>
 
     <section id="coach-table-info">
