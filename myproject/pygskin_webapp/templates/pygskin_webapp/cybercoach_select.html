@@ -44,7 +44,7 @@
         width: 100%;
     }
 
-    p {
+    form p {
         display: flex;
     }
 
@@ -184,10 +184,17 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            align-items: normal;
         }
 
-        .play-input, .coach-selector {
+        .coach-selector {
             width: 100%; /* Ensure the form takes up full width */
+        }
+
+        .play-input {
+            width: 90%;
+            grid-template-columns: 1fr;
+            gap: 0px;
         }
 
         .form-row {
@@ -197,14 +204,27 @@
         }
 
         .down-and-distance, .time-remaining {
-            flex-direction: column; /* Stack inputs vertically */
-            align-items: flex-start; /* Align to the start on mobile */
+            flex-direction: row;
+            align-items: center;
         }
 
         .or-text {
             font-size: 60px; /* Adjust the size of the text for mobile */
             margin: 20px 0;
         }
+
+        .first-column {
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            width: auto !important;
+        }
+
+        form p {
+            display: block;
+        }
+
     }
 </style>
 
