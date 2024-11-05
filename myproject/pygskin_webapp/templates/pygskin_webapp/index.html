@@ -2,260 +2,190 @@
 {% load static %}
 
 {% block content %}
-    <style>
-        html, body{
-            margin: 0 !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
-        }
+<style>
+    /* General reset */
+    html, body {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        width: 100%;
+    }
 
-        .container {
-            background-color: #f1efef !important;
-            flex: none !important;
-            height: 800px !important;
-            left: 0px !important;
-            position: static !important;
-            max-width: 1670px !important;
-        }
+    .container {
+        padding: 0% !important;
+    }
 
+    /* Main container */
+    .hero-section {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #f1efef;
+    }
+
+    /* Left content section */
+    .hero-content-left {
+        width: 65%;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        z-index: 1;
+    }
+
+    .hero-section-background {
+        position: absolute;
+        top: -15%;
+        left: 30%;
+        bottom: -50%;
+        transform: translateX(-50%) rotate(-30deg);
+        width: 80%;
+        opacity: 0.10;
+        z-index: 0;
+    }
+
+    .hero-section-background img {
+        width: 150%;
+        height: auto;
+    }
+
+    .hero-section-text-box {
+        z-index: 1; /* Position above background */
+        margin-top: 80px;
+        max-width: 70%;
+    }
+
+    .hero-section-text-box p {
+        font-family: 'Fugaz One', sans-serif;
+        font-size: 6vw; /* Responsive scaling */
+        font-weight: 400;
+        text-transform: uppercase;
+        background: linear-gradient(to bottom, #000000 10%, #006106 50%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    /* Small text and button */
+    .hero-section-bottom-text {
+        max-width: 600px;
+        margin-top: 20px;
+    }
+
+    .hero-section-bottom-text-div p {
+        font-size: 1.2rem;
+        color: rgba(1, 96, 6, 1);
+        margin: 0;
+        padding: 10px 0;
+    }
+
+    .hero-section-bottom-button {
+        background-color: #016006;
+        border-radius: 6px;
+        padding: 10px 20px;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+
+    .hero-section-bottom-button-box p {
+        font-size: 1rem;
+        color: rgb(255, 222, 33);
+        margin: 0;
+    }
+
+    /* Centered coach image */
+    .centered-coach-image {
+        width: 30%;
+        max-width: 400px;
+        margin: 20px auto;
+        margin-right: 10%;
+        text-align: center;
+        z-index: 1;
+    }
+
+    .centered-coach-image img {
+        width: 100%;
+        height: auto;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        background-color: #016006;
+        border-radius: 20px;
+        box-shadow: 0 4px 4px #00000040;
+        width: 30%;
+        max-width: 400px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .sidebar-heading {
+        font-family: 'Fugaz One', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: rgb(255, 222, 33);
+        margin: 10px 0;
+    }
+
+    .sidebar-top-item,
+    .sidebar-bottom-item {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .sidebar img {
+        width: 100%;
+        height: auto;
+        border-radius: inherit;
+        object-fit: cover;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+        /* Adjust layout for medium screens */
         .hero-section {
-            flex: none;
-            height: 1054px;
-            left: 0px;
-            overflow: visible;
-            position: absolute;
-            top: -70px;
-            width: 1600px;
+            flex-direction: column;
+            align-items: center;
         }
 
-        .hero-section-text-box {
-            flex: none;
-            height: auto;
-            left: 150px;
-            position: absolute;
-            top: 350px;
-            width: 470px;
-            word-break: break-word;
-            word-wrap: break-word;
+        .hero-content-left,
+        .sidebar {
+            width: 100%;
+            max-width: none;
+            align-items: center;
         }
 
         .hero-section-text-box p {
-            font-family: 'Fugaz One', sans-serif;
-            font-size: 100px; 
-            font-weight: 400; 
-            text-transform: uppercase; 
-            background: linear-gradient(to bottom, #000000 10%, #006106 50%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: inline-block;
-            text-align: left;
-            text-wrap: wrap;
-            vertical-align: middle;
-            padding: 0;
-            line-height: 1;
-            margin: 0 auto;
+            font-size: 6vw;
         }
 
-        .hero-section-background {
-            aspect-ratio: 1.0857938843180555 / 1;
-            flex: none;
-            left: -160px;
-            mix-blend-mode: luminosity;
-            opacity: .08;
-            position: absolute;
-            top: 5px;
-            width: 1000px;
-            transform: rotate(-30deg);
+        .centered-coach-image {
+            display: none; /* Hide coach image on smaller screens */
         }
+    }
 
-        .hero-section-background-div {
-            position: absolute;
-            border-radius: inherit;
-            inset: 0px;
+    @media (max-width: 768px) {
+        /* Additional adjustments for small screens */
+        .hero-section-text-box p {
+            font-size: 8vw;
         }
+    }
+</style>
 
-        .hero-section-background-div img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border-radius: inherit;
-            object-position: center center;
-            object-fit: cover;
-        }
-
-        .hero-section-bottom-text {
-            flex: none;
-            height: 125px;
-            left: 150px;
-            overflow: visible;
-            position: absolute;
-            top: 800px;
-            width: 458px;
-        }
-
-        .hero-section-bottom-text-div {
-            flex: none;
-            height: 75px;
-            left: 0;
-            position: absolute;
-            top: 0;
-            white-space: pre-wrap;
-            width: 458px;
-            word-break: break-word;
-            word-wrap: break-word;
-        }
-
-        .hero-section-bottom-text-div p {
-            font-family: 'Fugaz One', sans-serif;
-            font-size: 24px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            color: rgba(1, 96, 6, 1);
-            display: inline-block;
-            text-align: center;
-            text-wrap: wrap;
-            vertical-align: middle;
-            padding: 0;
-            line-height: 1;
-            margin: 0 auto;
-        }
-
-        .hero-section-bottom-button {
-            align-content: flex-start;
-            align-items: flex-start;
-            background-color: #016006;
-            border-radius: 6px;
-            display: flex;
-            flex: none;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            gap: 10px;
-            height: min-content;
-            justify-content: flex-start;
-            left: 35px;
-            overflow: visible;
-            padding: 12px 32px;
-            position: absolute;
-            text-decoration: none;
-        }
-
-        .hero-section-bottom-button-box {
-            flex: none;
-            height: auto;
-            position: relative;
-            white-space: pre;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero-section-bottom-button-box p {
-            font-family: 'Fugaz One', sans-serif;
-            font-size: 20px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            color: rgb(255, 222, 33);
-            display: inline-block;
-            text-align: left;
-            text-wrap: wrap;
-            vertical-align: middle;
-            padding: 18px;
-            line-height: 1;
-            margin: 0 auto;
-        }
-
-        .middle-picture {
-            aspect-ratio: .6238532110091743 / 1;
-            flex: none;
-            height: auto;
-            left: 750px;
-            position: absolute;
-            top: 300px;
-            width: 408px;
-        }
-
-        .middle-picture-div {
-            position: absolute;
-            border-radius: inherit;
-            inset: 0px;
-        }
-
-        .middle-picture-div img {
-            display: block;
-            width: 100%;
-            height: 100%;
-            border-radius: inherit;
-            object-position: center center;
-            object-fit: cover;
-        }
-
-        .sidebar {
-            --border-bottom-width: 8px;
-            --border-color: #016006;
-            --border-left-width: 8px;
-            --border-right-width: 8px;
-            --border-style: solid;
-            --border-top-width: 8px;
-            background-color: #016006;
-            border-radius: 20px;
-            box-shadow: 0 4px 4px #00000040;
-            flex: none;
-            height: 750px;
-            right: 50px;
-            position: absolute;
-            top: 167px;
-            width: 401px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .sidebar-heading {
-            height: 52px;
-            font-family: 'Fugaz One', sans-serif;
-            font-size: 30px;
-            font-weight: 700;
-            color: rgb(255, 222, 33);
-            text-align: center;
-            margin: 0;
-            padding-top: 10px;
-            text-transform: uppercase;
-        }
-
-        .sidebar-top-item,
-        .sidebar-bottom-item {
-            flex: none;
-            width: 100%;
-            display: flex;
-            height: 272px;
-            justify-content: center;
-            align-items: center;
-            text-decoration: none;
-        }
-
-        .sidebar-top-item img,
-        .sidebar-bottom-item img {
-            max-height: 90%;
-            max-width: 90%;
-            border-radius: inherit;
-            object-fit: cover;
-        }
-    </style>
-
-    <div class="hero-section">
+<div class="hero-section">
+    <!-- Left side with background, main text, and bottom button -->
+    <div class="hero-content-left">
         <div class="hero-section-background">
-            <div class="hero-section-background-div">
-                <img src="{% static "favicon.ico" %}" alt="Football Background">
-            </div>
+            <img src="{% static 'favicon.ico' %}" alt="Football Background">
         </div>
         <div class="hero-section-text-box">
             <p>SEE HOW COACHES THINK</p>
-        </div>
-        <div class="middle-picture">
-            <div class="middle-picture-div">
-                <img src="{% static "coach_background_index.png" %}" alt="Coach Middle Background">
-            </div>
         </div>
         <div class="hero-section-bottom-text">
             <div class="hero-section-bottom-text-div">
@@ -268,15 +198,23 @@
             </div>
         </div>
     </div>
+
+    <!-- Centered Coach Image -->
+    <div class="centered-coach-image">
+        <img src="{% static 'coach_background_index.png' %}" alt="Coach Middle Background">
+    </div>
+
+    <!-- Sidebar on the right side -->
     <div class="sidebar">
         <h2 class="sidebar-heading">VIEW COACH STATISTICS</h2>
         <a class="sidebar-top-item" href="{% url 'coach_stats' %}">
-            <img src="{% static "view_coach_stats.png" %}">
+            <img src="{% static 'view_coach_stats.png' %}">
         </a>
         <h2 class="sidebar-heading">VISUALIZE REALIGNMENT</h2>
         <a class="sidebar-bottom-item" href="{% url 'conference_analysis' %}">
-            <img src="{% static "visualize_realignment.png" %}">
+            <img src="{% static 'visualize_realignment.png' %}">
         </a>
     </div>
+</div>
 
 {% endblock %}
