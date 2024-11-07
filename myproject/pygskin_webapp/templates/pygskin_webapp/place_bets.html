@@ -7,6 +7,15 @@
 {% block content %}
 
 <style>
+    h1, h2 {
+        text-transform: uppercase;
+    }
+    
+    h3, p {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+    }
+
     .betting-container {
         display: flex;
         flex-wrap: wrap;
@@ -42,15 +51,30 @@
         margin-bottom: 5px;
     }
 
+    .bet-button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
     .bet-button {
         padding: 5px 10px;
         margin: 5px;
         background-color: #FFDE21;
         color: #008703;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
         border: none;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s;
+        width: 45%;
+        text-align: center;
+    }
+
+    #submitBetButton, #betAmount, #betting-history {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
     }
 
     .bet-button:hover {
@@ -155,9 +179,9 @@
 
     // Sample betting data
     const bettingData = [
-        { homeTeam: "Team A", awayTeam: "Team B", spread: "-3.5", moneyline: "+150", overUnder: "45.5" },
-        { homeTeam: "Team C", awayTeam: "Team D", spread: "+2.5", moneyline: "-120", overUnder: "52.0" },
-        { homeTeam: "Team E", awayTeam: "Team F", spread: "-1.5", moneyline: "+200", overUnder: "48.5" }
+        { homeTeam: "Team A", awayTeam: "Team B", spreadHome: "-3.5", spreadAway: "+3.5", moneylineHome: "-150", moneylineAway: "+120", over: "45.5", under: "45.5" },
+        { homeTeam: "Team C", awayTeam: "Team D", spreadHome: "+2.5", spreadAway: "-2.5", moneylineHome: "-120", moneylineAway: "+110", over: "52.0", under: "52.0" },
+        { homeTeam: "Team E", awayTeam: "Team F", spreadHome: "-1.5", spreadAway: "+1.5", moneylineHome: "+200", moneylineAway: "-250", over: "48.5", under: "48.5" }
     ];
 
     function updateBettingHistory(bet) {
@@ -215,9 +239,18 @@
 
         card.innerHTML = `
             <div class="team-names">${game.awayTeam} @ ${game.homeTeam}</div>
-            <button class="bet-button" onclick="openModal('Spread', '${encodeURIComponent(JSON.stringify(game))}')">Spread: ${game.spread}</button>
-            <button class="bet-button" onclick="openModal('Moneyline', '${encodeURIComponent(JSON.stringify(game))}')">Moneyline: ${game.moneyline}</button>
-            <button class="bet-button" onclick="openModal('Over/Under', '${encodeURIComponent(JSON.stringify(game))}')">Over/Under: ${game.overUnder}</button>
+            <div class="bet-button-container">
+                <button class="bet-button" onclick="openModal('Spread Away', '${encodeURIComponent(JSON.stringify(game))}')">Spread (${game.spreadAway})</button>
+                <button class="bet-button" onclick="openModal('Spread Home', '${encodeURIComponent(JSON.stringify(game))}')">Spread (${game.spreadHome})</button>
+            </div>
+            <div class="bet-button-container">
+                <button class="bet-button" onclick="openModal('Moneyline Away', '${encodeURIComponent(JSON.stringify(game))}')">Moneyline (${game.moneylineAway})</button>
+                <button class="bet-button" onclick="openModal('Moneyline Home', '${encodeURIComponent(JSON.stringify(game))}')">Moneyline (${game.moneylineHome})</button>
+            </div>
+            <div class="bet-button-container">
+                <button class="bet-button" onclick="openModal('Over', '${encodeURIComponent(JSON.stringify(game))}')">Over (${game.over})</button>
+                <button class="bet-button" onclick="openModal('Under', '${encodeURIComponent(JSON.stringify(game))}')">Under (${game.under})</button>
+            </div>
         `;
 
         return card;
