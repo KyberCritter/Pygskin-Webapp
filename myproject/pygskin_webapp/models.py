@@ -66,3 +66,46 @@ class Subscriber(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} <{self.email}>"
+
+class Game(models.Model):
+    cfbdb_game_id = models.IntegerField()
+    season = models.IntegerField()
+    week = models.IntegerField()
+    home_team = models.CharField(max_length=50)
+    away_team = models.CharField(max_length=50)
+    home_money_line = models.IntegerField(null=True, blank=True)
+    away_money_line = models.IntegerField(null=True, blank=True)
+    spread = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    over_under = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    game_date = models.DateTimeField()
+
+class Bet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    bet_type = models.CharField(max_length=50) # 'Spread', 'Money Line', 'Over Under'
+    credits_bet = models.IntegerField()
+    odds = models.DecimalField(max_digits=5, decimal_places=2)
+    bet_placed_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='Pending')
+    payout = models.IntegerField(default=0)
+
+class UserCredit(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    total_credits = models.IntegerField(default=10000)
+    credits_won = models.IntegerField(default=0)
+    credits_lost = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
+
+class BettingTransaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bet = models.ForeignKey(Bet, on_delete=models.SET_NULL, null=True)
+    transaction_type = models.CharField(max_length=20) # 'Bet placed', 'Win', 'lose'
+    credits_adjusted = models.IntegerField()
+    balance_after_transaction = models.IntegerField()
+    transaction_date = models.DateTimeField(auto_now_add=True)
+
+class GameScore(models.Model):
+    game = models.OneToOneField(Game, on_delete=models.CASCADE)
+    home_team_score = models.IntegerField(default=0)
+    away_team_score = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
