@@ -138,12 +138,19 @@
     </div>
 </div>
 
+<!-- Betting History -->
+<h2>Betting History</h2>
+<div id="betting-history">
+    <p>No bets placed yet.</p>
+</div>
+
 <script>
     let currentBalance = 10000; // Initialize balance
+    let bettingHistory = [];
 
     // Display the current balance
     function updateBalanceDisplay() {
-        document.getElementById('balance-display').innerText = `Balance: $${currentBalance.toFixed(2)}`;
+        document.getElementById('balance-display').innerText = `Balance: $${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
     }
 
     // Sample betting data
@@ -153,21 +160,45 @@
         { homeTeam: "Team E", awayTeam: "Team F", spread: "-1.5", moneyline: "+200", overUnder: "48.5" }
     ];
 
+    function updateBettingHistory(bet) {
+        bettingHistory.push(bet);
+
+        const historyContainer = document.getElementById('betting-history');
+        historyContainer.innerHTML = ''; // Clear previous content
+
+        if (bettingHistory.length === 0) {
+            historyContainer.innerHTML = '<p>No bets placed yet.</p>';
+            return;
+        }
+
+        const historyList = document.createElement('ul');
+        bettingHistory.forEach((item, index) => {
+            const listItem = document.createElement('li');
+            listItem.innerText = `Bet #${index + 1}: ${item.type} - ${item.amount} on ${item.game.awayTeam} @ ${item.game.homeTeam}`;
+            historyList.appendChild(listItem);
+        });
+
+        historyContainer.appendChild(historyList);
+    }
+
     const modal = document.getElementById('betModal');
     const modalTitle = document.getElementById('modalTitle');
     const betAmountInput = document.getElementById('betAmount');
     const submitBetButton = document.getElementById('submitBetButton');
     const closeModal = document.querySelector('.close-modal');
+    let currentBet = null;
 
     function openModal(betType, gameStr) {
         const game = JSON.parse(decodeURIComponent(gameStr));
         modalTitle.innerText = `Place Bet on ${betType} for ${game.awayTeam} @ ${game.homeTeam}`;
         modal.style.display = 'flex';
+        currentBet = { type: betType, game: game }; // Store current bet details
     }
 
     function closeModalFunc() {
         modal.style.display = 'none';
         betAmountInput.value = '';
+        currentBet = null;
     }
 
     closeModal.addEventListener('click', closeModalFunc);
@@ -211,7 +242,13 @@
 
         currentBalance -= betAmount;
         updateBalanceDisplay();
-        alert(`Bet of $${betAmount.toFixed(2)} submitted!`);
+
+        if (currentBet) {
+            currentBet.amount = betAmount;
+            updateBettingHistory(currentBet);
+        }
+
+        // alert(`Bet of $${betAmount.toFixed(2)} submitted!`);
         closeModalFunc();
     });
 
