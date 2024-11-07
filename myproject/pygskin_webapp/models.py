@@ -109,3 +109,5 @@ class GameScore(models.Model):
     home_team_score = models.IntegerField(default=0)
     away_team_score = models.IntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
+    # auto_now=True will updated this variable automatically when 'GameScore' object is updated.
+    # So there is no need to update it manually in the code. 
