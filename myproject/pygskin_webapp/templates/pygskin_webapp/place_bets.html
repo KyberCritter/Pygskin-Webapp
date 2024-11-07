@@ -139,6 +139,13 @@
 </div>
 
 <script>
+    let currentBalance = 10000; // Initialize balance
+
+    // Display the current balance
+    function updateBalanceDisplay() {
+        document.getElementById('balance-display').innerText = `Balance: $${currentBalance.toFixed(2)}`;
+    }
+
     // Sample betting data
     const bettingData = [
         { homeTeam: "Team A", awayTeam: "Team B", spread: "-3.5", moneyline: "+150", overUnder: "45.5" },
@@ -191,9 +198,25 @@
     });
 
     submitBetButton.addEventListener('click', () => {
-        alert(`Bet of $${betAmountInput.value} submitted!`);
+        const betAmount = parseFloat(betAmountInput.value);
+        if (isNaN(betAmount) || betAmount <= 0) {
+            alert('Please enter a valid bet amount.');
+            return;
+        }
+
+        if (betAmount > currentBalance) {
+            alert('Insufficient balance to place this bet.');
+            return;
+        }
+
+        currentBalance -= betAmount;
+        updateBalanceDisplay();
+        alert(`Bet of $${betAmount.toFixed(2)} submitted!`);
         closeModalFunc();
     });
+
+    // Initialize balance display on page load
+    updateBalanceDisplay();
 </script>
 
 {% endblock %}
