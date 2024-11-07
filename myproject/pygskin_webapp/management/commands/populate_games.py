@@ -18,7 +18,8 @@ class Command(BaseCommand):
 
         params = {
             "year": 2024,
-            "week": 1
+            "week": 11,
+            "provider": "ESPN Bet", 
         }
         
         response = requests.get(
@@ -51,11 +52,10 @@ class Command(BaseCommand):
                         "week": game_data["week"],
                         "home_team": game_data["homeTeam"],
                         "away_team": game_data["awayTeam"],
-                        "home_money_line": game_data["lines"][0]["homeMoneyline"] if line_data else None,
-                        "away_money_line": game_data["lines"][0]["awayMoneyline"] if line_data else None,
-                        "spread": game_data["lines"][0]["spread"] if line_data else None,
-                        "over_under": game_data["lines"][0]["overUnder"] if line_data else None,
-                        "game_date": parse_datetime(game_data["startDate"]),
+                        "home_money_line": game_data["lines"][0].get("homeMoneyline"),
+                        "away_money_line": game_data["lines"][0].get("awayMoneyline"),
+                        "spread": game_data["lines"][0].get("spread"),
+                        "over_under": game_data["lines"][0].get("overUnder"),
                     }
                 )
 
@@ -63,8 +63,8 @@ class Command(BaseCommand):
                 GameScore.objects.update_or_create(
                     game=game,
                     defaults={
-                        "home_score": game_data["homeScore"],
-                        "away_score": game_data["awayScore"],
+                        "home_team_score": game_data["homeScore"],
+                        "away_team_score": game_data["awayScore"],
                     }
                 )
 

@@ -73,11 +73,11 @@ class Game(models.Model):
     week = models.IntegerField()
     home_team = models.CharField(max_length=50)
     away_team = models.CharField(max_length=50)
-    home_money_line = models.IntegerField(null=True, blank=True)
-    away_money_line = models.IntegerField(null=True, blank=True)
+    home_money_line = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    away_money_line = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     spread = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     over_under = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
-    game_date = models.DateTimeField()
+    game_date = models.DateTimeField(null=True, blank=True)
 
 class Bet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
