@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Place Bets{% endblock %}
+
+{% block content %}
+
+<style>
+    .betting-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+        justify-content: center; /* Center items horizontally */
+    }
+
+    .bet-card {
+        background-color: #008703;
+        color: #fff;
+        border-radius: 15px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        width: 280px;
+        text-align: center;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        transition: transform 0.3s;
+    }
+
+    .bet-card:hover {
+        transform: scale(1.05);
+    }
+
+    .team-names {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+
+    .bet-info {
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+
+    .bet-input {
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .bet-input input[type="number"] {
+        padding: 5px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+        margin-right: 5px;
+        width: 70px;
+    }
+
+    .bet-input button {
+        padding: 5px 10px;
+        background-color: #FFDE21;
+        color: #008703;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .bet-input button:hover {
+        background-color: #e5c70f;
+    }
+</style>
+
+<h1>Place Bets</h1>
+
+<p>Choose a game to place a fake bet on. Select your bet amount and click "Place Bet".</p>
+
+<div class="betting-container" id="betting-container">
+    <!-- Bet cards will be dynamically created here -->
+</div>
+
+<script>
+    // Sample betting data
+    const bettingData = [
+        { homeTeam: "Team A", awayTeam: "Team B", spread: "-3.5", moneyline: "+150", overUnder: "45.5" },
+        { homeTeam: "Team C", awayTeam: "Team D", spread: "+2.5", moneyline: "-120", overUnder: "52.0" },
+        { homeTeam: "Team E", awayTeam: "Team F", spread: "-1.5", moneyline: "+200", overUnder: "48.5" }
+    ];
+
+    function createBetCard(game) {
+        const card = document.createElement('div');
+        card.classList.add('bet-card');
+
+        card.innerHTML = `
+            <div class="team-names">${game.awayTeam} @ ${game.homeTeam}</div>
+            <div class="bet-info">Spread: ${game.spread}</div>
+            <div class="bet-info">Moneyline: ${game.moneyline}</div>
+            <div class="bet-info">Over/Under: ${game.overUnder}</div>
+            <div class="bet-input">
+                <input type="number" placeholder="Bet $" min="0">
+                <button onclick="placeBet('${game.homeTeam}', '${game.awayTeam}')">Place Bet</button>
+            </div>
+        `;
+
+        return card;
+    }
+
+    function placeBet(homeTeam, awayTeam) {
+        alert(`Bet placed on ${awayTeam} @ ${homeTeam}!`);
+    }
+
+    const container = document.getElementById('betting-container');
+    bettingData.forEach(game => {
+        container.appendChild(createBetCard(game));
+    });
+</script>
+
+{% endblock %}

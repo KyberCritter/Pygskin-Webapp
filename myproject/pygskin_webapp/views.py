@@ -272,6 +272,12 @@ def coach_stats(request):
     return render(request, 'pygskin_webapp/coach_stats.html', context)
 
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
+def place_bets(request):
+    template = loader.get_template("pygskin_webapp/place_bets.html")
+    context = {}
+    return HttpResponse(template.render(context, request))
+
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def cybercoach(request):
     # Only proceed if this is a POST request
     if request.method == 'POST':
