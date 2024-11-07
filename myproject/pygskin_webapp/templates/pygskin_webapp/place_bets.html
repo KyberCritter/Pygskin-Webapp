@@ -158,6 +158,7 @@
         <span class="close-modal">&times;</span>
         <h3 id="modalTitle">Place Your Bet</h3>
         <input type="number" id="betAmount" placeholder="Enter bet amount" min="0">
+        <p id="potentialWinnings">Potential Winnings: $0.00</p>
         <button id="submitBetButton">Submit Bet</button>
     </div>
 </div>
@@ -179,9 +180,54 @@
 
     // Sample betting data
     const bettingData = [
-        { homeTeam: "Team A", awayTeam: "Team B", spreadHome: "-3.5", spreadAway: "+3.5", moneylineHome: "-150", moneylineAway: "+120", over: "45.5", under: "45.5" },
-        { homeTeam: "Team C", awayTeam: "Team D", spreadHome: "+2.5", spreadAway: "-2.5", moneylineHome: "-120", moneylineAway: "+110", over: "52.0", under: "52.0" },
-        { homeTeam: "Team E", awayTeam: "Team F", spreadHome: "-1.5", spreadAway: "+1.5", moneylineHome: "+200", moneylineAway: "-250", over: "48.5", under: "48.5" }
+        { 
+            homeTeam: "Team A", 
+            awayTeam: "Team B", 
+            spreadHome: "-3.5", 
+            spreadAway: "+3.5", 
+            moneylineHome: "-150", 
+            moneylineAway: "+120", 
+            over: "45.5", 
+            under: "45.5",
+            oddsSpreadHome: -110, // Add odds for each option
+            oddsSpreadAway: -110,
+            oddsMoneylineHome: -150,
+            oddsMoneylineAway: +120,
+            oddsOver: -105,
+            oddsUnder: -105
+        },
+        { 
+            homeTeam: "Team C", 
+            awayTeam: "Team D", 
+            spreadHome: "+2.5", 
+            spreadAway: "-2.5", 
+            moneylineHome: "-120", 
+            moneylineAway: "+110", 
+            over: "52.0", 
+            under: "52.0",
+            oddsSpreadHome: -110,
+            oddsSpreadAway: -110,
+            oddsMoneylineHome: -120,
+            oddsMoneylineAway: +110,
+            oddsOver: -110,
+            oddsUnder: -110
+        },
+        { 
+            homeTeam: "Team E", 
+            awayTeam: "Team F", 
+            spreadHome: "-1.5", 
+            spreadAway: "+1.5", 
+            moneylineHome: "+200", 
+            moneylineAway: "-250", 
+            over: "48.5", 
+            under: "48.5",
+            oddsSpreadHome: -105,
+            oddsSpreadAway: -105,
+            oddsMoneylineHome: +200,
+            oddsMoneylineAway: -250,
+            oddsOver: -110,
+            oddsUnder: -110
+        }
     ];
 
     function updateBettingHistory(bet) {
@@ -212,11 +258,46 @@
     const closeModal = document.querySelector('.close-modal');
     let currentBet = null;
 
-    function openModal(betType, gameStr) {
+    // Calculate winnings based on the odds
+    function calculateWinnings(betAmount, odds) {
+            if (odds > 0) {
+                // Positive odds (e.g., +120 means winning $120 on a $100 bet)
+                return betAmount * (odds / 100);
+            } else {
+                // Negative odds (e.g., -150 means winning $100 on a $150 bet)
+                return betAmount / Math.abs(odds / 100);
+            }
+        }
+
+        function openModal(betType, gameStr) {
         const game = JSON.parse(decodeURIComponent(gameStr));
+        let odds = 0;
+
+        // Determine odds based on the betType
+        if (betType.includes('Spread Away')) {
+            odds = parseFloat(game.spreadAway);
+        } else if (betType.includes('Spread Home')) {
+            odds = parseFloat(game.spreadHome);
+        } else if (betType.includes('Moneyline Away')) {
+            odds = parseFloat(game.moneylineAway);
+        } else if (betType.includes('Moneyline Home')) {
+            odds = parseFloat(game.moneylineHome);
+        } else if (betType === 'Over' || betType === 'Under') {
+            // Assume even odds for Over/Under (this can be adjusted as per your requirements)
+            odds = 100;
+        }
+
         modalTitle.innerText = `Place Bet on ${betType} for ${game.awayTeam} @ ${game.homeTeam}`;
         modal.style.display = 'flex';
-        currentBet = { type: betType, game: game }; // Store current bet details
+        currentBet = { type: betType, game: game, odds: odds }; // Store current bet details, including odds
+
+        // Update potential winnings display (if you have a place to show it)
+        const potentialWinningsDisplay = document.getElementById('potentialWinnings');
+        if (potentialWinningsDisplay) {
+            const betAmount = parseFloat(betAmountInput.value) || 0;
+            const potentialWinnings = calculateWinnings(betAmount, odds);
+            potentialWinningsDisplay.innerText = `Potential Winnings: $${potentialWinnings.toFixed(2)}`;
+        }
     }
 
     function closeModalFunc() {
@@ -240,16 +321,28 @@
         card.innerHTML = `
             <div class="team-names">${game.awayTeam} @ ${game.homeTeam}</div>
             <div class="bet-button-container">
-                <button class="bet-button" onclick="openModal('Spread Away', '${encodeURIComponent(JSON.stringify(game))}')">Spread (${game.spreadAway})</button>
-                <button class="bet-button" onclick="openModal('Spread Home', '${encodeURIComponent(JSON.stringify(game))}')">Spread (${game.spreadHome})</button>
+                <button class="bet-button" onclick="openModal('Spread Away', '${encodeURIComponent(JSON.stringify(game))}')">
+                    Spread (${game.spreadAway}) - Odds: ${game.oddsSpreadAway > 0 ? '+' : ''}${game.oddsSpreadAway}
+                </button>
+                <button class="bet-button" onclick="openModal('Spread Home', '${encodeURIComponent(JSON.stringify(game))}')">
+                    Spread (${game.spreadHome}) - Odds: ${game.oddsSpreadHome > 0 ? '+' : ''}${game.oddsSpreadHome}
+                </button>
             </div>
             <div class="bet-button-container">
-                <button class="bet-button" onclick="openModal('Moneyline Away', '${encodeURIComponent(JSON.stringify(game))}')">Moneyline (${game.moneylineAway})</button>
-                <button class="bet-button" onclick="openModal('Moneyline Home', '${encodeURIComponent(JSON.stringify(game))}')">Moneyline (${game.moneylineHome})</button>
+                <button class="bet-button" onclick="openModal('Moneyline Away', '${encodeURIComponent(JSON.stringify(game))}')">
+                    Moneyline (${game.moneylineAway}) - Odds: ${game.oddsMoneylineAway > 0 ? '+' : ''}${game.oddsMoneylineAway}
+                </button>
+                <button class="bet-button" onclick="openModal('Moneyline Home', '${encodeURIComponent(JSON.stringify(game))}')">
+                    Moneyline (${game.moneylineHome}) - Odds: ${game.oddsMoneylineHome > 0 ? '+' : ''}${game.oddsMoneylineHome}
+                </button>
             </div>
             <div class="bet-button-container">
-                <button class="bet-button" onclick="openModal('Over', '${encodeURIComponent(JSON.stringify(game))}')">Over (${game.over})</button>
-                <button class="bet-button" onclick="openModal('Under', '${encodeURIComponent(JSON.stringify(game))}')">Under (${game.under})</button>
+                <button class="bet-button" onclick="openModal('Over', '${encodeURIComponent(JSON.stringify(game))}')">
+                    Over (${game.over}) - Odds: ${game.oddsOver > 0 ? '+' : ''}${game.oddsOver}
+                </button>
+                <button class="bet-button" onclick="openModal('Under', '${encodeURIComponent(JSON.stringify(game))}')">
+                    Under (${game.under}) - Odds: ${game.oddsUnder > 0 ? '+' : ''}${game.oddsUnder}
+                </button>
             </div>
         `;
 
@@ -273,11 +366,15 @@
             return;
         }
 
+        const potentialWinnings = calculateWinnings(betAmount, currentBet.odds);
+        alert(`Bet of $${betAmount.toFixed(2)} placed. Potential Winnings: $${potentialWinnings.toFixed(2)}`);
+
         currentBalance -= betAmount;
         updateBalanceDisplay();
 
         if (currentBet) {
             currentBet.amount = betAmount;
+            currentBet.winnings = potentialWinnings;
             updateBettingHistory(currentBet);
         }
 
