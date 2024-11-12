@@ -102,7 +102,13 @@
         text-align: center;
     }
 
-    #submitBetButton, #betAmount {
+    #submitBetButton {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    #betAmount {
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
     }
@@ -505,7 +511,7 @@
 
     submitBetButton.addEventListener('click', () => {
         const betAmount = parseFloat(betAmountInput.value);
-        if (isNaN(betAmount) || betAmount <= 0) {
+        if (isNaN(betAmount) || betAmount <= 0 || !/^\d+(\.\d{1,2})?$/.test(betAmount)) {
             alert('Please enter a valid bet amount.');
             return;
         }
@@ -538,6 +544,12 @@
     betAmountInput.addEventListener('input', () => {
         if (currentBet) {
             const betAmount = parseFloat(betAmountInput.value) || 0;
+            if (isNaN(betAmount) || betAmount < 0 || !/^\d+(\.\d{1,2})?$/.test(betAmount) || betAmount > currentBalance) {
+                betAmountInput.style.backgroundColor = '#f8d7da';
+            }
+            else {
+                betAmountInput.style.backgroundColor = '';
+            }
             const potentialWinnings = (calculateWinnings(betAmount, currentBet.odds) + betAmount).toFixed(2);
             document.getElementById('potentialWinnings').innerText = `Potential Winnings: $${potentialWinnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         }
