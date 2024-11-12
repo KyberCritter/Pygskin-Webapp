@@ -76,7 +76,9 @@ class Game(models.Model):
     home_money_line = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     away_money_line = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     spread = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    spread_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     over_under = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    over_under_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     game_date = models.DateTimeField(null=True, blank=True)
 
 class Bet(models.Model):
