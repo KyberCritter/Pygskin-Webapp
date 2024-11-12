@@ -193,7 +193,7 @@
 <div class="header-container">
     <div class="header-sub-container">
         <h1>Place Bets</h1>
-        <h2 id="balance-display">Balance: $10,000</h2>
+        <h2 id="balance-display">Balance: 10,000 Credits</h2>
     </div>
 
     <p>Choose a game to place a fake bet on. Select your bet type and enter the amount.</p>
@@ -209,7 +209,7 @@
         <span class="close-modal">&times;</span>
         <h3 id="modalTitle">Place Your Bet</h3>
         <input type="number" id="betAmount" placeholder="Enter bet amount" min="0">
-        <p id="potentialWinnings">Potential Winnings: $0.00</p>
+        <p id="potentialWinnings">Potential Winnings: 0.00 Credits</p>
         <button id="submitBetButton">Submit Bet</button>
     </div>
 </div>
@@ -230,7 +230,7 @@
 
     // Display the current balance
     function updateBalanceDisplay() {
-        document.getElementById('balance-display').innerText = `Balance: $${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('balance-display').innerText = `Balance: ${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Credits`;
     }
 
     // Sample betting data
@@ -377,7 +377,6 @@
                 value += "Spread " + item.game.homeTeam + " (" + item.game.spreadHome + ")";
             } else if (item.type.includes('Moneyline Away')) {
                 value += "Moneyline " + item.game.awayTeam;
-                
             } else if (item.type.includes('Moneyline Home')) {
                 value += "Moneyline " + item.game.homeTeam;
             } else if (item.type === 'Over') {
@@ -385,7 +384,7 @@
             } else if (item.type === 'Under') {
                 value += "Total Points Under " + item.game.under;
             }
-            listItem.innerText = `Bet #${index + 1}: ${value} (${item.odds > 0 ? '+' : ''}${item.odds}) $${item.amount} to win $${item.winnings}`;
+            listItem.innerText = `Bet #${index + 1}: ${value} (${item.odds > 0 ? '+' : ''}${item.odds}) ${item.amount} Credits to win ${item.winnings} Credits`;
             historyList.appendChild(listItem);
         });
 
@@ -443,7 +442,7 @@
             if (potentialWinningsDisplay) {
                 const betAmount = parseFloat(betAmountInput.value) || 0;
                 const potentialWinnings = calculateWinnings(betAmount, odds) + betAmount;
-                potentialWinningsDisplay.innerText = `Potential Winnings: $${potentialWinnings}`;
+                potentialWinningsDisplay.innerText = `Potential Winnings: ${potentialWinnings} Credits`;
             }
         }
 
@@ -553,7 +552,7 @@
                 betAmountInput.style.backgroundColor = '';
             }
             const potentialWinnings = (calculateWinnings(betAmount, currentBet.odds) + betAmount).toFixed(2);
-            document.getElementById('potentialWinnings').innerText = `Potential Winnings: $${potentialWinnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            document.getElementById('potentialWinnings').innerText = `Potential Winnings: ${potentialWinnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Credits`;
         }
     });
 
