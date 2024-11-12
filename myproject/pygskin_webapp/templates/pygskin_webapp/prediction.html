@@ -123,6 +123,17 @@
         color: red !important;
         font-weight: bold;
     }
+
+    @media (max-width: 768px) {
+        .table-container {
+            flex-direction: column;
+        }
+    }
+    @media (min-width: 769px) {
+        .table-container {
+            flex-direction: row;
+        }
+    }
 </style>
 <div class="header-container">
     <div class="group">

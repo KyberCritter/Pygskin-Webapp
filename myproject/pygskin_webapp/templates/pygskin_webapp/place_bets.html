@@ -1,0 +1,561 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Place Bets{% endblock %}
+
+{% block content %}
+
+<style>
+    h1, h2 {
+        text-transform: uppercase;
+        text-shadow: none !important;
+        text-align: center;
+    }
+
+    h1 {
+        color: #FFDE21 !important;
+    }
+
+    h2, p {
+        color: white !important;
+    }
+
+    .header-container {
+        background-color: #006106;
+        border-radius: 20px;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-top: 25px;
+        padding-bottom: 15px;
+        margin: 20px 0;
+        text-align: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-sub-container {
+        background-color: #008703;
+        border-radius: 20px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+    }
+    
+    h3, p {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .betting-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-top: 20px;
+        justify-content: center;
+    }
+
+    .bet-card {
+        background-color: #006106;
+        color: #FFDE21;
+        border-radius: 15px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        width: 280px;
+        text-align: center;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        transition: transform 0.3s;
+    }
+
+    .bet-card:hover {
+        transform: scale(1.05);
+    }
+
+    .team-names {
+        font-size: 1.25rem;
+        margin-bottom: 10px;
+    }
+
+    .bet-info {
+        font-size: 1rem;
+        margin-bottom: 5px;
+    }
+
+    .bet-button-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .bet-button {
+        padding: 5px 10px;
+        margin: 5px;
+        background-color: #008703;
+        color: #FFDE21;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 45%;
+        text-align: center;
+    }
+
+    #submitBetButton {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    #betAmount {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+    }
+
+    #betting-history {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        color: white;
+    }
+
+    .bet-button:hover {
+        background-color: #e5c70f;
+        color: #006106;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 400px;
+        text-align: center;
+    }
+
+    .close-modal {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close-modal:hover,
+    .close-modal:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .modal input[type="number"] {
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        outline: none;
+        width: 80%;
+        margin-bottom: 10px;
+    }
+
+    .modal button {
+        padding: 5px 10px;
+        background-color: #008703;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .modal button:hover {
+        background-color: #006d02;
+    }
+
+    #potentialWinnings {
+        color: black !important;
+    }
+</style>
+
+<div class="header-container">
+    <div class="header-sub-container">
+        <h1>Place Bets</h1>
+        <h2 id="balance-display">Balance: 10,000 Credits</h2>
+    </div>
+
+    <p>Choose a game to place a fake bet on. Select your bet type and enter the amount.</p>
+</div>  
+
+<div class="betting-container" id="betting-container">
+    <!-- Bet cards will be dynamically created here -->
+</div>
+
+<!-- Modal Structure -->
+<div id="betModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h3 id="modalTitle">Place Your Bet</h3>
+        <input type="number" id="betAmount" placeholder="Enter bet amount" min="0">
+        <p id="potentialWinnings">Potential Winnings: 0.00 Credits</p>
+        <button id="submitBetButton">Submit Bet</button>
+    </div>
+</div>
+
+<!-- Betting History -->
+ <div class="header-container">
+    <div class="header-sub-container">
+        <h1>Betting History</h1>
+    </div>
+    <div id="betting-history">
+        <p>No bets placed yet.</p>
+    </div>
+</div>
+
+<script>
+    let currentBalance = 10000; // Initialize balance
+    let bettingHistory = [];
+
+    // Display the current balance
+    function updateBalanceDisplay() {
+        document.getElementById('balance-display').innerText = `Balance: ${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Credits`;
+    }
+
+    // Sample betting data
+    // need to get info from the view and fill in bettingData with it.
+    const bettingData = [
+        { 
+            homeTeam: "Team A", 
+            awayTeam: "Team B", 
+            spreadHome: "-3.5", 
+            spreadAway: "+3.5", 
+            moneylineHome: "-150", 
+            moneylineAway: "+120", 
+            over: "45.5", 
+            under: "45.5",
+            oddsSpreadHome: -110,
+            oddsSpreadAway: -110,
+            oddsMoneylineHome: -150,
+            oddsMoneylineAway: +120,
+            oddsOver: -105,
+            oddsUnder: -105
+        },
+        { 
+            homeTeam: "Team C", 
+            awayTeam: "Team D", 
+            spreadHome: "+2.5", 
+            spreadAway: "-2.5", 
+            moneylineHome: "-120", 
+            moneylineAway: "+110", 
+            over: "52.0", 
+            under: "52.0",
+            oddsSpreadHome: -110,
+            oddsSpreadAway: -110,
+            oddsMoneylineHome: -120,
+            oddsMoneylineAway: +110,
+            oddsOver: -110,
+            oddsUnder: -110
+        },
+        { 
+            homeTeam: "Team E", 
+            awayTeam: "Team F", 
+            spreadHome: "-1.5", 
+            spreadAway: "+1.5", 
+            moneylineHome: "+200", 
+            moneylineAway: "-250", 
+            over: "48.5", 
+            under: "48.5",
+            oddsSpreadHome: -105,
+            oddsSpreadAway: -105,
+            oddsMoneylineHome: +200,
+            oddsMoneylineAway: -250,
+            oddsOver: -110,
+            oddsUnder: -110
+        },
+        { 
+            homeTeam: "Georgia", 
+            awayTeam: "Tennessee", 
+            spreadHome: "-10", 
+            spreadAway: "+10", 
+            moneylineHome: "-375", 
+            moneylineAway: "+295", 
+            over: "48.5", 
+            under: "48.5",
+            oddsSpreadHome: -108,
+            oddsSpreadAway: -112,
+            oddsMoneylineHome: -375,
+            oddsMoneylineAway: +295,
+            oddsOver: -110,
+            oddsUnder: -110
+        },
+        { 
+            homeTeam: "Arkansas", 
+            awayTeam: "Texas", 
+            spreadHome: "+13.5", 
+            spreadAway: "-13.5", 
+            moneylineHome: "+380", 
+            moneylineAway: "-500", 
+            over: "57.5", 
+            under: "57.5",
+            oddsSpreadHome: -110,
+            oddsSpreadAway: -110,
+            oddsMoneylineHome: +380,
+            oddsMoneylineAway: -500,
+            oddsOver: -110,
+            oddsUnder: -110
+        },
+        { 
+            homeTeam: "Auburn", 
+            awayTeam: "UL Monroe", 
+            spreadHome: "-23.5", 
+            spreadAway: "+23.5", 
+            moneylineHome: "-3500", 
+            moneylineAway: "+1280", 
+            over: "46.5", 
+            under: "46.5",
+            oddsSpreadHome: -110,
+            oddsSpreadAway: -110,
+            oddsMoneylineHome: -3500,
+            oddsMoneylineAway: +1280,
+            oddsOver: -110,
+            oddsUnder: -110
+        }
+    ];
+
+    function updateBettingHistory(bet) {
+        bettingHistory.push(bet);
+
+        // console.log(bet);
+        // bet stores:
+            // amount
+            // game:
+                // awayTeam
+                // homeTeam
+                // moneylineAway
+                // moneylineHome
+                // oddsMoneylineAway
+                // oddsMoneylineHome
+                // oddsOver
+                // oddsSpreadAway
+                // oddsSpreadHome
+                // oddsUnder
+                // over
+                // spreadAway
+                // spreadHome
+                // under
+            // odds
+            // type
+            // winnings
+
+        const historyContainer = document.getElementById('betting-history');
+        historyContainer.innerHTML = ''; // Clear previous content
+
+        if (bettingHistory.length === 0) {
+            historyContainer.innerHTML = '<p>No bets placed yet.</p>';
+            return;
+        }
+
+        const historyList = document.createElement('ul');
+        bettingHistory.forEach((item, index) => {
+            const listItem = document.createElement('li');
+            var value = "";
+            if (item.type.includes('Spread Away')) {
+                value += "Spread " + item.game.awayTeam + " (" + item.game.spreadAway + ")";
+            } else if (item.type.includes('Spread Home')) {
+                value += "Spread " + item.game.homeTeam + " (" + item.game.spreadHome + ")";
+            } else if (item.type.includes('Moneyline Away')) {
+                value += "Moneyline " + item.game.awayTeam;
+            } else if (item.type.includes('Moneyline Home')) {
+                value += "Moneyline " + item.game.homeTeam;
+            } else if (item.type === 'Over') {
+                value += "Total Points Over " + item.game.over;
+            } else if (item.type === 'Under') {
+                value += "Total Points Under " + item.game.under;
+            }
+            listItem.innerText = `Bet #${index + 1}: ${value} (${item.odds > 0 ? '+' : ''}${item.odds}) ${item.amount} Credits to win ${item.winnings} Credits`;
+            historyList.appendChild(listItem);
+        });
+
+        historyContainer.appendChild(historyList);
+    }
+
+    const modal = document.getElementById('betModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const betAmountInput = document.getElementById('betAmount');
+    const submitBetButton = document.getElementById('submitBetButton');
+    const closeModal = document.querySelector('.close-modal');
+    let currentBet = null;
+
+    // Calculate winnings based on the odds
+    function calculateWinnings(betAmount, odds) {
+            if (odds > 0) {
+                // Positive odds (e.g., +120 means winning $120 on a $100 bet)
+                return betAmount * (odds / 100);
+            } else {
+                // Negative odds (e.g., -150 means winning $100 on a $150 bet)
+                return betAmount / Math.abs(odds / 100);
+            }
+        }
+
+        function openModal(betType, gameStr) {
+            const game = JSON.parse(decodeURIComponent(gameStr));
+            let odds = 0;
+
+            // Determine odds based on the betType
+            if (betType.includes('Spread Away')) {
+                odds = parseFloat(game.oddsSpreadAway);
+                modalTitle.innerHTML = `Spread: ${game.awayTeam} (${game.spreadAway})</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType.includes('Spread Home')) {
+                odds = parseFloat(game.oddsSpreadHome);
+                modalTitle.innerHTML = `Spread: ${game.homeTeam} (${game.spreadHome})</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType.includes('Moneyline Away')) {
+                odds = parseFloat(game.oddsMoneylineAway);
+                modalTitle.innerHTML = `Moneyline: ${game.awayTeam}</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType.includes('Moneyline Home')) {
+                odds = parseFloat(game.oddsMoneylineHome);
+                modalTitle.innerHTML = `Moneyline: ${game.homeTeam}</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType === 'Over') {
+                odds = parseFloat(game.oddsOver);
+                modalTitle.innerHTML = `Total Score: Over ${game.over}</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType === 'Under') {
+                odds = parseFloat(game.oddsUnder);
+                modalTitle.innerHTML = `Total Score: Under ${game.under}</br>${odds > 0 ? '+' : ''}${odds}`;
+            }
+
+            modal.style.display = 'flex';
+            currentBet = { type: betType, game: game, odds: odds }; // Store current bet details, including odds
+
+            // Update potential winnings display
+            const potentialWinningsDisplay = document.getElementById('potentialWinnings');
+            if (potentialWinningsDisplay) {
+                const betAmount = parseFloat(betAmountInput.value) || 0;
+                const potentialWinnings = calculateWinnings(betAmount, odds) + betAmount;
+                potentialWinningsDisplay.innerText = `Potential Winnings: ${potentialWinnings} Credits`;
+            }
+        }
+
+    function closeModalFunc() {
+        modal.style.display = 'none';
+        betAmountInput.value = '';
+        currentBet = null;
+    }
+
+    closeModal.addEventListener('click', closeModalFunc);
+
+    window.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            closeModalFunc();
+        }
+    });
+
+    function createBetCard(game) {
+        const card = document.createElement('div');
+        card.classList.add('bet-card');
+
+        card.innerHTML = `
+            <div class="team-names">${game.awayTeam} @ ${game.homeTeam}</div>
+            <span style="color: white">
+            Point Spread
+            </span>
+            <div class="bet-button-container">
+                <button class="bet-button" onclick="openModal('Spread Away', '${encodeURIComponent(JSON.stringify(game))}')">
+                    ${game.awayTeam} (${game.spreadAway})</br>${game.oddsSpreadAway > 0 ? '+' : ''}${game.oddsSpreadAway}
+                </button>
+                <button class="bet-button" onclick="openModal('Spread Home', '${encodeURIComponent(JSON.stringify(game))}')">
+                    ${game.homeTeam} (${game.spreadHome})</br>${game.oddsSpreadHome > 0 ? '+' : ''}${game.oddsSpreadHome}
+                </button>
+            </div>
+            <span style="color: white">
+            Moneyline
+            </span>
+            <div class="bet-button-container">
+                <button class="bet-button" onclick="openModal('Moneyline Away', '${encodeURIComponent(JSON.stringify(game))}')">
+                    ${game.awayTeam}</br>${game.oddsMoneylineAway > 0 ? '+' : ''}${game.oddsMoneylineAway}
+                </button>
+                <button class="bet-button" onclick="openModal('Moneyline Home', '${encodeURIComponent(JSON.stringify(game))}')">
+                    ${game.homeTeam}</br>${game.oddsMoneylineHome > 0 ? '+' : ''}${game.oddsMoneylineHome}
+                </button>
+            </div>
+            <span style="color: white">
+            Total Score
+            </span>
+            <div class="bet-button-container">
+                <button class="bet-button" onclick="openModal('Over', '${encodeURIComponent(JSON.stringify(game))}')">
+                    Over ${game.over}</br>${game.oddsOver > 0 ? '+' : ''}${game.oddsOver}
+                </button>
+                <button class="bet-button" onclick="openModal('Under', '${encodeURIComponent(JSON.stringify(game))}')">
+                    Under ${game.under}</br>${game.oddsUnder > 0 ? '+' : ''}${game.oddsUnder}
+                </button>
+            </div>
+        `;
+
+        return card;
+    }
+
+    const container = document.getElementById('betting-container');
+    bettingData.forEach(game => {
+        container.appendChild(createBetCard(game));
+    });
+
+    // need to submit the bet data to the database here
+    submitBetButton.addEventListener('click', () => {
+        const betAmount = parseFloat(betAmountInput.value);
+        if (isNaN(betAmount) || betAmount <= 0 || !/^\d+(\.\d{1,2})?$/.test(betAmount)) {
+            alert('Please enter a valid bet amount.');
+            return;
+        }
+
+        if (betAmount > currentBalance) {
+            alert('Insufficient balance to place this bet.');
+            return;
+        }
+
+        const potentialWinnings = (calculateWinnings(betAmount, currentBet.odds) + betAmount).toFixed(2);
+        // alert(`Bet of $${betAmount.toFixed(2)} placed. Potential Winnings: $${potentialWinnings}`);
+
+        currentBalance -= betAmount;
+        updateBalanceDisplay();
+
+        if (currentBet) {
+            currentBet.amount = betAmount;
+            currentBet.winnings = potentialWinnings;
+            updateBettingHistory(currentBet);
+        }
+
+        // alert(`Bet of $${betAmount.toFixed(2)} submitted!`);
+        closeModalFunc();
+    });
+
+    // Initialize balance display on page load
+    updateBalanceDisplay();
+
+    // Event listener to update potential winnings on input change
+    betAmountInput.addEventListener('input', () => {
+        if (currentBet) {
+            const betAmount = parseFloat(betAmountInput.value) || 0;
+            if (isNaN(betAmount) || betAmount < 0 || !/^\d+(\.\d{1,2})?$/.test(betAmount) || betAmount > currentBalance) {
+                betAmountInput.style.backgroundColor = '#f8d7da';
+            }
+            else {
+                betAmountInput.style.backgroundColor = '';
+            }
+            const potentialWinnings = (calculateWinnings(betAmount, currentBet.odds) + betAmount).toFixed(2);
+            document.getElementById('potentialWinnings').innerText = `Potential Winnings: ${potentialWinnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Credits`;
+        }
+    });
+
+</script>
+
+{% endblock %}
