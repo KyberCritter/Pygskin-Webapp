@@ -19,7 +19,8 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR("API keys not set"))
             return
 
-        # Fetch data from CFBDB
+        # Get data from CFBDB
+        # Right now, week/year is being set manually
         cfbdb_params = {
             "year": 2024,
             "week": 12,
@@ -36,7 +37,8 @@ class Command(BaseCommand):
             return
         cfbdb_data = cfbdb_response.json()
 
-        # Fetch data from Odds API
+        # Get data from Odds API
+        # Right now, time for the week is being set manually
         odds_params = {
             "regions": "us",
             "markets": "h2h,spreads,totals",
@@ -53,6 +55,7 @@ class Command(BaseCommand):
         odds_data = odds_response.json()
 
         # Build a map for Odds API data by team names
+        # This gets all the team names from Odds API and is used to map the games
         odds_team_map = defaultdict(list)
         for odds_game in odds_data:
             home_team = odds_game["home_team"]
@@ -60,10 +63,10 @@ class Command(BaseCommand):
             odds_team_map[home_team].append(odds_game)
             odds_team_map[away_team].append(odds_game)
 
-        # Process each game from CFBDB
+        # Look at each game from CFBDB
         for game_data in cfbdb_data:
             try:
-                # Check if line data is available
+                # Check if game data is available
                 lines = game_data.get("lines", [])
                 line_data = lines[0] if lines else None
                 if not line_data:
@@ -75,6 +78,7 @@ class Command(BaseCommand):
                 matched_game = None
 
                 # Find the matching game in Odds API using substring matching
+                # Checking if CFBDB name is in Odds API name due to name mismatch
                 for odds_team_name, odds_games in odds_team_map.items():
                     if home_team_cfbdb in odds_team_name:
                         for odds_game in odds_games:
@@ -89,23 +93,30 @@ class Command(BaseCommand):
                     if matched_game:
                         break
 
-                # Initialize prices to None
-                spread_price = None
-                over_under_price = None
+                # Initial spread prices and over/under prices
+                # These are not always in the DB so must set to a default
+                home_spread_price = None
+                away_spread_price = None
+                home_over_under_price = None
+                away_over_under_price = None
                 if matched_game:
-                    # Extract spread price
+                    # Get spread prices for home and away teams with substring matching
                     spread_market = next((mkt for bk in matched_game["bookmakers"] for mkt in bk["markets"] if mkt["key"] == "spreads"), None)
                     if spread_market:
-                        spread_outcome = next((outcome for outcome in spread_market["outcomes"] if outcome["name"] == home_team_cfbdb or outcome["name"] == away_team_cfbdb), None)
-                        if spread_outcome:
-                            spread_price = spread_outcome.get("price")
+                        for outcome in spread_market["outcomes"]:
+                            if home_team_cfbdb in outcome["name"] or outcome["name"] in home_team_cfbdb:
+                                home_spread_price = outcome.get("price")
+                            elif away_team_cfbdb in outcome["name"] or outcome["name"] in away_team_cfbdb:
+                                away_spread_price = outcome.get("price")
 
-                    # Extract over/under price
+                    # Get over/under prices for both teams
                     totals_market = next((mkt for bk in matched_game["bookmakers"] for mkt in bk["markets"] if mkt["key"] == "totals"), None)
                     if totals_market:
-                        over_under_outcome = next((outcome for outcome in totals_market["outcomes"] if outcome["name"] in ["Over", "Under"]), None)
-                        if over_under_outcome:
-                            over_under_price = over_under_outcome.get("price")
+                        for outcome in totals_market["outcomes"]:
+                            if outcome["name"] == "Over":
+                                home_over_under_price = outcome.get("price")
+                            elif outcome["name"] == "Under":
+                                away_over_under_price = outcome.get("price")
 
                 # Populate or update the Game table
                 game, created = Game.objects.update_or_create(
@@ -118,14 +129,18 @@ class Command(BaseCommand):
                         "home_money_line": line_data.get("homeMoneyline"),
                         "away_money_line": line_data.get("awayMoneyline"),
                         "spread": line_data.get("spread"),
-                        "spread_price": spread_price,
+                        "home_spread_price": home_spread_price,
+                        "away_spread_price": away_spread_price,
                         "over_under": line_data.get("overUnder"),
-                        "over_under_price": over_under_price,
+                        "home_over_under_price": home_over_under_price,
+                        "away_over_under_price": away_over_under_price,
                         "game_date": parse_datetime(game_data["startDate"])
                     }
                 )
 
                 # Populate or update GameScore table
+                # When getting lines for a game that has not been played, score will be set to null
+                # Will have to pull again at the end of the week to get the scores
                 GameScore.objects.update_or_create(
                     game=game,
                     defaults={
