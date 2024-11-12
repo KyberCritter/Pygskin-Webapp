@@ -233,106 +233,8 @@
         document.getElementById('balance-display').innerText = `Balance: ${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Credits`;
     }
 
-    // Sample betting data
-    // need to get info from the view and fill in bettingData with it.
-    const bettingData = [
-        { 
-            homeTeam: "Team A", 
-            awayTeam: "Team B", 
-            spreadHome: "-3.5", 
-            spreadAway: "+3.5", 
-            moneylineHome: "-150", 
-            moneylineAway: "+120", 
-            over: "45.5", 
-            under: "45.5",
-            oddsSpreadHome: -110,
-            oddsSpreadAway: -110,
-            oddsMoneylineHome: -150,
-            oddsMoneylineAway: +120,
-            oddsOver: -105,
-            oddsUnder: -105
-        },
-        { 
-            homeTeam: "Team C", 
-            awayTeam: "Team D", 
-            spreadHome: "+2.5", 
-            spreadAway: "-2.5", 
-            moneylineHome: "-120", 
-            moneylineAway: "+110", 
-            over: "52.0", 
-            under: "52.0",
-            oddsSpreadHome: -110,
-            oddsSpreadAway: -110,
-            oddsMoneylineHome: -120,
-            oddsMoneylineAway: +110,
-            oddsOver: -110,
-            oddsUnder: -110
-        },
-        { 
-            homeTeam: "Team E", 
-            awayTeam: "Team F", 
-            spreadHome: "-1.5", 
-            spreadAway: "+1.5", 
-            moneylineHome: "+200", 
-            moneylineAway: "-250", 
-            over: "48.5", 
-            under: "48.5",
-            oddsSpreadHome: -105,
-            oddsSpreadAway: -105,
-            oddsMoneylineHome: +200,
-            oddsMoneylineAway: -250,
-            oddsOver: -110,
-            oddsUnder: -110
-        },
-        { 
-            homeTeam: "Georgia", 
-            awayTeam: "Tennessee", 
-            spreadHome: "-10", 
-            spreadAway: "+10", 
-            moneylineHome: "-375", 
-            moneylineAway: "+295", 
-            over: "48.5", 
-            under: "48.5",
-            oddsSpreadHome: -108,
-            oddsSpreadAway: -112,
-            oddsMoneylineHome: -375,
-            oddsMoneylineAway: +295,
-            oddsOver: -110,
-            oddsUnder: -110
-        },
-        { 
-            homeTeam: "Arkansas", 
-            awayTeam: "Texas", 
-            spreadHome: "+13.5", 
-            spreadAway: "-13.5", 
-            moneylineHome: "+380", 
-            moneylineAway: "-500", 
-            over: "57.5", 
-            under: "57.5",
-            oddsSpreadHome: -110,
-            oddsSpreadAway: -110,
-            oddsMoneylineHome: +380,
-            oddsMoneylineAway: -500,
-            oddsOver: -110,
-            oddsUnder: -110
-        },
-        { 
-            homeTeam: "Auburn", 
-            awayTeam: "UL Monroe", 
-            spreadHome: "-23.5", 
-            spreadAway: "+23.5", 
-            moneylineHome: "-3500", 
-            moneylineAway: "+1280", 
-            over: "46.5", 
-            under: "46.5",
-            oddsSpreadHome: -110,
-            oddsSpreadAway: -110,
-            oddsMoneylineHome: -3500,
-            oddsMoneylineAway: +1280,
-            oddsOver: -110,
-            oddsUnder: -110
-        }
-    ];
+    const gamesList = JSON.parse('{{ games_json|escapejs }}');
+    // console.log(gamesList);
 
     function updateBettingHistory(bet) {
         bettingHistory.push(bet);
@@ -340,21 +242,7 @@
         // console.log(bet);
         // bet stores:
             // amount
-            // game:
-                // awayTeam
-                // homeTeam
-                // moneylineAway
-                // moneylineHome
-                // oddsMoneylineAway
-                // oddsMoneylineHome
-                // oddsOver
-                // oddsSpreadAway
-                // oddsSpreadHome
-                // oddsUnder
-                // over
-                // spreadAway
-                // spreadHome
-                // under
+            // game (same data as database)
             // odds
             // type
             // winnings
@@ -372,17 +260,17 @@
             const listItem = document.createElement('li');
             var value = "";
             if (item.type.includes('Spread Away')) {
-                value += "Spread " + item.game.awayTeam + " (" + item.game.spreadAway + ")";
+                value += "Spread " + item.game.away_team + " (" + item.game.away_money_line < 0 ? '-' : '+' + Math.abs(parseFloat(item.game.spread).toFixed(1)) + ")";
             } else if (item.type.includes('Spread Home')) {
-                value += "Spread " + item.game.homeTeam + " (" + item.game.spreadHome + ")";
+                value += "Spread " + item.game.home_team + " (" + item.game.away_money_line < 0 ? '-' : '+' + Math.abs(parseFloat(item.game.spread).toFixed(1)) + ")";
             } else if (item.type.includes('Moneyline Away')) {
-                value += "Moneyline " + item.game.awayTeam;
+                value += "Moneyline " + item.game.away_team;
             } else if (item.type.includes('Moneyline Home')) {
-                value += "Moneyline " + item.game.homeTeam;
+                value += "Moneyline " + item.game.home_team;
             } else if (item.type === 'Over') {
-                value += "Total Points Over " + item.game.over;
+                value += "Total Points Over " + parseFloat(item.game.over_under).toFixed(1);
             } else if (item.type === 'Under') {
-                value += "Total Points Under " + item.game.under;
+                value += "Total Points Under " + parseFloat(item.game.over_under).toFixed(1);
             }
             listItem.innerText = `Bet #${index + 1}: ${value} (${item.odds > 0 ? '+' : ''}${item.odds}) ${item.amount} Credits to win ${item.winnings} Credits`;
             historyList.appendChild(listItem);
@@ -415,23 +303,23 @@
 
             // Determine odds based on the betType
             if (betType.includes('Spread Away')) {
-                odds = parseFloat(game.oddsSpreadAway);
-                modalTitle.innerHTML = `Spread: ${game.awayTeam} (${game.spreadAway})</br>${odds > 0 ? '+' : ''}${odds}`;
+                odds = parseFloat(game.away_spread_price);
+                modalTitle.innerHTML = `Spread: ${game.away_team} (${game.away_money_line < 0 ? '-' : '+'}${Math.abs(parseFloat(game.spread).toFixed(1))})</br>${odds > 0 ? '+' : ''}${odds}`;
             } else if (betType.includes('Spread Home')) {
-                odds = parseFloat(game.oddsSpreadHome);
-                modalTitle.innerHTML = `Spread: ${game.homeTeam} (${game.spreadHome})</br>${odds > 0 ? '+' : ''}${odds}`;
+                odds = parseFloat(game.home_spread_price);
+                modalTitle.innerHTML = `Spread: ${game.home_team} (${game.home_money_line < 0 ? '-' : '+'}${Math.abs(parseFloat(game.spread).toFixed(1))})</br>${odds > 0 ? '+' : ''}${odds}`;
             } else if (betType.includes('Moneyline Away')) {
-                odds = parseFloat(game.oddsMoneylineAway);
-                modalTitle.innerHTML = `Moneyline: ${game.awayTeam}</br>${odds > 0 ? '+' : ''}${odds}`;
+                odds = parseFloat(game.away_money_line);
+                modalTitle.innerHTML = `Moneyline: ${game.away_team}</br>${odds > 0 ? '+' : ''}${odds}`;
             } else if (betType.includes('Moneyline Home')) {
-                odds = parseFloat(game.oddsMoneylineHome);
-                modalTitle.innerHTML = `Moneyline: ${game.homeTeam}</br>${odds > 0 ? '+' : ''}${odds}`;
+                odds = parseFloat(game.home_money_line);
+                modalTitle.innerHTML = `Moneyline: ${game.home_team}</br>${odds > 0 ? '+' : ''}${odds}`;
             } else if (betType === 'Over') {
-                odds = parseFloat(game.oddsOver);
-                modalTitle.innerHTML = `Total Score: Over ${game.over}</br>${odds > 0 ? '+' : ''}${odds}`;
+                odds = parseFloat(game.away_over_under_price);
+                modalTitle.innerHTML = `Total Score: Over ${parseFloat(game.over_under).toFixed(1)}</br>${odds > 0 ? '+' : ''}${odds}`;
             } else if (betType === 'Under') {
-                odds = parseFloat(game.oddsUnder);
-                modalTitle.innerHTML = `Total Score: Under ${game.under}</br>${odds > 0 ? '+' : ''}${odds}`;
+                odds = parseFloat(game.home_over_under_price);
+                modalTitle.innerHTML = `Total Score: Under ${parseFloat(game.over_under).toFixed(1)}</br>${odds > 0 ? '+' : ''}${odds}`;
             }
 
             modal.style.display = 'flex';
@@ -465,47 +353,53 @@
         card.classList.add('bet-card');
 
         card.innerHTML = `
-            <div class="team-names">${game.awayTeam} @ ${game.homeTeam}</div>
+            <div class="team-names">${game.away_team} @ ${game.home_team}</div>
+            ${game.spread !== null && game.away_spread_price !== null && game.home_spread_price !== null ? `
             <span style="color: white">
             Point Spread
             </span>
             <div class="bet-button-container">
-                <button class="bet-button" onclick="openModal('Spread Away', '${encodeURIComponent(JSON.stringify(game))}')">
-                    ${game.awayTeam} (${game.spreadAway})</br>${game.oddsSpreadAway > 0 ? '+' : ''}${game.oddsSpreadAway}
-                </button>
-                <button class="bet-button" onclick="openModal('Spread Home', '${encodeURIComponent(JSON.stringify(game))}')">
-                    ${game.homeTeam} (${game.spreadHome})</br>${game.oddsSpreadHome > 0 ? '+' : ''}${game.oddsSpreadHome}
-                </button>
+                    <button class="bet-button" onclick="openModal('Spread Away', '${encodeURIComponent(JSON.stringify(game))}')">
+                        ${game.away_team} (${game.away_money_line < 0 ? '-' : '+'}${Math.abs(parseFloat(game.spread).toFixed(1))})</br>${game.away_spread_price > 0 ? '+' : ''}${Math.round(game.away_spread_price)}
+                    </button>
+                    <button class="bet-button" onclick="openModal('Spread Home', '${encodeURIComponent(JSON.stringify(game))}')">
+                        ${game.home_team} (${game.home_money_line < 0 ? '-' : '+'}${Math.abs(parseFloat(game.spread).toFixed(1))})</br>${game.home_spread_price > 0 ? '+' : ''}${Math.round(game.home_spread_price)}
+                    </button>
             </div>
+            ` : ''}
+            ${game.away_money_line !== null && game.home_money_line !== null ? `
             <span style="color: white">
             Moneyline
             </span>
             <div class="bet-button-container">
-                <button class="bet-button" onclick="openModal('Moneyline Away', '${encodeURIComponent(JSON.stringify(game))}')">
-                    ${game.awayTeam}</br>${game.oddsMoneylineAway > 0 ? '+' : ''}${game.oddsMoneylineAway}
-                </button>
-                <button class="bet-button" onclick="openModal('Moneyline Home', '${encodeURIComponent(JSON.stringify(game))}')">
-                    ${game.homeTeam}</br>${game.oddsMoneylineHome > 0 ? '+' : ''}${game.oddsMoneylineHome}
-                </button>
+                    <button class="bet-button" onclick="openModal('Moneyline Away', '${encodeURIComponent(JSON.stringify(game))}')">
+                        ${game.away_team}</br>${game.away_money_line > 0 ? '+' : ''}${Math.round(game.away_money_line)}
+                    </button>
+                    <button class="bet-button" onclick="openModal('Moneyline Home', '${encodeURIComponent(JSON.stringify(game))}')">
+                        ${game.home_team}</br>${game.home_money_line > 0 ? '+' : ''}${Math.round(game.home_money_line)}
+                    </button>
             </div>
+            ` : ''}
+            ${game.over_under !== null && game.away_over_under_price !== null && game.home_over_under_price !== null ? `
             <span style="color: white">
             Total Score
             </span>
             <div class="bet-button-container">
-                <button class="bet-button" onclick="openModal('Over', '${encodeURIComponent(JSON.stringify(game))}')">
-                    Over ${game.over}</br>${game.oddsOver > 0 ? '+' : ''}${game.oddsOver}
-                </button>
-                <button class="bet-button" onclick="openModal('Under', '${encodeURIComponent(JSON.stringify(game))}')">
-                    Under ${game.under}</br>${game.oddsUnder > 0 ? '+' : ''}${game.oddsUnder}
-                </button>
+                    <button class="bet-button" onclick="openModal('Over', '${encodeURIComponent(JSON.stringify(game))}')">
+                        Over ${parseFloat(game.over_under).toFixed(1)}</br>${game.away_over_under_price > 0 ? '+' : ''}${Math.round(game.away_over_under_price)}
+                    </button>
+                    <button class="bet-button" onclick="openModal('Under', '${encodeURIComponent(JSON.stringify(game))}')">
+                        Under ${parseFloat(game.over_under).toFixed(1)}</br>${game.home_over_under_price > 0 ? '+' : ''}${Math.round(game.home_over_under_price)}
+                    </button>
             </div>
+            ` : ''}
         `;
 
         return card;
     }
 
     const container = document.getElementById('betting-container');
-    bettingData.forEach(game => {
+    gamesList.forEach(game => {
         container.appendChild(createBetCard(game));
     });
 
