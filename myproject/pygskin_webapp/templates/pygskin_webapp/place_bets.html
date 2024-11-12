@@ -234,6 +234,7 @@
     }
 
     // Sample betting data
+    // need to get info from the view and fill in bettingData with it.
     const bettingData = [
         { 
             homeTeam: "Team A", 
@@ -509,6 +510,7 @@
         container.appendChild(createBetCard(game));
     });
 
+    // need to submit the bet data to the database here
     submitBetButton.addEventListener('click', () => {
         const betAmount = parseFloat(betAmountInput.value);
         if (isNaN(betAmount) || betAmount <= 0 || !/^\d+(\.\d{1,2})?$/.test(betAmount)) {
