@@ -101,6 +101,15 @@ class Command(BaseCommand):
                 home_over_under_price = None
                 away_over_under_price = None
                 if matched_game:
+                    # Get ML prices for home and away teams
+                    money_line_market = next((mkt for bk in matched_game["bookmakers"] for mkt in bk["markets"] if mkt["key"] == "h2h"), None)
+                    if money_line_market:
+                        for outcome in money_line_market["outcomes"]:
+                            if home_team_cfbdb in outcome["name"] or outcome["name"] in home_team_cfbdb:
+                                home_team_money_line = outcome.get("price")
+                            elif away_team_cfbdb in outcome["name"] or outcome["name"] in away_team_cfbdb:
+                                away_team_money_line = outcome.get("price")
+
                     # Get spread prices for home and away teams with substring matching
                     spread_market = next((mkt for bk in matched_game["bookmakers"] for mkt in bk["markets"] if mkt["key"] == "spreads"), None)
                     if spread_market:
@@ -127,8 +136,8 @@ class Command(BaseCommand):
                         "week": game_data["week"],
                         "home_team": home_team_cfbdb,
                         "away_team": away_team_cfbdb,
-                        "home_money_line": line_data.get("homeMoneyline"),
-                        "away_money_line": line_data.get("awayMoneyline"),
+                        "home_money_line": home_team_money_line,
+                        "away_money_line": away_team_money_line,
                         "spread": line_data.get("spread"),
                         "home_spread_price": home_spread_price,
                         "away_spread_price": away_spread_price,
