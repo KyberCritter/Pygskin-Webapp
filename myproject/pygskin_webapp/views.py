@@ -23,7 +23,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
-from .models import Cybercoach, Subscriber
+from .models import Cybercoach, Subscriber, UserCredit
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -128,10 +128,19 @@ def profile_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
+    # Loading in all user credit information
+    user_credit = UserCredit.objects.get(user=request.user)
+    credits_balance = user_credit.total_credits
+    credits_won = user_credit.credits_won
+    credits_lost = user_credit.credits_lost
+
     return render(request, 'pygskin_webapp/profile.html', {
         'first_name': request.user.first_name,
         'last_name': request.user.last_name,
-        'email': request.user.email
+        'email': request.user.email,
+        'credit_balance': credits_balance,
+        'credits_won': credits_won,
+        'credits_lost': credits_lost
     })
 
 def license(request):
