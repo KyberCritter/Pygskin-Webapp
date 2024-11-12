@@ -9,11 +9,42 @@
 <style>
     h1, h2 {
         text-transform: uppercase;
+        text-shadow: none !important;
+        text-align: center;
+    }
+
+    h1 {
+        color: #FFDE21 !important;
+    }
+
+    h2, p {
+        color: white !important;
+    }
+
+    .header-container {
+        background-color: #006106;
+        border-radius: 20px;
+        padding-left: 30px;
+        padding-right: 30px;
+        padding-top: 25px;
+        padding-bottom: 15px;
+        margin: 20px 0;
+        text-align: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-sub-container {
+        background-color: #008703;
+        border-radius: 20px;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
     }
     
     h3, p {
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
+        text-align: center;
     }
 
     .betting-container {
@@ -25,8 +56,8 @@
     }
 
     .bet-card {
-        background-color: #008703;
-        color: #fff;
+        background-color: #006106;
+        color: #FFDE21;
         border-radius: 15px;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
         padding: 15px;
@@ -60,8 +91,8 @@
     .bet-button {
         padding: 5px 10px;
         margin: 5px;
-        background-color: #FFDE21;
-        color: #008703;
+        background-color: #008703;
+        color: #FFDE21;
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
         border: none;
@@ -79,6 +110,7 @@
 
     .bet-button:hover {
         background-color: #e5c70f;
+        color: #006106;
     }
 
     /* Modal Styles */
@@ -143,10 +175,14 @@
     }
 </style>
 
-<h1>Place Bets</h1>
-<h2 id="balance-display">Balance: $10,000</h2>
+<div class="header-container">
+    <div class="header-sub-container">
+        <h1>Place Bets</h1>
+        <h2 id="balance-display">Balance: $10,000</h2>
+    </div>
 
-<p>Choose a game to place a fake bet on. Select your bet type and enter the amount.</p>
+    <p>Choose a game to place a fake bet on. Select your bet type and enter the amount.</p>
+</div>  
 
 <div class="betting-container" id="betting-container">
     <!-- Bet cards will be dynamically created here -->
@@ -164,9 +200,13 @@
 </div>
 
 <!-- Betting History -->
-<h2>Betting History</h2>
-<div id="betting-history">
-    <p>No bets placed yet.</p>
+ <div class="header-container">
+    <div class="header-sub-container">
+        <h1>Betting History</h1>
+    </div>
+    <div id="betting-history">
+        <p>No bets placed yet.</p>
+    </div>
 </div>
 
 <script>
@@ -384,6 +424,16 @@
 
     // Initialize balance display on page load
     updateBalanceDisplay();
+
+    // Event listener to update potential winnings on input change
+    betAmountInput.addEventListener('input', () => {
+        if (currentBet) {
+            const betAmount = parseFloat(betAmountInput.value) || 0;
+            const potentialWinnings = calculateWinnings(betAmount, currentBet.odds);
+            document.getElementById('potentialWinnings').innerText = `Potential Winnings: $${potentialWinnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        }
+    });
+
 </script>
 
 {% endblock %}
