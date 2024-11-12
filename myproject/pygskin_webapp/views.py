@@ -22,8 +22,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+# Riley libraries for place_bets
+from django.http import JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
+import json
+
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
-from .models import Cybercoach, Subscriber
+from .models import Cybercoach, Subscriber, Game
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -274,7 +279,15 @@ def coach_stats(request):
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def place_bets(request):
     template = loader.get_template("pygskin_webapp/place_bets.html")
-    context = {}
+    # Convert the QuerySet to a list of dictionaries
+    games = Game.objects.all().values()  # or values('field1', 'field2') to include specific fields
+    
+    # Serialize the data to JSON
+    serialized_games = json.dumps(list(games), cls=DjangoJSONEncoder)
+
+    context = {
+        "games_json": serialized_games
+    }
     return HttpResponse(template.render(context, request))
 
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)

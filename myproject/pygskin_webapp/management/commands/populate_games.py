@@ -41,6 +41,7 @@ class Command(BaseCommand):
         # Right now, time for the week is being set manually
         odds_params = {
             "regions": "us",
+            "bookmakers": "draftkings",
             "markets": "h2h,spreads,totals",
             "oddsFormat": "american",
             "dateFormat": "iso",
