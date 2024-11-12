@@ -22,8 +22,13 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 
+# Riley libraries for place_bets
+from django.http import JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
+import json
+
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
-from .models import Cybercoach, Subscriber
+from .models import Cybercoach, Subscriber, Game, UserCredit
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -128,10 +133,19 @@ def profile_view(request):
     if not request.user.is_authenticated:
         return redirect('login')
 
+    # Loading in all user credit information
+    user_credit = UserCredit.objects.get(user=request.user)
+    credits_balance = user_credit.total_credits
+    credits_won = user_credit.credits_won
+    credits_lost = user_credit.credits_lost
+
     return render(request, 'pygskin_webapp/profile.html', {
         'first_name': request.user.first_name,
         'last_name': request.user.last_name,
-        'email': request.user.email
+        'email': request.user.email,
+        'credit_balance': credits_balance,
+        'credits_won': credits_won,
+        'credits_lost': credits_lost
     })
 
 def license(request):
@@ -270,6 +284,20 @@ def coach_stats(request):
         "coach_seasons": coach_seasons,
     }
     return render(request, 'pygskin_webapp/coach_stats.html', context)
+
+@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
+def place_bets(request):
+    template = loader.get_template("pygskin_webapp/place_bets.html")
+    # Convert the QuerySet to a list of dictionaries
+    games = Game.objects.all().values()  # or values('field1', 'field2') to include specific fields
+    
+    # Serialize the data to JSON
+    serialized_games = json.dumps(list(games), cls=DjangoJSONEncoder)
+
+    context = {
+        "games_json": serialized_games
+    }
+    return HttpResponse(template.render(context, request))
 
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def cybercoach(request):

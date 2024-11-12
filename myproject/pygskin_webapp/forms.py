@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.core.validators import validate_email
 from django.contrib.auth.hashers import make_password
 
-from .models import Coach, Cybercoach, Subscriber
+from .models import Coach, Cybercoach, Subscriber, UserCredit
 
 
 class CoachSelectForm(forms.Form):
@@ -84,6 +84,9 @@ class SubscriberForm(ModelForm):
             last_name=self.cleaned_data['last_name'],
             password=make_password(self.cleaned_data['password']),  # Hash the password
         )
+
+        # Put the user in the UserCredit table and give them credits
+        UserCredit.objects.create(user=user)
         
         # Link the subscriber to the newly created user
         subscriber = super().save(commit=False)
