@@ -103,9 +103,15 @@
         text-align: center;
     }
 
-    #submitBetButton, #betAmount, #betting-history {
+    #submitBetButton, #betAmount {
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
+    }
+
+    #betting-history {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        color: white;
     }
 
     .bet-button:hover {
@@ -172,6 +178,10 @@
 
     .modal button:hover {
         background-color: #006d02;
+    }
+
+    #potentialWinnings {
+        color: black !important;
     }
 </style>
 
@@ -273,6 +283,28 @@
     function updateBettingHistory(bet) {
         bettingHistory.push(bet);
 
+        // console.log(bet);
+        // bet stores:
+            // amount
+            // game:
+                // awayTeam
+                // homeTeam
+                // moneylineAway
+                // moneylineHome
+                // oddsMoneylineAway
+                // oddsMoneylineHome
+                // oddsOver
+                // oddsSpreadAway
+                // oddsSpreadHome
+                // oddsUnder
+                // over
+                // spreadAway
+                // spreadHome
+                // under
+            // odds
+            // type
+            // winnings
+
         const historyContainer = document.getElementById('betting-history');
         historyContainer.innerHTML = ''; // Clear previous content
 
@@ -284,7 +316,22 @@
         const historyList = document.createElement('ul');
         bettingHistory.forEach((item, index) => {
             const listItem = document.createElement('li');
-            listItem.innerText = `Bet #${index + 1}: ${item.type} - ${item.amount} on ${item.game.awayTeam} @ ${item.game.homeTeam}`;
+            var value = "";
+            if (item.type.includes('Spread Away')) {
+                value += "Spread " + item.game.awayTeam + " (" + item.game.spreadAway + ")";
+            } else if (item.type.includes('Spread Home')) {
+                value += "Spread " + item.game.homeTeam + " (" + item.game.spreadHome + ")";
+            } else if (item.type.includes('Moneyline Away')) {
+                value += "Moneyline " + item.game.awayTeam;
+                
+            } else if (item.type.includes('Moneyline Home')) {
+                value += "Moneyline " + item.game.homeTeam;
+            } else if (item.type === 'Over') {
+                value += "Total Points Over " + item.game.over;
+            } else if (item.type === 'Under') {
+                value += "Total Points Under " + item.game.under;
+            }
+            listItem.innerText = `Bet #${index + 1}: ${value} (${item.odds > 0 ? '+' : ''}${item.odds}) $${item.amount} to win $${item.winnings}`;
             historyList.appendChild(listItem);
         });
 
@@ -310,35 +357,41 @@
         }
 
         function openModal(betType, gameStr) {
-        const game = JSON.parse(decodeURIComponent(gameStr));
-        let odds = 0;
+            const game = JSON.parse(decodeURIComponent(gameStr));
+            let odds = 0;
 
-        // Determine odds based on the betType
-        if (betType.includes('Spread Away')) {
-            odds = parseFloat(game.spreadAway);
-        } else if (betType.includes('Spread Home')) {
-            odds = parseFloat(game.spreadHome);
-        } else if (betType.includes('Moneyline Away')) {
-            odds = parseFloat(game.moneylineAway);
-        } else if (betType.includes('Moneyline Home')) {
-            odds = parseFloat(game.moneylineHome);
-        } else if (betType === 'Over' || betType === 'Under') {
-            // Assume even odds for Over/Under (this can be adjusted as per your requirements)
-            odds = 100;
+            // Determine odds based on the betType
+            if (betType.includes('Spread Away')) {
+                odds = parseFloat(game.oddsSpreadAway);
+                modalTitle.innerHTML = `Spread: ${game.awayTeam} (${game.spreadAway})</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType.includes('Spread Home')) {
+                odds = parseFloat(game.oddsSpreadHome);
+                modalTitle.innerHTML = `Spread: ${game.homeTeam} (${game.spreadHome})</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType.includes('Moneyline Away')) {
+                odds = parseFloat(game.oddsMoneylineAway);
+                modalTitle.innerHTML = `Moneyline: ${game.awayTeam}</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType.includes('Moneyline Home')) {
+                odds = parseFloat(game.oddsMoneylineHome);
+                modalTitle.innerHTML = `Moneyline: ${game.homeTeam}</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType === 'Over') {
+                odds = parseFloat(game.oddsOver);
+                modalTitle.innerHTML = `Total Score: Over ${game.over}</br>${odds > 0 ? '+' : ''}${odds}`;
+            } else if (betType === 'Under') {
+                odds = parseFloat(game.oddsUnder);
+                modalTitle.innerHTML = `Total Score: Under ${game.under}</br>${odds > 0 ? '+' : ''}${odds}`;
+            }
+
+            modal.style.display = 'flex';
+            currentBet = { type: betType, game: game, odds: odds }; // Store current bet details, including odds
+
+            // Update potential winnings display
+            const potentialWinningsDisplay = document.getElementById('potentialWinnings');
+            if (potentialWinningsDisplay) {
+                const betAmount = parseFloat(betAmountInput.value) || 0;
+                const potentialWinnings = calculateWinnings(betAmount, odds) + betAmount;
+                potentialWinningsDisplay.innerText = `Potential Winnings: $${potentialWinnings}`;
+            }
         }
-
-        modalTitle.innerText = `Place Bet on ${betType} for ${game.awayTeam} @ ${game.homeTeam}`;
-        modal.style.display = 'flex';
-        currentBet = { type: betType, game: game, odds: odds }; // Store current bet details, including odds
-
-        // Update potential winnings display (if you have a place to show it)
-        const potentialWinningsDisplay = document.getElementById('potentialWinnings');
-        if (potentialWinningsDisplay) {
-            const betAmount = parseFloat(betAmountInput.value) || 0;
-            const potentialWinnings = calculateWinnings(betAmount, odds);
-            potentialWinningsDisplay.innerText = `Potential Winnings: $${potentialWinnings.toFixed(2)}`;
-        }
-    }
 
     function closeModalFunc() {
         modal.style.display = 'none';
@@ -360,28 +413,37 @@
 
         card.innerHTML = `
             <div class="team-names">${game.awayTeam} @ ${game.homeTeam}</div>
+            <span style="color: white">
+            Point Spread
+            </span>
             <div class="bet-button-container">
                 <button class="bet-button" onclick="openModal('Spread Away', '${encodeURIComponent(JSON.stringify(game))}')">
-                    Spread (${game.spreadAway}) - Odds: ${game.oddsSpreadAway > 0 ? '+' : ''}${game.oddsSpreadAway}
+                    ${game.awayTeam} (${game.spreadAway})</br>${game.oddsSpreadAway > 0 ? '+' : ''}${game.oddsSpreadAway}
                 </button>
                 <button class="bet-button" onclick="openModal('Spread Home', '${encodeURIComponent(JSON.stringify(game))}')">
-                    Spread (${game.spreadHome}) - Odds: ${game.oddsSpreadHome > 0 ? '+' : ''}${game.oddsSpreadHome}
+                    ${game.homeTeam} (${game.spreadHome})</br>${game.oddsSpreadHome > 0 ? '+' : ''}${game.oddsSpreadHome}
                 </button>
             </div>
+            <span style="color: white">
+            Moneyline
+            </span>
             <div class="bet-button-container">
                 <button class="bet-button" onclick="openModal('Moneyline Away', '${encodeURIComponent(JSON.stringify(game))}')">
-                    Moneyline (${game.moneylineAway}) - Odds: ${game.oddsMoneylineAway > 0 ? '+' : ''}${game.oddsMoneylineAway}
+                    ${game.awayTeam}</br>${game.oddsMoneylineAway > 0 ? '+' : ''}${game.oddsMoneylineAway}
                 </button>
                 <button class="bet-button" onclick="openModal('Moneyline Home', '${encodeURIComponent(JSON.stringify(game))}')">
-                    Moneyline (${game.moneylineHome}) - Odds: ${game.oddsMoneylineHome > 0 ? '+' : ''}${game.oddsMoneylineHome}
+                    ${game.homeTeam}</br>${game.oddsMoneylineHome > 0 ? '+' : ''}${game.oddsMoneylineHome}
                 </button>
             </div>
+            <span style="color: white">
+            Total Score
+            </span>
             <div class="bet-button-container">
                 <button class="bet-button" onclick="openModal('Over', '${encodeURIComponent(JSON.stringify(game))}')">
-                    Over (${game.over}) - Odds: ${game.oddsOver > 0 ? '+' : ''}${game.oddsOver}
+                    Over ${game.over}</br>${game.oddsOver > 0 ? '+' : ''}${game.oddsOver}
                 </button>
                 <button class="bet-button" onclick="openModal('Under', '${encodeURIComponent(JSON.stringify(game))}')">
-                    Under (${game.under}) - Odds: ${game.oddsUnder > 0 ? '+' : ''}${game.oddsUnder}
+                    Under ${game.under}</br>${game.oddsUnder > 0 ? '+' : ''}${game.oddsUnder}
                 </button>
             </div>
         `;
@@ -406,8 +468,8 @@
             return;
         }
 
-        const potentialWinnings = calculateWinnings(betAmount, currentBet.odds);
-        alert(`Bet of $${betAmount.toFixed(2)} placed. Potential Winnings: $${potentialWinnings.toFixed(2)}`);
+        const potentialWinnings = (calculateWinnings(betAmount, currentBet.odds) + betAmount).toFixed(2);
+        // alert(`Bet of $${betAmount.toFixed(2)} placed. Potential Winnings: $${potentialWinnings}`);
 
         currentBalance -= betAmount;
         updateBalanceDisplay();
@@ -429,7 +491,7 @@
     betAmountInput.addEventListener('input', () => {
         if (currentBet) {
             const betAmount = parseFloat(betAmountInput.value) || 0;
-            const potentialWinnings = calculateWinnings(betAmount, currentBet.odds);
+            const potentialWinnings = (calculateWinnings(betAmount, currentBet.odds) + betAmount).toFixed(2);
             document.getElementById('potentialWinnings').innerText = `Potential Winnings: $${potentialWinnings.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         }
     });
