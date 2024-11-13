@@ -21,6 +21,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 # Riley libraries for place_bets
 from django.http import JsonResponse
@@ -28,7 +31,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json
 
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
-from .models import Cybercoach, Subscriber, Game, UserCredit
+from .models import Cybercoach, Subscriber, Game, UserCredit, Bet
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -313,6 +316,56 @@ def place_bets(request):
         "games_json": serialized_games,
         'credit_balance': credits_balance
     })
+
+# This is the view that handles the AJAX request for placing bets
+@login_required
+@require_POST
+def place_bet(request):
+    try:
+        # Get the data from the POST
+        data = json.loads(request.body)
+        game_id = data.get("game_id")
+        bet_type = data.get("bet_type")
+        credits_bet = data.get("credits_bet")
+        odds = data.get("odds")
+
+        # Ensure all fields are provided
+        if game_id is None or bet_type is None or credits_bet is None or odds is None:
+            return JsonResponse({"error": "Missing required fields"}, status=400)
+
+        # Convert `credits_bet` and `odds` to integers/floats after validation
+        credits_bet = int(credits_bet)
+        odds = float(odds)
+
+        # Get the game
+        game = Game.objects.get(id=game_id)
+
+        # Get user credits
+        user_credit = UserCredit.objects.get(user=request.user)
+        if credits_bet > user_credit.total_credits:
+            return JsonResponse({"error": "Insufficient credits"}, status=400)
+
+        # Deduct/update credits from users available balance 
+        user_credit.total_credits -= credits_bet
+        user_credit.save()
+
+        # Create a new user bet instance
+        bet = Bet.objects.create(
+            user=request.user,
+            game=game,
+            bet_type=bet_type,
+            credits_bet=credits_bet,
+            odds=odds,
+            #bet_placed_at=timezone.now(),
+            status="Pending", # Default value until payout/loss
+            payout=0, # Default value until payout/loss
+        )
+
+        return JsonResponse({"success": True, "new_balance": user_credit.total_credits})
+    except Game.DoesNotExist:
+        return JsonResponse({"error": "Game not found"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def cybercoach(request):
