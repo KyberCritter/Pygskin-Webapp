@@ -193,7 +193,7 @@
 <div class="header-container">
     <div class="header-sub-container">
         <h1>Place Bets</h1>
-        <h2 id="balance-display">Balance: 10,000 Credits</h2>
+        <h2 id="balance-display" data-credit-balance="{{ credit_balance }}">Balance: {{ credit_balance }} Credits</h2>
     </div>
 
     <p>Choose a game to place a fake bet on. Select your bet type and enter the amount.</p>
@@ -225,7 +225,8 @@
 </div>
 
 <script>
-    let currentBalance = 10000; // Initialize balance
+    const balanceElement = document.getElementById('balance-display');
+    let currentBalance = parseFloat(balanceElement.getAttribute('data-credit-balance')) || 0;
     let bettingHistory = [];
 
     // Display the current balance

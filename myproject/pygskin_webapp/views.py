@@ -294,10 +294,25 @@ def place_bets(request):
     # Serialize the data to JSON
     serialized_games = json.dumps(list(games), cls=DjangoJSONEncoder)
 
-    context = {
-        "games_json": serialized_games
-    }
-    return HttpResponse(template.render(context, request))
+    if not request.user.is_authenticated:
+        credits_balance = 0
+    else:
+        # Loading in all user credit information
+        user_credit = UserCredit.objects.get(user=request.user)
+        credits_balance = user_credit.total_credits
+        print("User Credits:", credits_balance)
+    
+    # context = {
+    #     "games_json": serialized_games,
+    #     "credit_balance": credits_balance,
+    # }
+        
+        
+    #return HttpResponse(template.render(context, request))
+    return render(request, 'pygskin_webapp/place_bets.html', {
+        "games_json": serialized_games,
+        'credit_balance': credits_balance
+    })
 
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def cybercoach(request):
