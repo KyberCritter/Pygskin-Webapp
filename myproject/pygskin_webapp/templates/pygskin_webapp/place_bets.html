@@ -483,6 +483,13 @@
             return;
         }
 
+        var currentTimeToCheck = new Date();
+        var gameDate = new Date(currentBet.game.game_date);
+        if (gameDate < currentTimeToCheck) { // do not create bet cards if the game has already started
+            alert("Error: Cannot bet on a game that has already started.");
+            return;
+        }
+
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
