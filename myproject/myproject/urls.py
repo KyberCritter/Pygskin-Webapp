@@ -47,7 +47,8 @@ urlpatterns = [
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
     path("profile/", views.profile_view, name="profile"),
-    path("place_bets/", views.place_bets, name="place_bets")
+    path("place_bets/", views.place_bets, name="place_bets"),
+    path("place_bet/", views.place_bet, name="place_bet")
 ]
 
 handler400 = "pygskin_webapp.views.handler400"

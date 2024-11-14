@@ -193,7 +193,7 @@
 <div class="header-container">
     <div class="header-sub-container">
         <h1>Place Bets</h1>
-        <h2 id="balance-display">Balance: 10,000 Credits</h2>
+        <h2 id="balance-display" data-credit-balance="{{ credit_balance }}">Balance: {{ credit_balance }} Credits</h2>
     </div>
 
     <p>Choose a game to place a fake bet on. Select your bet type and enter the amount.</p>
@@ -225,7 +225,8 @@
 </div>
 
 <script>
-    let currentBalance = 10000; // Initialize balance
+    const balanceElement = document.getElementById('balance-display');
+    let currentBalance = parseFloat(balanceElement.getAttribute('data-credit-balance')) || 0;
     let bettingHistory = [];
 
     // Display the current balance
@@ -427,20 +428,71 @@
             return;
         }
 
-        const potentialWinnings = (calculateWinnings(betAmount, currentBet.odds) + betAmount).toFixed(2);
-        // alert(`Bet of $${betAmount.toFixed(2)} placed. Potential Winnings: $${potentialWinnings}`);
+        // Construct the data to send to the server
+        const betData = {
+            game_id: currentBet.game.id,
+            bet_type: currentBet.type,
+            credits_bet: betAmount,
+            odds: currentBet.odds
+        };
 
-        currentBalance -= betAmount;
-        updateBalanceDisplay();
+        // Debugging output
+        console.log("Bet Data:", betData);
 
-        if (currentBet) {
-            currentBet.amount = betAmount;
-            currentBet.winnings = potentialWinnings;
-            updateBettingHistory(currentBet);
+        // Check if any property in betData is undefined or null
+        if (!betData.game_id || !betData.bet_type || !betData.credits_bet || betData.odds === undefined) {
+            alert("Error: Some bet data is missing.");
+            return;
         }
 
-        // alert(`Bet of $${betAmount.toFixed(2)} submitted!`);
-        closeModalFunc();
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        const csrfToken = getCookie('csrftoken');
+
+        // Send an AJAX POST request to submit the bet
+        const placeBetUrl = "{% url 'place_bet' %}";
+
+        fetch(placeBetUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken
+            },
+            body: JSON.stringify(betData)
+        })
+
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                currentBalance = data.new_balance;  // Update the balance with the new value
+                updateBalanceDisplay();  // Refresh the balance display
+
+                currentBet.amount = betAmount;
+                currentBet.winnings = calculateWinnings(betAmount, currentBet.odds);
+                updateBettingHistory(currentBet);  // Add the bet to betting history
+                closeModalFunc();
+            } else {
+                alert(data.error || "An error occurred while placing your bet.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("An unexpected error occurred.");
+        });
     });
 
     // Initialize balance display on page load
