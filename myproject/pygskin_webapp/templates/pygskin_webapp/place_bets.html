@@ -74,7 +74,12 @@
 
     .team-names {
         font-size: 1.25rem;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
+    }
+
+    .game-time {
+        font-size: 1rem;
+        margin-bottom: 5px;
     }
 
     .bet-info {
@@ -351,6 +356,29 @@
         }
     });
 
+    function formatDateTime(dateTimeStr) {
+        const date = new Date(dateTimeStr);
+        const now = new Date();
+        const options = { hour: 'numeric', minute: 'numeric', hour12: true };
+        const formattedTime = date.toLocaleTimeString([], options);
+
+        const isToday = date.toDateString() === now.toDateString();
+        const isTomorrow = date.toDateString() === new Date(now.setDate(now.getDate() + 1)).toDateString();
+
+        if (isToday) {
+            return `Today at ${formattedTime}`;
+        } else if (isTomorrow) {
+            return `Tomorrow at ${formattedTime}`;
+        } else {
+            const formattedDate = date.toLocaleDateString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+            return `${formattedDate} at ${formattedTime}`;
+        }
+    }
+
     function createBetCard(game) {
         const card = document.createElement('div');
         card.classList.add('bet-card');
@@ -366,6 +394,7 @@
 
         card.innerHTML = `
             <div class="team-names">${game.away_team === "Hawaii" ? "Hawai'i" : game.away_team} @ ${game.home_team === "Hawaii" ? "Hawai'i" : game.home_team}</div>
+            <div class="game-time">${formatDateTime(game.game_date)}</div>
             ${game.spread !== null && game.away_spread_price !== null && game.home_spread_price !== null ? `
             <span style="color: white">
             Point Spread
@@ -410,9 +439,18 @@
         return card;
     }
 
+    // sort the gamesList by date/time
+    gamesList.sort((a, b) => new Date(a.game_date) - new Date(b.game_date));
+    
+    // create cards dynamically for each one
     const container = document.getElementById('betting-container');
+    const currentTime = new Date();
+
     gamesList.forEach(game => {
-        container.appendChild(createBetCard(game));
+        const gameDate = new Date(game.game_date);
+        if (gameDate > currentTime) { // do not create bet cards if the game has already started
+            container.appendChild(createBetCard(game));
+        }
     });
 
     // need to submit the bet data to the database here
