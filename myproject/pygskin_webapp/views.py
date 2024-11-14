@@ -23,7 +23,11 @@ from django.contrib.auth.models import User
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.utils import timezone
+from datetime import timedelta
+from django.utils import timezone
+from django.core.cache import cache
 
 # Riley libraries for place_bets
 from django.http import JsonResponse
@@ -92,31 +96,49 @@ def signup_view(request):
     }
     return HttpResponse(template.render(context, request))
 
+
+MAX_LOGIN_ATTEMPTS = 5  # Limit for login attempts
+LOCKOUT_TIME = 300
 @ensure_csrf_cookie
 def login_view(request):
-    # If user already logged in, redirect to login page with name displayed
     if request.user.is_authenticated:
-        #return render(request, 'pygskin_webapp/login.html')
         return redirect('profile')
 
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
+        username = request.POST.get('username')
+
+        # Check if the user is locked out
+        lockout_key = f'lockout_{username}'
+        if cache.get(lockout_key):
+            messages.error(request, "This account is temporarily locked. Please try again later.")
+            return render(request, 'pygskin_webapp/login.html', {'form': form})
+
         if form.is_valid():
-            # If the form is valid, get username and password from form
-            # and authenticate with Djangos built-in system
-            username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(request, username=username, password=password)
 
-            # If user exists, redirect to login page
-            # Should change this later to profile page
             if user is not None:
+                # Clear the login attempt count on successful login
+                cache.delete(f'login_attempts_{username}')
                 auth_login(request, user)
                 return redirect('profile')
             else:
                 messages.error(request, "Invalid username or password.")
         else:
-            messages.error(request, "Invalid username or password.")
+            # Increment login attempts
+            login_attempts_key = f'login_attempts_{username}'
+            login_attempts = cache.get(login_attempts_key, 0) + 1
+            cache.set(login_attempts_key, login_attempts, timeout=LOCKOUT_TIME)
+
+            # Check if login attempts exceed the maximum limit
+            if login_attempts >= MAX_LOGIN_ATTEMPTS:
+                # Lock the account for LOCKOUT_TIME seconds
+                cache.set(lockout_key, True, timeout=LOCKOUT_TIME)
+                messages.error(request, "Too many failed login attempts. Please try again later.")
+            else:
+                remaining_attempts = MAX_LOGIN_ATTEMPTS - login_attempts
+                messages.error(request, f"Invalid username or password. You have {remaining_attempts} attempts left.")
 
     form = AuthenticationForm()
     return render(request, 'pygskin_webapp/login.html', {'form': form})
