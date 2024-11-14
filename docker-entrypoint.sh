@@ -29,7 +29,7 @@ python manage.py createsuperuser --noinput --username $DJANGO_SUPERUSER_USERNAME
 # echo "Populating Game and GameScores Tables from CFBDB"
 # python manage.py populate_games
 
-# echo "Populating Game and GameScores Tables from CFBDB"
+# echo "Updating Game scores and betting transactions Tables from CFBDB"
 # python manage.py update_scores
 
 echo "Collecting static files..."
