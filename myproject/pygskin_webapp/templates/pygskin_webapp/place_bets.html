@@ -485,8 +485,22 @@
 
         var currentTimeToCheck = new Date();
         var gameDate = new Date(currentBet.game.game_date);
-        if (gameDate < currentTimeToCheck) { // do not create bet cards if the game has already started
+        if (gameDate < currentTimeToCheck) { // error for edge casing where someone could cheat and open the page, then wait to bet until after the game starts
             alert("Error: Cannot bet on a game that has already started.");
+            // clear and rebuild cards
+            const container = document.getElementById('betting-container');
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            const currentTime = new Date();
+
+            gamesList.forEach(game => {
+                const gameDate = new Date(game.game_date);
+                if (gameDate > currentTime) { // do not create bet cards if the game has already started
+                    container.appendChild(createBetCard(game));
+                }
+            });
+            closeModalFunc();
             return;
         }
 
