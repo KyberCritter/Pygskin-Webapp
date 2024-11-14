@@ -178,66 +178,6 @@ def colley_matrix(request):
     context = {}
     return HttpResponse(template.render(context, request))
 
-@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
-def coach(request):
-    # Only proceed if this is a POST request
-    if request.method == 'POST':
-        form = CoachSelectForm(request.POST)
-        
-        if form.is_valid():
-            # Extract the selected coach and model type from the POST request
-            coach = form.cleaned_data.get('coach')
-            # Load the cybercoach from the path
-            cybercoach_obj = Cybercoach.objects.filter(coach=coach).first()
-            if cybercoach_obj is None:
-                return redirect('error')    # avoid exposing the error message to the user
-            cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_obj.model_filename)
-            try:
-                #if(cybercoach_path.find('..')):
-                    #raise RuntimeError("Pls do not hack my server")
-                
-                cybercoach = pickle.load(open(cybercoach_path, "rb"))
-
-            except Exception as e:                
-                return redirect('error')    # avoid exposing the error message to the user
-
-            # Gather playcalling statistics
-            play_dist = [cybercoach.play_distribution[key] for key in sorted(cybercoach.play_distribution.keys())]
-            # play_dist_1st_down = [value for value in cybercoach.play_distribution_by_down[1].values()]
-            # play_dist_2nd_down = [value for value in cybercoach.play_distribution_by_down[2].values()]
-            # play_dist_3rd_down = [value for value in cybercoach.play_distribution_by_down[3].values()]
-            play_dist_4th_down = [cybercoach.play_distribution_by_down[4][key] for key in sorted(cybercoach.play_distribution_by_down[4].keys())]
-            play_types = [pygskin.PlayType(key).name for key in sorted(cybercoach.play_distribution.keys())]
-            colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in sorted(cybercoach.play_distribution.keys())]
-
-            # Prepare context data for rendering
-            context = {
-                "coach_name": f"{coach.first_name} {coach.last_name}",
-                "first_year": cybercoach.coach.first_year,
-                "last_year": cybercoach.coach.last_year,
-                "coach_seasons": cybercoach.coach.coach_dict["seasons"],
-                "play_dist": play_dist,
-                "play_types": play_types,
-                "colors": colors,
-                "form": form,
-                # "play_dist_1st_down": play_dist_1st_down,
-                # "play_dist_2nd_down": play_dist_2nd_down,
-                # "play_dist_3rd_down": play_dist_3rd_down,
-                "play_dist_4th_down": play_dist_4th_down,
-                "coach_bio": coach.biography,
-            }
-
-            # Render and return the template with context
-            return render(request, "pygskin_webapp/coach.html", context)
-        
-        else:
-            # Redirect or show an error for invalid form data
-            return redirect('index')
-    else:
-        # Redirect or show an error for non-POST requests
-        # Adjust the redirect path as necessary
-        return redirect('index')
-
 @ratelimit(key='ip', rate='10/m', method=ratelimit.ALL)
 def coach_stats(request):
     form = CoachSelectForm(request.GET)  # Initialize form with GET data
@@ -367,64 +307,6 @@ def place_bet(request):
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
-@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
-def cybercoach(request):
-    # Only proceed if this is a POST request
-    if request.method == 'POST':
-        form = CybercoachSelectForm(request.POST)
-
-        if form.is_valid():
-            # Extract the selected cybercoach from the POST request
-            cybercoach_model = form.cleaned_data.get('cybercoach')
-            # Load the cybercoach from the path
-            if cybercoach_model is None:
-                return redirect('error')    # avoid exposing the error message to the user
-            cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename)
-            try:
-                cybercoach_obj = pickle.load(open(cybercoach_path, "rb"))
-            except Exception as e:
-                return redirect('error')    # avoid exposing the error message to the user
-
-            first_year = cybercoach_obj.coach.first_year
-            last_year = cybercoach_obj.coach.last_year
-            opponents_by_year = {}
-            for year in range(first_year, last_year + 1):
-                opponent_list = []
-                current_team = cybercoach_obj.coach.coach_school_dict[year]
-                for game in cybercoach_obj.coach.games_list:
-                    if game.game_dict["season"] == year and game.game_dict["home_team"] == current_team and (game.game_dict["away_team"], game.game_dict["week"]) not in opponent_list:
-                        opponent_list.append((game.game_dict["away_team"], game.game_dict["week"]))
-                    elif game.game_dict["season"] == year and game.game_dict["away_team"] == current_team and (game.game_dict["home_team"], game.game_dict["week"]) not in opponent_list:
-                        opponent_list.append((game.game_dict["home_team"], game.game_dict["week"]))
-                opponents_by_year[year] = opponent_list
-                
-            # Prepare context data for rendering
-            context = {
-                "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
-                "first_year": first_year,
-                "last_year": last_year,
-                "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
-                "opponents_by_year": opponents_by_year,
-                "current_team": cybercoach_obj.coach.coach_school_dict[cybercoach_obj.coach.first_year],
-                "model_accuracy": round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2),
-                "cybercoach_id": cybercoach_model.id,
-                "model_type": get_model_type_name(cybercoach_model.model_type),
-                "custom_scenario_form": CustomScenarioForm()  # Add the form to the context
-            }
-            for key, value in context.items():
-                if key == "custom_scenario_form":
-                    continue
-                request.session[key] = value
-
-            # Render and return the template with context
-            return render(request, "pygskin_webapp/cybercoach.html", context)
-        else:
-            # Redirect or show an error for invalid form data
-            return redirect('index')
-    else:
-        # Redirect or show an error for non-POST requests
-        return redirect('index')
-
 @ratelimit(key='ip', rate='10/m', method=ratelimit.ALL)
 def cybercoach_select(request):
     form = CybercoachSelectForm(request.GET)  # Initialize form with GET data
@@ -497,52 +379,6 @@ def cybercoach_select(request):
         "play_data": serialized_play_data,
     }
     return render(request, 'pygskin_webapp/cybercoach_select.html', context)
-
-@ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
-def drive_select(request):
-    # select a drive from the cybercoach
-    if request.method == 'POST':
-        if "cybercoach_id" not in request.session:
-            return redirect('index')
-        if not request.session["cybercoach_id"]:
-            return redirect('index')
-        cybercoach_model = Cybercoach.objects.get(id=request.session["cybercoach_id"])
-        try:
-            cybercoach_obj = pickle.load(open(os.path.join(PATH_TO_CYBERCOACHES, cybercoach_model.model_filename), "rb"))
-        except Exception as e:
-            return redirect('error')    # avoid exposing the error message to the user
-
-        # Extract the selected coach and model type from the POST request
-        selected_opponent = request.POST.get('opponent')
-        selected_year = int(request.POST.get('year'))
-
-        current_team = cybercoach_obj.coach.coach_school_dict[selected_year]
-        current_opponent = selected_opponent.split(",")[0]
-        selected_week = int(selected_opponent.split(",")[1])
-        game_dict = cybercoach_obj.original_play_df[(cybercoach_obj.original_play_df["season"] == selected_year) & (cybercoach_obj.original_play_df["offense"] == current_team) & (cybercoach_obj.original_play_df["defense"] == current_opponent) & (cybercoach_obj.original_play_df["week"] == selected_week)].to_dict()
-
-        context = {
-            "selected_year": selected_year,
-            "selected_week": selected_week,
-            "selected_opponent": current_opponent,
-            "current_team": current_team,
-            "game_dict": game_dict,
-            "drive_numbers": list(set(game_dict["drive_number"].values())),
-            "coach_name": cybercoach_obj.coach.coach_dict["first_name"] + " " + cybercoach_obj.coach.coach_dict["last_name"],
-            "first_year": cybercoach_obj.coach.first_year,
-            "last_year": cybercoach_obj.coach.last_year,
-            "coach_seasons": cybercoach_obj.coach.coach_dict["seasons"],
-            "model_accuracy": round(cybercoach_obj.prediction_stats["accuracy"] * 100, 2),
-            "model_type": get_model_type_name(cybercoach_model.model_type),
-            "cybercoach_id": cybercoach_model.id,
-        }
-        for key, value in context.items():
-            request.session[key] = value
-    
-        return render(request, "pygskin_webapp/drive_select.html", context)
-    else:
-        # Redirect or show an error for non-POST requests
-        return redirect('index')
 
 @ratelimit(key='ip', rate='10/m', method=ratelimit.ALL)
 def prediction(request):
