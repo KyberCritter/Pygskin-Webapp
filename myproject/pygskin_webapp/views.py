@@ -31,7 +31,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 import json
 
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
-from .models import Cybercoach, Subscriber, Game, UserCredit, Bet
+from .models import Cybercoach, Subscriber, Game, UserCredit, Bet, BettingTransaction
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -142,13 +142,18 @@ def profile_view(request):
     credits_won = user_credit.credits_won
     credits_lost = user_credit.credits_lost
 
+    transaction_history = BettingTransaction.objects.filter(user=request.user).order_by('-transaction_date')
+    active_bets = Bet.objects.filter(user=request.user, status="Pending")
+
     return render(request, 'pygskin_webapp/profile.html', {
         'first_name': request.user.first_name,
         'last_name': request.user.last_name,
         'email': request.user.email,
         'credit_balance': credits_balance,
         'credits_won': credits_won,
-        'credits_lost': credits_lost
+        'credits_lost': credits_lost,
+        'transaction_history': transaction_history,
+        'active_bets': active_bets,
     })
 
 def license(request):

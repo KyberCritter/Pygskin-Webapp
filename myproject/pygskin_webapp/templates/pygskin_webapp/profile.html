@@ -138,6 +138,19 @@
                 <th>Payout</th>
             </tr>
         </thead>
+        <tbody>
+            {% for transaction in transaction_history %}
+                <tr>
+                    <td>{{ transaction.bet.game.home_team }} vs {{ transaction.bet.game.away_team }}</td>
+                    <td>{{ transaction.bet.bet_type }}</td>
+                    <td>{{ transaction.bet.credits_bet }}</td>
+                    <td>{{ transaction.transaction_type }}</td>
+                    <td>{{ transaction.credits_adjusted }}</td>
+                </tr>
+                {% empty %}
+                    <tr><td colspan="5">No transactions yet.</td></tr>
+                {% endfor %}
+        </tbody>
     </table>
 
     <h2>Active Bets:</h2>
@@ -150,21 +163,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>ALA v TENN</td>
-                <td>Spread: -3/-110</td>
-                <td>100</td>
-            </tr>
-            <tr>
-                <td>ORE v PUR</td>
-                <td>Total: u58.5/-105</td>
-                <td>2500</td>
-            </tr>
-            <tr>
-                <td>AUB v MIZ</td>
-                <td>ML: -200</td>
-                <td>500</td>
-            </tr>
+            {% for bet in active_bets %}
+                <tr>
+                    <td>{{ bet.game.home_team }} vs {{ bet.game.away_team }}</td>
+                    <td>{{ bet.bet_type }}: {{ bet.odds }}</td>
+                    <td>{{ bet.credits_bet }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="3">No active bets.</td></tr>
+            {% endfor %}
         </tbody>
     </table>
 
