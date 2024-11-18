@@ -6,8 +6,10 @@
 
 {% block content %}
 
+<!-- Link the custom CSS for this page -->
 <link rel="stylesheet" type="text/css" href="{% static 'place_bets.css' %}">
 
+<!-- Header container for the place bets page -->
 <div class="header-container">
     <div class="header-sub-container">
         <h1>Place Bets</h1>
@@ -15,13 +17,14 @@
     </div>
 
     <p>Choose a game to place a fake bet on. Select your bet type and enter the amount.</p>
-</div>  
+</div>
 
+<!-- Container to hold dynamically created bet cards for each game -->
 <div class="betting-container" id="betting-container">
     <!-- Bet cards will be dynamically created here -->
 </div>
 
-<!-- Modal Structure -->
+<!-- Modal Structure for placing a bet -->
 <div id="betModal" class="modal">
     <div class="modal-content">
         <span class="close-modal">&times;</span>
@@ -33,7 +36,8 @@
 </div>
 
 <!-- Betting History -->
- <div class="header-container">
+<!-- This was used for debugging, and it can be removed if desired. The relevant JS would also need to be removed -->
+<div class="header-container">
     <div class="header-sub-container">
         <h1>BETS MADE IN THIS SESSION</h1>
     </div>
@@ -45,7 +49,8 @@
 <script type="text/javascript">
     // These variables need to be defined here, because there are errors when the django formatted variables are defined in external JS files
     const gamesList = JSON.parse('{{ games_json|escapejs }}');
-  </script>
+</script>
+<!-- Load the JS for this page -->
 <script type="text/javascript" src="{% static 'place_bets.js' %}"></script>
 
 {% endblock %}

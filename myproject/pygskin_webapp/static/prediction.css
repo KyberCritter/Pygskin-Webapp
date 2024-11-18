@@ -4,6 +4,7 @@
         color: white;
     }
 
+    /* Container for the page header */
     .header-container {
         background-color: #006106;
         border-radius: 20px;
@@ -12,11 +13,12 @@
         text-align: center;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     }
-    
+
     .header-container .group {
         padding: 20px !important;
     }
-    
+
+    /* Rounded boxes */
     .group {
         display: block !important;
         border-radius: 15px;
@@ -45,6 +47,7 @@
         text-shadow: none !important;
     }
 
+    /* Container that holds the tables */
     .table-container {
         display: flex;
         justify-content: space-between;
@@ -52,7 +55,7 @@
     }
 
     /* Table wrapper styles */
-    .scrollable-table { 
+    .scrollable-table {
         flex: 1;
         overflow-x: auto;
         width: 100%;
@@ -63,12 +66,17 @@
     /* Table styles */
     .scrollable-table table {
         width: 100%;
-        border-collapse: separate; /* Ensures border-radius will work */
-        border-spacing: 10px; /* Adds space between table cells */
-        background-color: #006106; /* Background for the entire table */
-        border-radius: 15px; /* Rounds the corners of the table */
+        border-collapse: separate;
+        /* Ensures border-radius will work */
+        border-spacing: 10px;
+        /* Adds space between table cells */
+        background-color: #006106;
+        /* Background for the entire table */
+        border-radius: 15px;
+        /* Rounds the corners of the table */
         padding: 10px;
-        margin: auto; /* Centers the table */
+        margin: auto;
+        /* Centers the table */
     }
 
     /* Header cell styles */
@@ -117,11 +125,13 @@
         font-weight: bold;
     }
 
+    /* Mobile compatibility */
     @media (max-width: 768px) {
         .table-container {
             flex-direction: column;
         }
     }
+
     @media (min-width: 769px) {
         .table-container {
             flex-direction: row;

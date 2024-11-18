@@ -6,18 +6,23 @@
 
 {% load static %}
 
+<!-- Link the custom CSS for this page -->
 <link rel="stylesheet" type="text/css" href="{% static 'prediction.css' %}">
 
+<!-- Header section -->
 <div class="header-container">
     <div class="group">
-        <h1>{{ coach_name|upper }} CYBERCOACH FOR DRIVE {{ drive_number }} OF {{ current_team|upper }} VS. {{ selected_opponent|upper }} (WEEK {{ selected_week }}, {{ selected_year }})</h1>
+        <h1>{{ coach_name|upper }} CYBERCOACH FOR DRIVE {{ drive_number }} OF {{ current_team|upper }} VS. {{selected_opponent|upper }} (WEEK {{ selected_week }}, {{ selected_year }})</h1>
     </div>
     <div class="group">
-        <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
+        <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from
+            the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were
+            withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{model_accuracy }}%</strong> accurate on the evaluation data set.</p>
         <p>These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that drive.</p>
     </div>
 </div>
 
+<!-- Container for displaying prediction stats -->
 <div class="table-container" style="background-color:#006106; border-radius: 20px; gap:0px;">
     <div class="group" style="flex: 1 1 40%">
         <h2 id="prediction-stat">THE MACHINE LEARNING MODEL CORRECTLY PREDICTED #/# PLAYS</h2>
@@ -27,6 +32,8 @@
         <p><u>Scroll to the right</u> to see more data for each play.</p>
     </div>
 </div>
+
+<!-- Container for the scrollable tables with the predictions and the actual drive -->
 <div class="table-container">
     <div class="scrollable-table" id="prediction-table" style="flex: 1 1 40%">
         <table border="1">
@@ -39,11 +46,11 @@
             </thead>
             <tbody>
                 {% for pred, actual in predictions_and_actual %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{% if pred == 0 %}Pass{% elif pred == 1 %}Rush{% elif pred == 2 %}Field Goal{% elif pred == 3 %}PAT{% elif pred == 4 %}Punt{% else %}Other{% endif %}</td>
-                        <td class="{% if pred == actual %}correct{% else %}incorrect{% endif %}">{% if actual == 0 %}Pass{% elif actual == 1 %}Rush{% elif actual == 2 %}Field Goal{% elif actual == 3 %}PAT{% elif actual == 4 %}Punt{% else %}Other{% endif %}</td>
-                    </tr>
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{% if pred == 0 %}Pass{% elif pred == 1 %}Rush{% elif pred == 2 %}Field Goal{% elif pred == 3%}PAT{% elif pred == 4 %}Punt{% else %}Other{% endif %}</td>
+                    <td class="{% if pred == actual %}correct{% else %}incorrect{% endif %}">{% if actual == 0 %}Pass{%elif actual == 1 %}Rush{% elif actual == 2 %}Field Goal{% elif actual == 3 %}PAT{% elif actual== 4 %}Punt{% else %}Other{% endif %}</td>
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
@@ -53,25 +60,26 @@
             <thead>
                 <tr>
                     {% if drive_dict %}
-                        {% for key in drive_dict.0.keys %}
-                            <th>{{ key }}</th>
-                        {% endfor %}
+                    {% for key in drive_dict.0.keys %}
+                    <th>{{ key }}</th>
+                    {% endfor %}
                     {% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for row in drive_dict %}
-                    <tr>
-                        {% for value in row.values %}
-                            <td>{{ value }}</td>
-                        {% endfor %}
-                    </tr>
+                <tr>
+                    {% for value in row.values %}
+                    <td>{{ value }}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
 
+<!-- Link the custom JS file for this page -->
 <script type="text/javascript" src="{% static 'prediction.js' %}"></script>
 
 {% endblock %}

@@ -1,4 +1,5 @@
-    h1, h2 {
+    h1,
+    h2 {
         text-transform: uppercase;
         text-shadow: none !important;
         text-align: center;
@@ -8,10 +9,12 @@
         color: #FFDE21 !important;
     }
 
-    h2, p {
+    h2,
+    p {
         color: white !important;
     }
 
+    /* Header container for place bets */
     .header-container {
         background-color: #006106;
         border-radius: 20px;
@@ -31,13 +34,15 @@
         align-items: center;
         padding: 10px;
     }
-    
-    h3, p {
+
+    h3,
+    p {
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
         text-align: center;
     }
 
+    /* Container for betting cards */
     .betting-container {
         display: flex;
         flex-wrap: wrap;
@@ -46,6 +51,7 @@
         justify-content: center;
     }
 
+    /* Individual betting cards */
     .bet-card {
         background-color: #006106;
         color: #FFDE21;
