@@ -257,6 +257,11 @@ def coach_stats(request):
 
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def place_bets(request):
+    # require user to be logged in to see the place bets page
+    # if user is not authenticated, redirect to signup page
+    if not request.user.is_authenticated:
+        return redirect('signup')
+
     template = loader.get_template("pygskin_webapp/place_bets.html")
     # Convert the QuerySet to a list of dictionaries
     games = Game.objects.all().values()  # or values('field1', 'field2') to include specific fields
