@@ -67,6 +67,7 @@ class Subscriber(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name} <{self.email}>"
 
+# This model holds all of the information for each game
 class Game(models.Model):
     cfbdb_game_id = models.IntegerField()
     season = models.IntegerField()
@@ -83,6 +84,8 @@ class Game(models.Model):
     away_over_under_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     game_date = models.DateTimeField(null=True, blank=True)
 
+
+# This model holds all of the information for each bet made by a user
 class Bet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
@@ -93,6 +96,7 @@ class Bet(models.Model):
     status = models.CharField(max_length=20, default='Pending')
     payout = models.IntegerField(default=0)
 
+# This model holds all of the information for each user's credits
 class UserCredit(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total_credits = models.IntegerField(default=10000)
@@ -100,6 +104,7 @@ class UserCredit(models.Model):
     credits_lost = models.IntegerField(default=0)
     last_updated = models.DateTimeField(auto_now=True)
 
+# This model holds all of the information for each user's bet and the results
 class BettingTransaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     bet = models.ForeignKey(Bet, on_delete=models.SET_NULL, null=True)
@@ -108,6 +113,7 @@ class BettingTransaction(models.Model):
     balance_after_transaction = models.IntegerField()
     transaction_date = models.DateTimeField(auto_now_add=True)
 
+# This model holds all of the information for each game score and when it was last updated
 class GameScore(models.Model):
     game = models.OneToOneField(Game, on_delete=models.CASCADE)
     home_team_score = models.IntegerField(default=0)
