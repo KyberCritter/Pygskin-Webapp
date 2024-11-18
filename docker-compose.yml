@@ -1,4 +1,7 @@
+version: '3.9'
+
 services:
+  # PostgreSQL service
   db:
     image: postgres:latest
     volumes:
@@ -10,6 +13,7 @@ services:
     ports:
       - "5432:5432"
 
+  # Django app container (Web service)
   web:
     build: .
     command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000
@@ -21,9 +25,14 @@ services:
       DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME}
       DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL}
       DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD}
+      DATABASE_URL: postgres://django:django@db:5432/django
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
     depends_on:
       - db
+      - redis
 
+  # Nginx container (for reverse proxy)
   nginx:
     build:
       context: .
@@ -37,6 +46,7 @@ services:
     depends_on:
       - web
 
+  # Umami analytics container (optional, assuming you need it)
   umami:
     image: ghcr.io/umami-software/umami:postgresql-latest
     ports:
@@ -46,5 +56,38 @@ services:
     depends_on:
       - db
 
+  # Redis service for Celery
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  # Celery worker container
+  celery:
+    build: .
+    command: celery -A myproject worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - web
+      - redis
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+
+  # Celery Beat container (for periodic tasks)
+  celerybeat:
+    build: .
+    command: celery -A myproject beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - web
+    environment:
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+
 volumes:
   postgres_data: {}
+  staticfiles: {}
