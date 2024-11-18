@@ -74,6 +74,7 @@ def send_newsletter_signup(target_email: str):
 			"subject": "Welcome to the Pygskin newsletter!",
 			"template": "Newsletter Confirmation",})
 
+# Loads the subscriber form, checks if it is valid, and returns a subscription successfull page if it is.
 @ratelimit(key='ip', rate='1/m', method=ratelimit.ALL)
 def subscribed(request):
     if request.method == 'POST':
@@ -96,7 +97,7 @@ def signup_view(request):
     }
     return HttpResponse(template.render(context, request))
 
-
+# Loads the login page and limits the login attempts to 5
 MAX_LOGIN_ATTEMPTS = 5  # Limit for login attempts
 LOCKOUT_TIME = 300
 @ensure_csrf_cookie
@@ -152,6 +153,7 @@ def logout_view(request):
     # and has an option to return back to the home page
     return redirect('index')
 
+# Loads the profile view and all the information that the user needs to see.
 def profile_view(request):
     # Make sure user is authenticated before accessing profile page
     # If not authenticated, redirect to login page
@@ -164,6 +166,7 @@ def profile_view(request):
     credits_won = user_credit.credits_won
     credits_lost = user_credit.credits_lost
 
+    # Load in the betting transaction history for the user
     transaction_history = BettingTransaction.objects.filter(user=request.user).order_by('-transaction_date')
     active_bets = Bet.objects.filter(user=request.user, status="Pending")
 

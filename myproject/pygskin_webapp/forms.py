@@ -29,6 +29,7 @@ class CybercoachSelectForm(forms.Form):
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
+# This form will create a new subscriber and add in a new user to the DB
 class SubscriberForm(ModelForm):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
@@ -63,18 +64,21 @@ class SubscriberForm(ModelForm):
             'identity': 'Best describes me'
         }
 
+    # Function to make sure that each email submitted is unique
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if Subscriber.objects.filter(email=email).exists() or User.objects.filter(email=email).exists():
             raise forms.ValidationError("This email has already been subscribed.")
         return email
     
+    # Function to make sure that each username submitted is unique
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError("This username is already taken.")
         return username
     
+    # Saves the subscriber, creates a user, and give the user credits
     def save(self, commit=True):
         # Create a User instance for authentication
         user = User.objects.create(
