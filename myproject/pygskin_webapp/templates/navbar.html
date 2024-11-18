@@ -1,72 +1,8 @@
 <!-- navbar.html -->
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'navbar.css' %}">
 <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
-
-<style>
-    @media (max-width: 768px) {
-        #navbar-links, #navbar-signup {
-            display: none;
-        }
-
-        #hamburger-menu {
-            display: block;
-            font-size: xx-large;
-            cursor: pointer;
-        }
-
-    }
-    @media (min-width: 769px) {
-        #navbar-links, #navbar-signup {
-            display: flex;
-        }
-
-        #hamburger-menu {
-            display: none;
-        }
-
-        .side-nav {
-            display: none;
-        }
-    }
-
-    /* Side Navigation Menu */
-    .sidenav {
-        height: 100%; /* Full-height */
-        width: 0; /* Initially, width is 0 */
-        position: fixed; /* Stay in place */
-        z-index: 1; /* Sit on top */
-        top: 0;
-        left: 0;
-        background-color: white; /* White background color */
-        overflow-x: hidden; /* Disable horizontal scroll */
-        transition: 0.5s; /* Smooth transition */
-        padding-top: 60px; /* Place content 60px from the top */
-    }
-
-    .sidenav a {
-        font-family: 'DM Sans', sans-serif;
-        font-weight: 400;
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 25px;
-        color: #818181;
-        display: block;
-        transition: 0.3s;
-    }
-
-    .sidenav a:hover {
-        color: #f1f1f1;
-    }
-
-    .sidenav .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-    }
-</style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -117,32 +53,4 @@
     </div>
 </div>
 
-<script>
-    function openNav() {
-        document.getElementById("mySidenav").style.width = "100%";
-    }
-
-    function closeNav() {
-        document.getElementById("mySidenav").style.width = "0";
-    }
-
-    // THIS JAVASCRIPT IS TO FIX THE FOOTER ISSUE ON COACH_STATS WHEN THERE IS NO COACH SELECTED
-    document.addEventListener("DOMContentLoaded", function() {
-        const url = window.location.href;
-        const exactPath = /\/coach_stats\/$/; // Matches exactly "/coach_stats/"
-        const pathWithCoachParam = /\/coach_stats\/\?coach=$/; // Matches exactly "/coach_stats/?coach="
-
-        if (exactPath.test(url) || pathWithCoachParam.test(url)) {
-            const containers = document.getElementsByClassName('container');
-            for (let container of containers) {
-                container.style.padding = '0px';
-            }
-        }
-        else {
-            const containers = document.getElementsByClassName('container');
-            for (let container of containers) {
-                container.style.padding = '20px 7vw';
-            }
-        }
-    });
-</script>
+<script type="text/javascript" src="{% static 'navbar.js' %}"></script>

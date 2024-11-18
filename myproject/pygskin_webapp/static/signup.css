@@ -1,0 +1,65 @@
+.custom-button {
+    align-content: flex-start !important;
+    align-items: flex-start !important;
+    background-color: #008705 !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    flex: none !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    height: min-content !important;
+    justify-content: flex-start !important;
+    overflow: visible !important;
+    padding: 12px 32px !important;
+    text-decoration: none !important;
+    position: relative !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.custom-button-box {
+    flex: none !important;
+    height: auto !important;
+    position: relative !important;
+    white-space: pre !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.custom-button-box p {
+    font-family: 'Fugaz One', sans-serif !important;
+    font-size: 20px !important; 
+    font-weight: 700 !important; 
+    text-transform: uppercase !important; 
+    color: rgb(255, 222, 33) !important;
+    display: inline-block !important;
+    text-align: left !important;
+    vertical-align: middle !important;
+    padding: 18px !important;
+    line-height: 1 !important;
+    margin: 0 auto !important;
+}
+
+p {
+    font-family: 'DM Sans' !important;
+    font-weight: 400;
+    /* text-transform: uppercase !important;  */
+    /* color: #016006  !important; */
+}
+
+h2 {
+    color: #016006 !important;
+}
+
+form {
+    background-color: #016006 !important;
+
+}
+
+form label {
+    text-transform: uppercase !important; 
+    color: rgb(255, 222, 33) !important;
+}

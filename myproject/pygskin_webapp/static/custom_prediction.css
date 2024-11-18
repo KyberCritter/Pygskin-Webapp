@@ -1,0 +1,111 @@
+    p {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+    }
+
+    .header-container {
+        background-color: #006106;
+        border-radius: 20px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .group {
+        display: block !important;
+        padding: 20px !important;
+        border-radius: 15px;
+        background-color: #008703;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin: 10px;
+    }
+
+    h1 {
+        font-family: 'Fugaz One', sans-serif;
+        font-weight: 700;
+        color: #FFDE21 !important;
+        margin-bottom: 10px;
+        text-align: center;
+        text-shadow: none !important;
+    }
+    
+    h2 {
+        font-family: 'Fugaz One', sans-serif;
+        font-weight: 700;
+        color: #FFDE21 !important;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        text-align: center;
+        text-shadow: none !important;
+    }
+
+    /* Table wrapper styles */
+    .scrollable-table { 
+        flex: 1;
+        overflow-x: auto;
+        width: 100%;
+        text-align: center;
+        padding: 0px;
+    }
+
+    /* Table styles */
+    .scrollable-table table {
+        width: 100%;
+        border-collapse: separate; /* Ensures border-radius will work */
+        border-spacing: 10px; /* Adds space between table cells */
+        background-color: #006106; /* Background for the entire table */
+        border-radius: 15px; /* Rounds the corners of the table */
+        padding: 10px;
+        margin: auto; /* Centers the table */
+    }
+
+    /* Header cell styles */
+    .scrollable-table th {
+        background-color: #008703;
+        color: #FFDE21;
+        font-family: 'Fugaz One', sans-serif;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 10px;
+        text-transform: uppercase;
+    }
+
+    /* Body cell styles */
+    .scrollable-table td {
+        background-color: #F1EFEF;
+        font-family: 'Fugaz One', sans-serif;
+        font-weight: 700;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 10px;
+        text-transform: uppercase;
+        color: #006106;
+    }
+
+    /* Odd rows */
+    .scrollable-table tbody tr:nth-of-type(odd) td {
+        background-color: #F1EFEF;
+        color: #008703;
+    }
+
+    /* Even rows */
+    .scrollable-table tbody tr:nth-of-type(even) td {
+        background-color: #F1EFEF;
+        color: #008703;
+    }
+
+    /* Styles for special elements */
+    .scrollable-table td.correct {
+        color: #008703 !important;
+        font-weight: bold;
+    }
+
+    .scrollable-table td.incorrect {
+        color: red !important;
+        font-weight: bold;
+    }

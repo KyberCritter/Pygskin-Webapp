@@ -1,0 +1,110 @@
+    p {
+        font-family: 'DM Sans' !important;
+        font-weight: 400;
+        /* text-transform: uppercase !important;  */
+        /* color: #016006  !important; */
+    }
+    
+    h1, h2 {
+        text-transform: uppercase !important;
+    }
+
+    .custom-button {
+        align-content: flex-start !important;
+        align-items: flex-start !important;
+        background-color: #008705 !important;
+        border-radius: 6px !important;
+        display: flex !important;
+        flex: none !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        gap: 10px !important;
+        height: min-content !important;
+        justify-content: flex-start !important;
+        overflow: visible !important;
+        padding: 12px 32px !important;
+        text-decoration: none !important;
+        position: relative !important;
+        border: none !important;
+        cursor: pointer !important;
+    }
+
+    .custom-button-box {
+        flex: none !important;
+        height: auto !important;
+        position: relative !important;
+        white-space: pre !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .custom-button-box p {
+        font-family: 'Fugaz One', sans-serif !important;
+        font-size: 20px !important; 
+        font-weight: 700 !important; 
+        text-transform: uppercase !important; 
+        color: rgb(255, 222, 33) !important;
+        display: inline-block !important;
+        text-align: left !important;
+        vertical-align: middle !important;
+        padding: 18px !important;
+        line-height: 1 !important;
+        margin: 0 auto !important;
+    }
+
+    /* Table wrapper styles */
+    .scrollable-table {
+        flex: 1 !important;
+        overflow-x: auto !important;
+        width: 100% !important;
+        text-align: center !important;
+        padding-top: 20px !important;
+    }
+ 
+    /* Table styles */
+    .scrollable-table table {
+        width: 100% !important;
+        border-collapse: separate !important; /* Ensures border-radius will work */
+        border-spacing: 10px !important; /* Adds space between table cells */
+        background-color: #006106 !important; /* Background for the entire table */
+        border-radius: 15px !important; /* Rounds the corners of the table */
+        padding: 10px !important;
+        margin: auto !important; /* Centers the table */
+    }
+ 
+    /* Header cell styles */
+    .scrollable-table th {
+        background-color: #008703 !important;
+        color: #FFDE21 !important;
+        font-family: 'Fugaz One', sans-serif !important;
+        font-size: 18px !important;
+        padding: 10px !important;
+        border-radius: 10px !important;
+        text-transform: uppercase !important;
+    }
+ 
+    /* Body cell styles */
+    .scrollable-table td {
+        background-color: #F1EFEF !important;
+        font-family: 'Fugaz One', sans-serif !important;
+        font-weight: 700 !important;
+        font-size: 18px !important;
+        padding: 10px !important;
+        border-radius: 10px !important;
+        text-transform: uppercase !important;
+        color: #006106 !important;
+    }
+ 
+    /* Odd rows */
+    .scrollable-table tbody tr:nth-of-type(odd) td {
+        background-color: #F1EFEF !important;
+        color: #008703 !important;
+    }
+ 
+    /* Even rows */
+    .scrollable-table tbody tr:nth-of-type(even) td {
+        background-color: #F1EFEF !important;
+        color: #008703 !important;
+    }
