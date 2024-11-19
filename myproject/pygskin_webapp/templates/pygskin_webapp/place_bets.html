@@ -49,6 +49,7 @@
 <script type="text/javascript">
     // These variables need to be defined here, because there are errors when the django formatted variables are defined in external JS files
     const gamesList = JSON.parse('{{ games_json|escapejs }}');
+    const placeBetUrl = "{% url 'place_bet' %}";
 </script>
 <!-- Load the JS for this page -->
 <script type="text/javascript" src="{% static 'place_bets.js' %}"></script>

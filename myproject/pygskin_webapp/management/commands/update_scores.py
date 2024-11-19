@@ -19,7 +19,7 @@ class Command(BaseCommand):
             return
 
         season = 2024
-        week = 11
+        week = 12
 
         # Fetch scores data from the API
         params = {

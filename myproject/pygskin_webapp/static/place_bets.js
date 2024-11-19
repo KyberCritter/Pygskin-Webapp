@@ -298,7 +298,8 @@ submitBetButton.addEventListener('click', () => {
     const csrfToken = getCookie('csrftoken');
 
     // Send an AJAX POST request to submit the bet
-    const placeBetUrl = "{% url 'place_bet' %}";
+    // THIS NEEDS TO BE IN HTML FILE (DJANGO VARIABLES DON'T WORK IN SEPARATE JS FILE)
+    // const placeBetUrl = "{% url 'place_bet' %}";
 
     fetch(placeBetUrl, {
         method: "POST",
