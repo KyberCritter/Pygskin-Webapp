@@ -14,7 +14,6 @@ function updateBalanceDisplay() {
 
 // Update the betting history when a bet is placed. This could be removed if the betting history is removed from the page
 function updateBettingHistory(bet) {
-    ;
     bettingHistory.push(bet);
 
     // console.log(bet);
@@ -317,7 +316,7 @@ submitBetButton.addEventListener('click', () => {
                 updateBalanceDisplay();  // Refresh the balance display
 
                 currentBet.amount = betAmount;
-                currentBet.winnings = calculateWinnings(betAmount, currentBet.odds);
+                currentBet.winnings = (calculateWinnings(betAmount, currentBet.odds) + betAmount).toFixed(2);
                 updateBettingHistory(currentBet);  // Add the bet to betting history
                 closeModalFunc();
             } else {
