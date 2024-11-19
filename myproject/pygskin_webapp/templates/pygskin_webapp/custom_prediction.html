@@ -17,7 +17,7 @@
     <div class="group" style="color:white;">
         <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from
             the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were
-            withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{model_accuracy }}%</strong> accurate on the evaluation data set.</p>
+            withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
         <p>This is the decision that the {{ model_type }} Cybercoach of {{ coach_name }} would make in this custom
             scenario.</p>
     </div>
@@ -26,7 +26,7 @@
 <!-- Display the cybercoach's prediction -->
 <div class="group" style="margin:0px;">
     <h2>THE CYBERCOACH WOULD CALL {% if prediction == 0 %}A <u>PASS</u> PLAY{% elif prediction == 1 %}A <u>RUSH</u>
-        PLAY{% elif prediction == 2 %}A <u>FIELD GOAL</u>{% elif prediction == 3 %}A <u>PAT</u>{% elif prediction == 4%}A <u>PUNT</u>{% else %}AN <u>OTHER</u> PLAY{% endif %} IN THIS SITUATION.</h2>
+        PLAY{% elif prediction == 2 %}A <u>FIELD GOAL</u>{% elif prediction == 3 %}A <u>PAT</u>{% elif prediction == 4 %}A <u>PUNT</u>{% else %}AN <u>OTHER</u> PLAY{% endif %} IN THIS SITUATION.</h2>
 </div>
 
 <p><u>Scroll to the right</u> to see more of the data.</p>
