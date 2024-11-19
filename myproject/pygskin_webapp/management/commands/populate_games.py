@@ -23,7 +23,7 @@ class Command(BaseCommand):
         # Right now, week/year is being set manually
         cfbdb_params = {
             "year": 2024,
-            "week": 11,
+            "week": 13,
             "provider": "ESPN Bet"
         }
         
@@ -45,8 +45,8 @@ class Command(BaseCommand):
             "markets": "h2h,spreads,totals",
             "oddsFormat": "american",
             "dateFormat": "iso",
-            "commenceTimeFrom": "2024-11-04T00:00:00Z",
-            "commenceTimeTo": "2024-11-10T23:59:59Z",
+            "commenceTimeFrom": "2024-11-18T00:00:00Z",
+            "commenceTimeTo": "2024-11-24T23:59:59Z",
             "apiKey": ODDS_API_KEY
         }
         odds_response = requests.get(ODDS_API_URL, params=odds_params)
