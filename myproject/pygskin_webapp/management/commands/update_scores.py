@@ -5,6 +5,7 @@ import requests
 from django.core.management.base import BaseCommand
 from pygskin_webapp.models import Game, GameScore, Bet, BettingTransaction, UserCredit
 from django.utils.dateparse import parse_datetime
+from decimal import Decimal
 
 class Command(BaseCommand):
     help = 'Fetch and update game scores for completed games'
@@ -19,7 +20,7 @@ class Command(BaseCommand):
             return
 
         season = 2024
-        week = 12
+        week = 13
 
         # Fetch scores data from the API
         params = {
@@ -85,28 +86,77 @@ class Command(BaseCommand):
 
         for bet in pending_bets:
             won = False  # Tracks if bet was won
+            push = False
             payout = 0
 
             # Check outcome for money line
-            if bet.bet_type == "Money Line":
-                if (bet.odds > 0 and home_score > away_score) or (bet.odds < 0 and away_score > home_score):
+            if bet.bet_type == "Moneyline Home":
+                if home_score > away_score:
                     won = True
 
-            elif bet.bet_type == "Spread":
-                spread_difference = (home_score - away_score) if bet.odds < 0 else (away_score - home_score)
-                if spread_difference >= abs(float(bet.game.spread)):
+            elif bet.bet_type == "Moneyline Away":
+                if away_score > home_score:
                     won = True
 
-            elif bet.bet_type == "Over Under":
+            elif bet.bet_type == "Spread Home":
+                formatted_spread = bet.game.spread
+                if bet.game.home_money_line < 0: # home team favored to win
+                    formatted_spread = abs(bet.game.spread) * -1
+                else: # home team is the underdog
+                    formatted_spread = abs(bet.game.spread)
+                
+                if home_score + formatted_spread > away_score:
+                    # bet wins
+                    won = True
+                elif home_score + formatted_spread == away_score:
+                    # bet pushes
+                    push = True
+                    won = False
+                else:
+                    # bet loses
+                    won = False
+
+            elif bet.bet_type == "Spread Away":
+                formatted_spread = bet.game.spread
+                if bet.game.away_money_line < 0: # away team favored to win
+                    formatted_spread = abs(bet.game.spread) * -1 # negative spread
+                else: # away team is the underdog
+                    formatted_spread = abs(bet.game.spread) # + 1.5
+                
+                if away_score + formatted_spread > home_score:
+                    # bet wins
+                    won = True
+                elif away_score + formatted_spread == home_score:
+                    # bet pushes
+                    push = True
+                    won = False
+                else:
+                    # bet loses
+                    won = False
+
+            elif bet.bet_type == "Over":
                 total_score = home_score + away_score
-                if (bet.odds > 0 and total_score > float(bet.game.over_under)) or \
-                        (bet.odds < 0 and total_score < float(bet.game.over_under)):
+                if (total_score > float(bet.game.over_under)):
+                    won = True
+
+            elif bet.bet_type == "Under":
+                total_score = home_score + away_score
+                if (total_score < float(bet.game.over_under)):
                     won = True
 
             if won:
-                payout = int(bet.credits_bet * abs(float(bet.odds)) / 100)
+                # payout = float(bet.credits_bet * abs(float(bet.odds)) / 100)
+                if (bet.odds > 0):
+                    ## Positive odds (e.g., +120 means winning $120 on a $100 bet)
+                    payout = bet.credits_bet * (bet.odds / Decimal('100.00'))
+                else:
+                    ## Negative odds (e.g., -150 means winning $100 on a $150 bet)
+                    payout = bet.credits_bet / abs(bet.odds / Decimal('100.00'))
                 bet.status = "Won"
                 self.update_user_credits(bet, payout, "Win")
+            elif push:
+                bet.status = "Push"
+                self.update_user_credits(bet, 0, "Push")
             else:
                 bet.status = "Lost"
                 self.update_user_credits(bet, -bet.credits_bet, "Lose")
@@ -118,12 +168,15 @@ class Command(BaseCommand):
     def update_user_credits(self, bet, amount, transaction_type):
         # Update user credits and log the transaction
         user_credit = UserCredit.objects.get(user=bet.user)
-        user_credit.total_credits += amount
 
-        if amount > 0:
+        if amount >= 0:
+            user_credit.total_credits += amount + bet.credits_bet
             user_credit.credits_won += amount
         else:
             user_credit.credits_lost += abs(amount)
+
+        if user_credit.total_credits <= 0:
+            user_credit.total_credits = 5000.00
         user_credit.save()
 
         # Record the transaction
