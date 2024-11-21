@@ -26,11 +26,11 @@ python manage.py createsuperuser --noinput --username $DJANGO_SUPERUSER_USERNAME
 # echo "Loading database dump"
 # python manage.py loaddata /app/data_dump.json
 
-# echo "Populating Game and GameScores Tables from CFBDB"
-# python manage.py populate_games
+echo "Populating Game and GameScores Tables from CFBDB"
+python manage.py populate_games
 
-# echo "Updating Game scores and betting transactions Tables from CFBDB"
-# python manage.py update_scores
+echo "Updating Game scores and betting transactions Tables from CFBDB"
+python manage.py update_scores
 
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
