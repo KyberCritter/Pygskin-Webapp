@@ -90,7 +90,7 @@ class Bet(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     bet_type = models.CharField(max_length=50) # 'Spread', 'Money Line', 'Over Under'
-    credits_bet = models.IntegerField()
+    credits_bet = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     odds = models.DecimalField(max_digits=5, decimal_places=2)
     bet_placed_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, default='Pending')
@@ -100,8 +100,8 @@ class Bet(models.Model):
 class UserCredit(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     total_credits = models.IntegerField(default=10000)
-    credits_won = models.IntegerField(default=0)
-    credits_lost = models.IntegerField(default=0)
+    credits_won = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, default=0)
+    credits_lost = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, default=0)
     last_updated = models.DateTimeField(auto_now=True)
 
 # This model holds all of the information for each user's bet and the results
@@ -109,8 +109,8 @@ class BettingTransaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     bet = models.ForeignKey(Bet, on_delete=models.SET_NULL, null=True)
     transaction_type = models.CharField(max_length=20) # 'Bet placed', 'Win', 'lose'
-    credits_adjusted = models.IntegerField()
-    balance_after_transaction = models.IntegerField()
+    credits_adjusted = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    balance_after_transaction = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
     transaction_date = models.DateTimeField(auto_now_add=True)
 
 # This model holds all of the information for each game score and when it was last updated
