@@ -5,7 +5,7 @@ let bettingHistory = [];
 
 // Display the current balance
 function updateBalanceDisplay() {
-    document.getElementById('balance-display').innerText = `Balance: ${currentBalance.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Credits`;
+    document.getElementById('balance-display').innerText = `Balance: ${Number(currentBalance).toFixed(2).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} Credits`;
 }
 
 // These variables need to be defined here, because there are errors when the django formatted variables are defined in external JS files

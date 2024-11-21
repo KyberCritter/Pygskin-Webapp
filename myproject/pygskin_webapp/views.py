@@ -37,6 +37,8 @@ import json
 from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, CustomScenarioForm
 from .models import Cybercoach, Subscriber, Game, UserCredit, Bet, BettingTransaction
 
+from decimal import Decimal
+
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
 def get_model_type_name(model_type):
@@ -309,7 +311,7 @@ def place_bet(request):
             return JsonResponse({"error": "Missing required fields"}, status=400)
 
         # Convert `credits_bet` and `odds` to integers/floats after validation
-        credits_bet = int(credits_bet)
+        credits_bet = Decimal(credits_bet)
         odds = float(odds)
 
         # Get the game
