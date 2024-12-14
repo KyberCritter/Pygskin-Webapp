@@ -6,9 +6,7 @@
 
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'coach_stats.css' %}">
-
-<!-----------------------------------HTML--------------------------------------->
+<link rel="stylesheet" type="text/css" href="{% static 'coach_stats/coach_stats.css' %}">
 
 <!--Green Coach Select Box-->
 <div class="color-box">
@@ -82,10 +80,9 @@
             type: 'pie'
         }];
     </script>
-    <script type="text/javascript" src="{% static 'coach_stats.js' %}"></script>
+    <script type="text/javascript" src="{% static 'coach_stats/coach_stats.js' %}"></script>
 
     </section>
     {% endif %}
-
 
 {% endblock %}

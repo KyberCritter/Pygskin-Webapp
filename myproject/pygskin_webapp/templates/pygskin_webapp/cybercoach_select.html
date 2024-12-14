@@ -7,7 +7,7 @@
 {% load static %}
 
 <!-- Load CSS file for this page's styling -->
-<link rel="stylesheet" type="text/css" href="{% static 'cybercoach_select.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'cybercoach_select/cybercoach_select.css' %}">
 
 <!-- Main container for the page -->
 <div class="cybercoach-container">
@@ -163,7 +163,7 @@
     const playData = JSON.parse('{{ play_data|escapejs }}');
 </script>
 <!-- Load the external JS file -->
-<script type="text/javascript" src="{% static 'cybercoach_select.js' %}"></script>
+<script type="text/javascript" src="{% static 'cybercoach_select/cybercoach_select.js' %}"></script>
 
 
 {% endblock %}
