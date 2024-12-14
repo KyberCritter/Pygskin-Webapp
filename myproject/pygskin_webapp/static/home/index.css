@@ -1,178 +1,178 @@
 /* General reset */
-    html, body {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        width: 100%;
-    }
+/* html, body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+} */
 
-    .container {
-        padding: 0% !important;
-    }
+/* .container {
+    padding: 0% !important;
+} */
 
-    /* Main container */
+/* Main container */
+.hero-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f1efef;
+}
+
+/* Left content section */
+.hero-content-left {
+    width: 65%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    z-index: 1;
+}
+
+.hero-section-background {
+    position: absolute;
+    top: -15%;
+    left: 30%;
+    bottom: -50%;
+    transform: translateX(-50%) rotate(-30deg);
+    width: 80%;
+    opacity: 0.10;
+    z-index: 0;
+}
+
+.hero-section-background img {
+    width: 150%;
+    height: auto;
+}
+
+.hero-section-text-box {
+    z-index: 1; /* Position above background */
+    margin-top: 80px;
+    max-width: 70%;
+}
+
+.hero-section-text-box p {
+    font-family: 'Fugaz One', sans-serif;
+    font-size: 6vw; /* Responsive scaling */
+    font-weight: 400;
+    text-transform: uppercase;
+    background: linear-gradient(to bottom, #000000 10%, #006106 50%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    line-height: 1.2;
+}
+
+/* Small text and button */
+.hero-section-bottom-text {
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.hero-section-bottom-text-div p {
+    font-size: 1.2rem;
+    color: rgba(1, 96, 6, 1);
+    margin: 0;
+    padding: 10px 0;
+}
+
+.hero-section-bottom-button {
+    background-color: #016006;
+    border-radius: 6px;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 10;
+}
+
+.hero-section-bottom-button-box p {
+    font-size: 1rem;
+    color: rgb(255, 222, 33);
+    margin: 0;
+}
+
+/* Centered coach image */
+.centered-coach-image {
+    width: 30%;
+    max-width: 400px;
+    margin: 20px auto;
+    margin-right: 10%;
+    text-align: center;
+    z-index: 1;
+}
+
+.centered-coach-image img {
+    width: 100%;
+    height: auto;
+}
+
+/* Sidebar */
+.sidebar {
+    background-color: #016006;
+    border-radius: 20px;
+    box-shadow: 0 4px 4px #00000040;
+    width: 30%;
+    max-width: 400px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.sidebar-heading {
+    font-family: 'Fugaz One', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(255, 222, 33);
+    margin: 10px 0;
+}
+
+.sidebar-item {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.sidebar img {
+    width: 100%;
+    height: auto;
+    border-radius: inherit;
+    object-fit: cover;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    /* Adjust layout for medium screens */
     .hero-section {
-        display: flex;
-        justify-content: space-between;
-        padding: 20px;
-        background-color: #f1efef;
+        flex-direction: column;
+        align-items: center;
     }
 
-    /* Left content section */
-    .hero-content-left {
-        width: 65%;
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        z-index: 1;
+    .hero-content-left,
+    .sidebar {
+        width: 100%;
+        max-width: none;
+        align-items: center;
     }
 
     .hero-section-background {
-        position: absolute;
-        top: -15%;
-        left: 30%;
-        bottom: -50%;
-        transform: translateX(-50%) rotate(-30deg);
-        width: 80%;
-        opacity: 0.10;
-        z-index: 0;
-    }
-
-    .hero-section-background img {
-        width: 150%;
-        height: auto;
-    }
-
-    .hero-section-text-box {
-        z-index: 1; /* Position above background */
-        margin-top: 80px;
-        max-width: 70%;
+        display: none;
     }
 
     .hero-section-text-box p {
-        font-family: 'Fugaz One', sans-serif;
-        font-size: 6vw; /* Responsive scaling */
-        font-weight: 400;
-        text-transform: uppercase;
-        background: linear-gradient(to bottom, #000000 10%, #006106 50%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin: 0;
-        line-height: 1.2;
+        font-size: 6vw;
     }
 
-    /* Small text and button */
-    .hero-section-bottom-text {
-        max-width: 600px;
-        margin-top: 20px;
-    }
-
-    .hero-section-bottom-text-div p {
-        font-size: 1.2rem;
-        color: rgba(1, 96, 6, 1);
-        margin: 0;
-        padding: 10px 0;
-    }
-
-    .hero-section-bottom-button {
-        background-color: #016006;
-        border-radius: 6px;
-        padding: 10px 20px;
-        text-decoration: none;
-        display: inline-block;
-        margin-top: 10px;
-        margin-bottom: 20px;
-        position: relative;
-        z-index: 10;
-    }
-
-    .hero-section-bottom-button-box p {
-        font-size: 1rem;
-        color: rgb(255, 222, 33);
-        margin: 0;
-    }
-
-    /* Centered coach image */
     .centered-coach-image {
-        width: 30%;
-        max-width: 400px;
-        margin: 20px auto;
-        margin-right: 10%;
-        text-align: center;
-        z-index: 1;
+        display: none; /* Hide coach image on smaller screens */
     }
+}
 
-    .centered-coach-image img {
-        width: 100%;
-        height: auto;
+@media (max-width: 768px) {
+    /* Additional adjustments for small screens */
+    .hero-section-text-box p {
+        font-size: 8vw;
     }
-
-    /* Sidebar */
-    .sidebar {
-        background-color: #016006;
-        border-radius: 20px;
-        box-shadow: 0 4px 4px #00000040;
-        width: 30%;
-        max-width: 400px;
-        padding: 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-    }
-
-    .sidebar-heading {
-        font-family: 'Fugaz One', sans-serif;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: rgb(255, 222, 33);
-        margin: 10px 0;
-    }
-
-    .sidebar-item {
-        width: 100%;
-        margin: 10px 0;
-    }
-
-    .sidebar img {
-        width: 100%;
-        height: auto;
-        border-radius: inherit;
-        object-fit: cover;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 1024px) {
-        /* Adjust layout for medium screens */
-        .hero-section {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .hero-content-left,
-        .sidebar {
-            width: 100%;
-            max-width: none;
-            align-items: center;
-        }
-
-        .hero-section-background {
-            display: none;
-        }
-
-        .hero-section-text-box p {
-            font-size: 6vw;
-        }
-
-        .centered-coach-image {
-            display: none; /* Hide coach image on smaller screens */
-        }
-    }
-
-    @media (max-width: 768px) {
-        /* Additional adjustments for small screens */
-        .hero-section-text-box p {
-            font-size: 8vw;
-        }
-    }
+}

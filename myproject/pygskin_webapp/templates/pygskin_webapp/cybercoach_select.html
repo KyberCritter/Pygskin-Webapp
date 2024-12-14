@@ -1,12 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ model_type }} Cybercoach of {{ coach_name }}{% endblock %}
 
 {% block content %}
 
-{% load static %}
-
-<!-- Load CSS file for this page's styling -->
 <link rel="stylesheet" type="text/css" href="{% static 'cybercoach_select/cybercoach_select.css' %}">
 
 <!-- Main container for the page -->
@@ -154,7 +152,7 @@
 </section>
 {% endif %}
 
-<!-- Uses django to get the variables from the database, see views.py -->
+<!-- Uses Django to get the variables from the database, see views.py -->
 {{ opponents_by_year|json_script:"opponentYearsData" }}
 
 <script type="text/javascript">
@@ -164,6 +162,5 @@
 </script>
 <!-- Load the external JS file -->
 <script type="text/javascript" src="{% static 'cybercoach_select/cybercoach_select.js' %}"></script>
-
 
 {% endblock %}

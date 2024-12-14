@@ -11,26 +11,25 @@
         <a href="{% url 'index' %}" data-umami-event="pygskin-navbar-link">
             <img class="navbar-logo" src="{% static 'Pygskin-logo.png' %}" alt="Pygskin logo">
         </a>
-        <!-- <p class="navbar-subtext">BY SCOTT RATCHFORD</p> -->
     </div>
 
     <div class="navbar-menu" id="navbar-links">
         <a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a>
         <a href="{% url 'cybercoach_select' %}" class="{% if request.path == '/cybercoach_select/' %}active{% endif %}">Cybercoaches</a>
         <a href="{% url 'coach_stats' %}" class="{% if request.path == '/coach_stats/' %}active{% endif %}">Coach Statistics</a>
-        <a href="{% url 'place_bets' %}" class="{% if request.path == '/place_bets/' %}active{% endif %}">Place Bets</a>
+        {% comment %} <a href="{% url 'place_bets' %}" class="{% if request.path == '/place_bets/' %}active{% endif %}">Place Bets</a> {% endcomment %}
         <a href="{% url 'conference_analysis' %}" class="{% if request.path == '/conference_analysis/' %}active{% endif %}">Conference Realignment</a>
         <a href="{% url 'colley_matrix' %}" class="{% if request.path == '/colley_matrix/' %}active{% endif %}">Team Rankings</a>
         <a href="{% url 'about' %}" class="{% if request.path == '/about/' %}active{% endif %}">About</a>
     </div>
 
-    <div class="navbar-menu" id="navbar-signup">
+    {% comment %} <div class="navbar-menu" id="navbar-signup">
         {% if user.is_authenticated %}
             <a href="{% url 'profile' %}" class="{% if request.path == '/profile/' %}active{% endif %}">Profile</a>
         {% else %}
             <a href="{% url 'signup' %}" class="{% if request.path == '/signup/' %}active{% endif %}">Login</a>
         {% endif %}
-    </div>
+    </div> {% endcomment %}
 
     <div class="hamburger-menu" id="hamburger-menu" onclick="openNav()">
         &#9776; <!-- Hamburger icon -->
@@ -41,15 +40,15 @@
         <a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a>
         <a href="{% url 'cybercoach_select' %}" class="{% if request.path == '/cybercoach_select/' %}active{% endif %}">Cybercoaches</a>
         <a href="{% url 'coach_stats' %}" class="{% if request.path == '/coach_stats/' %}active{% endif %}">Coach Statistics</a>
-        <a href="{% url 'place_bets' %}" class="{% if request.path == '/place_bets/' %}active{% endif %}">Place Bets</a>
+        {% comment %} <a href="{% url 'place_bets' %}" class="{% if request.path == '/place_bets/' %}active{% endif %}">Place Bets</a> {% endcomment %}
         <a href="{% url 'conference_analysis' %}" class="{% if request.path == '/conference_analysis/' %}active{% endif %}">Conference Realignment</a>
         <a href="{% url 'colley_matrix' %}" class="{% if request.path == '/colley_matrix/' %}active{% endif %}">Team Rankings</a>
         <a href="{% url 'about' %}" class="{% if request.path == '/about/' %}active{% endif %}">About</a>
-        {% if user.is_authenticated %}
+        {% comment %} {% if user.is_authenticated %}
             <a href="{% url 'profile' %}" class="{% if request.path == '/profile/' %}active{% endif %}">Profile</a>
         {% else %}
             <a href="{% url 'signup' %}" class="{% if request.path == '/signup/' %}active{% endif %}">Login</a>
-        {% endif %}
+        {% endif %} {% endcomment %}
     </div>
 </div>
 
