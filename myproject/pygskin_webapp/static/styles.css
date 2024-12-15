@@ -36,6 +36,10 @@
     font-weight: 400; */
 }
 
+main {
+    flex: 1
+}
+
 /* Common styles */
 header {
     display: flex;
@@ -49,6 +53,7 @@ header {
     width: 100%;
     box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.5);
     top: 0;
+    min-height: 50px;
 }
 
 footer {
@@ -63,6 +68,7 @@ footer {
     color: #fff;
     padding-left: 10px;
     padding-right: 10px;
+    min-height: 50px;
 }
 
 html {
@@ -79,6 +85,9 @@ body {
     outline-color: #fff;
     outline-width: 2px;
     margin: 0px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 body > a {
@@ -91,6 +100,9 @@ body > a:visited {
 
 .container {
     padding: 20px 7vw;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 h1 {
@@ -195,12 +207,12 @@ h3 {
 }
 
 .scrollable-table thead {
-    background: #000;
+    background: rgb(0, 97, 6);
     color: #fff;
 }
 
 .scrollable-table thead tr {
-    background: #000;
+    background: rgb(0, 97, 6);
     color: #fff;
 }
 

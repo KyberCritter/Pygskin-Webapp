@@ -13,7 +13,6 @@ from django.template import loader
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
-# Brooks imported libraries
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 from django.contrib.auth import login as auth_login, authenticate
@@ -29,7 +28,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.core.cache import cache
 
-# Riley libraries for place_bets
+# Libraries for fake bets
 from django.http import JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 import json
@@ -38,6 +37,7 @@ from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, Custom
 from .models import Cybercoach, Subscriber, Game, UserCredit, Bet, BettingTransaction
 
 from decimal import Decimal
+
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 
@@ -55,17 +55,10 @@ def get_model_type_name(model_type):
     else:
         return model_type
 
-# Since new index pages does not need to pass form data, this should be the new
-# index view. Keeping the old one below for now just in case.
 @ratelimit(key='ip', rate='10/m', block=True)
 def index(request):
     template = loader.get_template("pygskin_webapp/index.html")
-    context = {
-        # "coach_form": CoachSelectForm(),
-        # "cybercoach_form": CybercoachSelectForm(),
-        # "subscribe_form": SubscriberForm(),
-    }
-    return HttpResponse(template.render(context, request))
+    return HttpResponse(template.render(request=request))
 
 def send_newsletter_signup(target_email: str):
 	return requests.post(
@@ -76,7 +69,10 @@ def send_newsletter_signup(target_email: str):
 			"subject": "Welcome to the Pygskin newsletter!",
 			"template": "Newsletter Confirmation",})
 
-# Loads the subscriber form, checks if it is valid, and returns a subscription successfull page if it is.
+"""
+USER ACCOUNTS TEMPORARILY DISABLED
+"""
+# Loads the subscriber form, checks if it is valid, and returns a subscription successful page if it is.
 @ratelimit(key='ip', rate='1/m', method=ratelimit.ALL)
 def subscribed(request):
     if request.method == 'POST':
@@ -92,6 +88,9 @@ def subscribed(request):
     else:
         return redirect('index')
 
+"""
+USER ACCOUNTS TEMPORARILY DISABLED
+"""
 def signup_view(request):
     template = loader.get_template("pygskin_webapp/signup.html")
     context = {
@@ -99,6 +98,9 @@ def signup_view(request):
     }
     return HttpResponse(template.render(context, request))
 
+"""
+USER ACCOUNTS TEMPORARILY DISABLED
+"""
 # Loads the login page and limits the login attempts to 5
 MAX_LOGIN_ATTEMPTS = 5  # Limit for login attempts
 LOCKOUT_TIME = 300
@@ -146,7 +148,9 @@ def login_view(request):
     form = AuthenticationForm()
     return render(request, 'pygskin_webapp/login.html', {'form': form})
 
-
+"""
+USER ACCOUNTS TEMPORARILY DISABLED
+"""
 def logout_view(request):
     logout(request)  # Log out the user
     
@@ -155,6 +159,9 @@ def logout_view(request):
     # and has an option to return back to the home page
     return redirect('index')
 
+"""
+USER ACCOUNTS TEMPORARILY DISABLED
+"""
 # Loads the profile view and all the information that the user needs to see.
 def profile_view(request):
     # Make sure user is authenticated before accessing profile page
@@ -220,34 +227,30 @@ def coach_stats(request):
     colors = None
     coach_seasons = None
 
-    if 'coach' in request.GET:  # Check if 'coach' is in the GET data
-        if form.is_valid():
-            selected_coach = form.cleaned_data['coach']
-            # Load the cybercoach data
-            cybercoach_obj = Cybercoach.objects.filter(coach=selected_coach).first()
-            if cybercoach_obj:
-                cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_obj.model_filename)
-                try:
-                    with open(cybercoach_path, "rb") as f:
-                        cybercoach = pickle.load(f)
-
-                    # Gather playcalling statistics
-                    play_dist = [cybercoach.play_distribution[key] for key in sorted(cybercoach.play_distribution.keys())]
-                    play_dist_4th_down = [cybercoach.play_distribution_by_down[4][key] for key in sorted(cybercoach.play_distribution_by_down[4].keys())]
-                    play_types = [pygskin.PlayType(key).name for key in sorted(cybercoach.play_distribution.keys())]
-                    colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in sorted(cybercoach.play_distribution.keys())]
-
-                    # Gather coach data
-                    coach_data = {
-                        "name": f"{selected_coach.first_name} {selected_coach.last_name}",
-                        "biography": selected_coach.biography,
-                        "first_year": cybercoach.coach.first_year,
-                        "last_year": cybercoach.coach.last_year,
-                    }
-                    coach_seasons = cybercoach.coach.coach_dict["seasons"]
-
-                except Exception as e:
-                    return redirect('error')  # Avoid exposing errors to the user
+    if form.is_valid():
+        selected_coach = form.cleaned_data['coach']
+        # Load the cybercoach data
+        cybercoach_obj = Cybercoach.objects.filter(coach=selected_coach).first()
+        if cybercoach_obj:
+            cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, cybercoach_obj.model_filename)
+            try:
+                with open(cybercoach_path, "rb") as f:
+                    cybercoach = pickle.load(f)
+                # Gather playcalling statistics
+                play_dist = [cybercoach.play_distribution[key] for key in sorted(cybercoach.play_distribution.keys())]
+                play_dist_4th_down = [cybercoach.play_distribution_by_down[4][key] for key in sorted(cybercoach.play_distribution_by_down[4].keys())]
+                play_types = [pygskin.PlayType(key).name for key in sorted(cybercoach.play_distribution.keys())]
+                colors = [pygskin.PLAY_TYPE_COLOR_DICT[pygskin.PlayType(key)] for key in sorted(cybercoach.play_distribution.keys())]
+                # Gather coach data
+                coach_data = {
+                    "name": f"{selected_coach.first_name} {selected_coach.last_name}",
+                    "biography": selected_coach.biography,
+                    "first_year": cybercoach.coach.first_year,
+                    "last_year": cybercoach.coach.last_year,
+                }
+                coach_seasons = cybercoach.coach.coach_dict["seasons"]
+            except Exception as e:
+                return redirect('error')  # Avoid exposing errors to the user
 
     context = {
         "coach_form": form,
@@ -260,6 +263,9 @@ def coach_stats(request):
     }
     return render(request, 'pygskin_webapp/coach_stats.html', context)
 
+"""
+USER ACCOUNTS TEMPORARILY DISABLED
+"""
 @ratelimit(key='ip', rate='5/m', method=ratelimit.ALL)
 def place_bets(request):
     # require user to be logged in to see the place bets page
@@ -286,14 +292,16 @@ def place_bets(request):
     #     "games_json": serialized_games,
     #     "credit_balance": credits_balance,
     # }
-        
-        
+
     #return HttpResponse(template.render(context, request))
     return render(request, 'pygskin_webapp/place_bets.html', {
         "games_json": serialized_games,
         'credit_balance': credits_balance
     })
 
+"""
+USER ACCOUNTS TEMPORARILY DISABLED
+"""
 # This is the view that handles the AJAX request for placing bets
 @login_required
 @require_POST
@@ -478,9 +486,9 @@ def prediction(request):
         return render(request, "pygskin_webapp/prediction.html", context)
     else:
         return redirect('index')
-
-    
-@ratelimit(key='ip', rate='3/m', method=ratelimit.ALL)  # rate limit to 3 requests per minute because machine learning models are computationally expensive
+  
+# rate limit to 3 requests per minute because machine learning models are computationally expensive
+@ratelimit(key='ip', rate='3/m', method=ratelimit.ALL)
 def custom_prediction(request):
     if request.method == 'POST':
         if not request.POST["cybercoach_id"]:

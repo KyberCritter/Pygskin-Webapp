@@ -1,91 +1,80 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Coach Stats{% endblock %}
 
 {% block content %}
 
-{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'coach_stats/coach_stats.css' %}">
 
-<link rel="stylesheet" type="text/css" href="{% static 'coach_stats.css' %}">
-
-<!-----------------------------------HTML--------------------------------------->
-
-<!--Green Coach Select Box-->
+<!-- Green Coach Select Box -->
 <div class="color-box">
     <section id="coach-stats">
-        <h2>
-            <form action="{% url 'coach_stats' %}" id="select-form" method="GET">
-                {{ coach_form.as_p }}
-            </form>
-        </h2>
-
+        <form action="{% url 'coach_stats' %}" id="select-form" method="GET">{{ coach_form.as_p }}</form>
         {% if coach_data %}
-
-        <p id="coach-info"> {{ coach_data.biography }} </p>
+        <p id="coach-info">{{ coach_data.biography }}</p>
+        {% endif %}
     </section>
 </div>
 
-    <section id="coach-table-info">
-
-        <h2>INCLUDED SEASONS</h2>
-        <div class="scrollable-table">
+{% if coach_data %}
+<section id="coach-table-info">
+    <h2>INCLUDED SEASONS</h2>
+    <div class="scrollable-table">
         {% if coach_seasons %}
-            <table>
-                <thead>
-                    <tr>
-                    {% for key in coach_seasons.0.keys %}
-                        <th>{{ key }}</th>
+        <table>
+            <thead>
+                <tr>
+                {% for key in coach_seasons.0.keys %}
+                    <th>{{ key }}</th>
+                {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in coach_seasons %}
+                <tr>
+                    {% for value in item.values %}
+                        <td>{{ value }}</td>
                     {% endfor %}
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in coach_seasons %}
-                    <tr>
-                        {% for value in item.values %}
-                            <td>{{ value }}</td>
-                        {% endfor %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% else %}
-            <p>No items found.</p>
+        <p>No items found.</p>
         {% endif %}
-        </div>
+    </div>
 
-        <h2>PLAYCALLING TENDENCIES</h2>
-        <div class="vertically-aligned-container">
-            
-            <h3>PLAY CALLS ON 4TH DOWN</h3>
-            <div id="playDist4thDownChart"></div>
-            <h3>PLAY CALLS ON ALL DOWNS</h3>
-            <div id="playDistChart"></div>
-        </div>
+    <h2>PLAYCALLING TENDENCIES</h2>
+    <div class="vertically-aligned-container">
+        <h3>PLAY CALLS ON 4TH DOWN</h3>
+        <div id="playDist4thDownChart"></div>
+        <h3>PLAY CALLS ON ALL DOWNS</h3>
+        <div id="playDistChart"></div>
+    </div>
 
-        <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" 
-            integrity="sha384-H7GB7Kme/VbPI/0S4LNq7OixFNVRgRGE8kyqTntBuiXle1KBm8KWLQh/Ah6bXCYW" 
-            crossorigin="anonymous">
-        </script>
-
-    <script type="text/javascript">
-        // These variables need to be defined here, because there are errors when the django formatted variables are defined in external JS files
-        var all_play_dist = [{
-            values: {{ play_dist|safe }},
-            labels: {{ play_types|safe }},
-            marker: { colors: {{ colors|safe }} },
-            type: 'pie'
-        }];
-        var play_dist_4th = [{
-            values: {{ play_dist_4th_down|safe }},
-            labels: {{ play_types|safe }},
-            marker: { colors: {{ colors|safe }} },
-            type: 'pie'
-        }];
+    <script src="https://cdn.plot.ly/plotly-2.30.0.min.js" 
+        integrity="sha384-H7GB7Kme/VbPI/0S4LNq7OixFNVRgRGE8kyqTntBuiXle1KBm8KWLQh/Ah6bXCYW" 
+        crossorigin="anonymous">
     </script>
-    <script type="text/javascript" src="{% static 'coach_stats.js' %}"></script>
 
-    </section>
-    {% endif %}
-
+<script type="text/javascript">
+    // These variables need to be defined here, because there are errors when the django formatted variables are defined in external JS files
+    var all_play_dist = [{
+        values: {{ play_dist|safe }},
+        labels: {{ play_types|safe }},
+        marker: { colors: {{ colors|safe }} },
+        type: 'pie'
+    }];
+    var play_dist_4th = [{
+        values: {{ play_dist_4th_down|safe }},
+        labels: {{ play_types|safe }},
+        marker: { colors: {{ colors|safe }} },
+        type: 'pie'
+    }];
+</script>
+<script type="text/javascript" src="{% static 'coach_stats/coach_stats.js' %}"></script>
+{% endif %}
+</section>
 
 {% endblock %}

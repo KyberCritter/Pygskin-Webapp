@@ -14,6 +14,7 @@ class CoachSelectForm(forms.Form):
     # Create a choice field populated with coach names
     coach = forms.ModelChoiceField(
         queryset=Coach.objects.all(),
+        label="SELECT A COACH",
         empty_label="Choose a coach",
         to_field_name="id",
         widget=forms.Select(attrs={'class': 'form-control'})

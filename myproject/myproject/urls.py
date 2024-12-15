@@ -34,18 +34,18 @@ urlpatterns = [
     path("prediction/", views.prediction, name="prediction"),
     path("custom_prediction/", views.custom_prediction, name="custom_prediction"),
     path("privacy/", views.privacy, name="privacy"),
-    path("subscribed/", views.subscribed, name="subscribed"),
+    # path("subscribed/", views.subscribed, name="subscribed"),
     path("about/", views.about, name="about"),
     path("conference_analysis/", views.conference_analysis, name="conference_analysis"),
     path("colley_matrix/", views.colley_matrix, name="colley_matrix"),
     path("coach_stats/", views.coach_stats, name="coach_stats"),
     path("cybercoach_select/", views.cybercoach_select, name="cybercoach_select"),    
-    path("signup/", views.signup_view, name="signup"),
-    path("login/", views.login_view, name="login"),
-    path("logout/", views.logout_view, name="logout"),
-    path("profile/", views.profile_view, name="profile"),
-    path("place_bets/", views.place_bets, name="place_bets"),
-    path("place_bet/", views.place_bet, name="place_bet")
+    # path("signup/", views.signup_view, name="signup"),
+    # path("login/", views.login_view, name="login"),
+    # path("logout/", views.logout_view, name="logout"),
+    # path("profile/", views.profile_view, name="profile"),
+    # path("place_bets/", views.place_bets, name="place_bets"),
+    # path("place_bet/", views.place_bet, name="place_bet")
 ]
 
 handler400 = "pygskin_webapp.views.handler400"

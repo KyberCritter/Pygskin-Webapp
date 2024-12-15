@@ -1,13 +1,11 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}{{ model_type }} Cybercoach of {{ coach_name }}{% endblock %}
 
 {% block content %}
 
-{% load static %}
-
-<!-- Load CSS file for this page's styling -->
-<link rel="stylesheet" type="text/css" href="{% static 'cybercoach_select.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'cybercoach_select/cybercoach_select.css' %}">
 
 <!-- Main container for the page -->
 <div class="cybercoach-container">
@@ -54,7 +52,7 @@
             <form action="{% url 'custom_prediction' %}" class="play-input" id="play-input"
                 style="background-color:#006106; border-radius:20px;" method="POST">
                 {% csrf_token %}
-                <!-- Hidden input field for the cybercoach id so that the prediction pages know which cybercoach to use -->
+                <!-- Hidden input field for the cybercoach ID so that the prediction pages know which cybercoach to use -->
                 <input type="hidden" id="cybercoach_id2" name="cybercoach_id" value="1">
                 <div class="first-column">
                     <div class="form-row" style="margin-bottom:0px;">
@@ -154,7 +152,7 @@
 </section>
 {% endif %}
 
-<!-- Uses django to get the variables from the database, see views.py -->
+<!-- Uses Django to get the variables from the database, see views.py -->
 {{ opponents_by_year|json_script:"opponentYearsData" }}
 
 <script type="text/javascript">
@@ -163,7 +161,6 @@
     const playData = JSON.parse('{{ play_data|escapejs }}');
 </script>
 <!-- Load the external JS file -->
-<script type="text/javascript" src="{% static 'cybercoach_select.js' %}"></script>
-
+<script type="text/javascript" src="{% static 'cybercoach_select/cybercoach_select.js' %}"></script>
 
 {% endblock %}

@@ -3,14 +3,11 @@
 
 {% block content %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'home/index.css' %}">
 
 <div class="hero-section">
     <!-- Left side with background, main text, and bottom button -->
     <div class="hero-content-left">
-        <div class="hero-section-background">
-            <img src="{% static 'favicon.ico' %}" alt="Football Background">
-        </div>
         <div class="hero-section-text-box">
             <p>SEE HOW COACHES THINK</p>
         </div>
@@ -28,18 +25,18 @@
 
     <!-- Centered Coach Image -->
     <div class="centered-coach-image">
-        <img src="{% static 'coach_background_index.png' %}" alt="Coach Middle Background">
+        <img src="{% static 'home/coach_background_index.png' %}" alt="Coach Middle Background">
     </div>
 
     <!-- Sidebar on the right side -->
     <div class="sidebar">
         <h2 class="sidebar-heading">VIEW COACH STATISTICS</h2>
-        <a class="sidebar-top-item" href="{% url 'coach_stats' %}">
-            <img src="{% static 'view_coach_stats.png' %}">
+        <a class="sidebar-item" href="{% url 'coach_stats' %}">
+            <img src="{% static 'home/view_coach_stats.png' %}">
         </a>
         <h2 class="sidebar-heading">VISUALIZE REALIGNMENT</h2>
-        <a class="sidebar-bottom-item" href="{% url 'conference_analysis' %}">
-            <img src="{% static 'visualize_realignment.png' %}">
+        <a class="sidebar-item" href="{% url 'conference_analysis' %}">
+            <img src="{% static 'home/visualize_realignment.png' %}">
         </a>
     </div>
 </div>
