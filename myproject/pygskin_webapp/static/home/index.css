@@ -1,14 +1,13 @@
-/* General reset */
-/* html, body {
+html, body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     width: 100%;
-} */
+}
 
-/* .container {
+.container {
     padding: 0% !important;
-} */
+}
 
 /* Main container */
 .hero-section {
@@ -26,22 +25,6 @@
     flex-direction: column;
     text-align: center;
     z-index: 1;
-}
-
-.hero-section-background {
-    position: absolute;
-    top: -15%;
-    left: 30%;
-    bottom: -50%;
-    transform: translateX(-50%) rotate(-30deg);
-    width: 80%;
-    opacity: 0.10;
-    z-index: 0;
-}
-
-.hero-section-background img {
-    width: 150%;
-    height: auto;
 }
 
 .hero-section-text-box {
@@ -155,10 +138,6 @@
         width: 100%;
         max-width: none;
         align-items: center;
-    }
-
-    .hero-section-background {
-        display: none;
     }
 
     .hero-section-text-box p {
