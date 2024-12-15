@@ -13,7 +13,6 @@ from django.template import loader
 from django_ratelimit.decorators import ratelimit
 from django_ratelimit.exceptions import Ratelimited
 
-# Brooks imported libraries
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import logout
 from django.contrib.auth import login as auth_login, authenticate
@@ -29,7 +28,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.core.cache import cache
 
-# Riley libraries for place_bets
+# Libraries for fake bets
 from django.http import JsonResponse
 from django.core.serializers.json import DjangoJSONEncoder
 import json
@@ -38,6 +37,7 @@ from .forms import CoachSelectForm, CybercoachSelectForm, SubscriberForm, Custom
 from .models import Cybercoach, Subscriber, Game, UserCredit, Bet, BettingTransaction
 
 from decimal import Decimal
+
 
 PATH_TO_CYBERCOACHES = conf_settings.PATH_TO_CYBERCOACHES
 

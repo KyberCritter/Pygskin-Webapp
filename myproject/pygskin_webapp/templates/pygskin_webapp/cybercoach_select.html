@@ -52,7 +52,7 @@
             <form action="{% url 'custom_prediction' %}" class="play-input" id="play-input"
                 style="background-color:#006106; border-radius:20px;" method="POST">
                 {% csrf_token %}
-                <!-- Hidden input field for the cybercoach id so that the prediction pages know which cybercoach to use -->
+                <!-- Hidden input field for the cybercoach ID so that the prediction pages know which cybercoach to use -->
                 <input type="hidden" id="cybercoach_id2" name="cybercoach_id" value="1">
                 <div class="first-column">
                     <div class="form-row" style="margin-bottom:0px;">
