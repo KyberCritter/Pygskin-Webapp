@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "0.0.0.0",
     ".pygskin.com",
+    "167.99.49.47"
 ]
 
 # Application definition
@@ -160,4 +161,23 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # For development; use Redis or Memcached in production
         'LOCATION': 'unique-snowflake',
     }
+}
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
