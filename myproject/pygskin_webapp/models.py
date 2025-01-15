@@ -1,8 +1,17 @@
+import hashlib
+import os
+from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from pygskin import ModelType
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.models import User
+
+from django.conf import settings as conf_settings
+
 
 class Coach(models.Model):
     """Model representing a coach."""
@@ -30,6 +39,7 @@ class Cybercoach(models.Model):
     model_type = models.CharField(choices=[(model_type.name, model_type.value) for model_type in ModelType], max_length=100)
     # Filename of the cybercoach model (all models are stored in the same directory)
     model_filename = models.CharField(max_length=100, default="")
+    file_hash = models.CharField(max_length=32, blank=True, editable=False) # Field to store the MD5 hash
 
     def __str__(self):
         return f"{self.coach.first_name} {self.coach.last_name} ({self.model_type})"
@@ -38,6 +48,19 @@ class Cybercoach(models.Model):
         ordering = ["coach", "model_type"]
         verbose_name = "Cybercoach"
         verbose_name_plural = "Cybercoaches"
+
+@receiver(post_save, sender=Cybercoach)
+def calculate_file_hash(sender, instance, **kwargs):
+    file_path = os.path.join(conf_settings.PATH_TO_CYBERCOACHES, instance.model_filename)  # Corrected file path
+
+    if os.path.exists(file_path):
+        with open(file_path, 'rb') as f:
+            file_content = f.read()
+            file_md5 = hashlib.md5(file_content).hexdigest()
+
+        # Directly update the instance without triggering save()
+        if instance.file_hash != file_md5:
+            Cybercoach.objects.filter(pk=instance.pk).update(file_hash=file_md5)
 
 class Subscriber(models.Model):
     REASON_CHOICES = [
@@ -52,7 +75,6 @@ class Subscriber(models.Model):
         ('COACH_PLAYER', 'Football coach or player'),
         ('OTHER', 'Other'),
     ]
-
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True) # Links Djangos built-in User model
     username = models.CharField(max_length=100, null=True)

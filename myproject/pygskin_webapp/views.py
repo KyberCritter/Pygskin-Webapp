@@ -1,3 +1,4 @@
+import hashlib
 import os
 import pickle
 
@@ -379,7 +380,13 @@ def cybercoach_select(request):
                 cybercoach_path = os.path.join(PATH_TO_CYBERCOACHES, selected_cybercoach.model_filename)
                 try:
                     with open(cybercoach_path, "rb") as f:
+                        # file_content = f.read()
+                        # file_md5 = hashlib.md5(file_content).hexdigest()
                         cybercoach_obj = pickle.load(f)
+
+                    # Check md5 hash against expected value
+                    # if file_md5 != cybercoach_obj.file_hash:    # Do not allow user to load file with incorrect hash
+                    #     return redirect('error')
 
                     # Gather details about the coach and model
                     coach_name = f"{selected_cybercoach.coach.first_name} {selected_cybercoach.coach.last_name}"
@@ -411,6 +418,11 @@ def cybercoach_select(request):
 
                 except Exception as e:
                     return redirect('error')  # Avoid exposing errors to the user
+        else:
+            first_cybercoach = Cybercoach.objects.first()
+            if first_cybercoach:
+                # Redirect to the page with the first cybercoach selected
+                return redirect(f'/cybercoach_select/?cybercoach={first_cybercoach.id}')
 
     context = {
         "cybercoach_form": form,

@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 from pygskin_webapp import views, urls
 from django.contrib.auth import views as auth_views
@@ -45,7 +46,8 @@ urlpatterns = [
     # path("logout/", views.logout_view, name="logout"),
     # path("profile/", views.profile_view, name="profile"),
     # path("place_bets/", views.place_bets, name="place_bets"),
-    # path("place_bet/", views.place_bet, name="place_bet")
+    # path("place_bet/", views.place_bet, name="place_bet"),
+    path('favicon.ico', RedirectView.as_view(url='/static/favicon.ico')),
 ]
 
 handler400 = "pygskin_webapp.views.handler400"
