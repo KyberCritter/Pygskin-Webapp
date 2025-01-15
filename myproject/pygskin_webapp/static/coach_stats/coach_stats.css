@@ -1,0 +1,120 @@
+#select-form {
+    display: contents;
+    align-items: center;
+    background-color: #008703;
+    color: #FFCC00;
+    font-family: 'Fugaz One', sans-serif;
+    text-transform: uppercase;
+    font-size: 18px;
+    height: 41px; /* must be 41 or greater unless you change size of select box */
+    width: 100%;
+    border: 40px;
+    border-radius: 40px;
+}
+
+#id_coach {
+    border: none;
+    border-radius: 40px;
+    background-color: #008703;
+    color: #FFCC00;
+    font-family: 'Fugaz One', sans-serif;
+    text-transform: uppercase;
+    padding: 10px;
+    flex-grow: 1;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#coach-info {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+.color-box {
+    background-color: #006106;
+    display: inline-block;
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    min-width: 100%;
+    max-width: 100%;
+}
+
+label {
+    color: #FFDE21 !important;
+    font-size: 28px !important;
+    flex: 0 0 35%;
+    margin-bottom: 0px !important;
+    margin-top: 5px !important;
+}
+
+/* Table styles */
+
+.scrollable-table {
+    flex: 1;
+    overflow-x: auto;
+    max-height: 400px;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+}
+
+.scrollable-table table {
+    width: 100%;
+    border-collapse: separate; /* Ensures border-radius will work */
+    border-spacing: 10px; /* Adds space between table cells */
+    background-color: #006106; /* Background for the entire table */
+    border-radius: 15px; /* Rounds the corners of the table */
+    padding: 10px;
+    margin: auto; /* Centers the table */
+}
+
+/* Header cell styles */
+
+.scrollable-table th {
+    background-color: #008703;
+    color: #FFCC00;
+    font-family: 'Fugaz One', sans-serif;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+}
+
+/* Body cell styles */
+
+.scrollable-table td {
+    background-color: #F1EFEF;
+    font-family: 'Fugaz One', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    color: #006106;
+}
+
+/* Odd rows */
+
+.scrollable-table tbody tr:nth-of-type(odd) td {
+    background-color: #F1EFEF;
+    color: #008703;
+}
+
+/* Even rows */
+
+.scrollable-table tbody tr:nth-of-type(even) td {
+    background-color: #F1EFEF;
+    color: #008703;
+}
+
+/* 
+!! setting the errorlist to display none -
+    bit of a weird fix, before you select a coach it says
+    "* this field is required", you can delete it and see
+*/
+.errorlist {
+    display: none;
+}

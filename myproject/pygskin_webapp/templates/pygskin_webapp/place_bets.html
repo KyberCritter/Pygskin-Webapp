@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}Place Bets{% endblock %}
+
+{% block content %}
+
+<!-- Link the custom CSS for this page -->
+<link rel="stylesheet" type="text/css" href="{% static 'place_bets/place_bets.css' %}">
+
+<!-- Header container for the place bets page -->
+<div class="header-container">
+    <div class="header-sub-container">
+        <h1>Place Bets</h1>
+        <h2 id="balance-display" data-credit-balance="{{ credit_balance }}">Balance: {{ credit_balance }} Credits</h2>
+    </div>
+
+    <p>Choose a game to place a fake bet on. Select your bet type and enter the amount.</p>
+</div>
+
+<!-- Container to hold dynamically created bet cards for each game -->
+<div class="betting-container" id="betting-container">
+    <!-- Bet cards will be dynamically created here -->
+</div>
+
+<!-- Modal Structure for placing a bet -->
+<div id="betModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h3 id="modalTitle">Place Your Bet</h3>
+        <input type="number" id="betAmount" placeholder="Enter bet amount" min="0">
+        <p id="potentialWinnings">Potential Winnings: 0.00 Credits</p>
+        <button id="submitBetButton">Submit Bet</button>
+    </div>
+</div>
+
+<!-- Betting History -->
+<!-- This was used for debugging, and it can be removed if desired. The relevant JS would also need to be removed -->
+<div class="header-container">
+    <div class="header-sub-container">
+        <h1>BETS MADE IN THIS SESSION</h1>
+    </div>
+    <div id="betting-history">
+        <p>No bets placed yet.</p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // These variables need to be defined here, because there are errors when the Django formatted variables are defined in external JS files
+    const gamesList = JSON.parse('{{ games_json|escapejs }}');
+    const placeBetUrl = "{% url 'place_bet' %}";
+</script>
+<!-- Load the JS for this page -->
+<script type="text/javascript" src="{% static 'place_bets/place_bets.js' %}"></script>
+
+{% endblock %}

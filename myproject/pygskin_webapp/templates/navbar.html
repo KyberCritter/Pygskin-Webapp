@@ -1,9 +1,55 @@
 <!-- navbar.html -->
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'navbar.css' %}">
 <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="navbar">
-    <a href="{% url 'index' %}" data-umami-event="pygskin-navbar-link"><img src="{% static "Pygskin-logo.png" %}" alt="Pygskin logo"></a>
-    <a href="https://scottratchford.com" data-umami-event="scott-website-link">by Scott Ratchford</a>
+    <div class="navbar-logo-text">
+        <a href="{% url 'index' %}" data-umami-event="pygskin-navbar-link">
+            <img class="navbar-logo" src="{% static 'Pygskin-logo.png' %}" alt="Pygskin logo">
+        </a>
+    </div>
+
+    <div class="navbar-menu" id="navbar-links">
+        <a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+        <a href="{% url 'cybercoach_select' %}" class="{% if request.path == '/cybercoach_select/' %}active{% endif %}">Cybercoaches</a>
+        <a href="{% url 'coach_stats' %}" class="{% if request.path == '/coach_stats/' %}active{% endif %}">Coach Statistics</a>
+        {% comment %} <a href="{% url 'place_bets' %}" class="{% if request.path == '/place_bets/' %}active{% endif %}">Place Bets</a> {% endcomment %}
+        <a href="{% url 'conference_analysis' %}" class="{% if request.path == '/conference_analysis/' %}active{% endif %}">Conference Realignment</a>
+        <a href="{% url 'colley_matrix' %}" class="{% if request.path == '/colley_matrix/' %}active{% endif %}">Team Rankings</a>
+        <a href="{% url 'about' %}" class="{% if request.path == '/about/' %}active{% endif %}">About</a>
+    </div>
+
+    {% comment %} <div class="navbar-menu" id="navbar-signup">
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="{% if request.path == '/profile/' %}active{% endif %}">Profile</a>
+        {% else %}
+            <a href="{% url 'signup' %}" class="{% if request.path == '/signup/' %}active{% endif %}">Login</a>
+        {% endif %}
+    </div> {% endcomment %}
+
+    <div class="hamburger-menu" id="hamburger-menu" onclick="openNav()">
+        &#9776; <!-- Hamburger icon -->
+    </div>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="{% url 'index' %}" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+        <a href="{% url 'cybercoach_select' %}" class="{% if request.path == '/cybercoach_select/' %}active{% endif %}">Cybercoaches</a>
+        <a href="{% url 'coach_stats' %}" class="{% if request.path == '/coach_stats/' %}active{% endif %}">Coach Statistics</a>
+        {% comment %} <a href="{% url 'place_bets' %}" class="{% if request.path == '/place_bets/' %}active{% endif %}">Place Bets</a> {% endcomment %}
+        <a href="{% url 'conference_analysis' %}" class="{% if request.path == '/conference_analysis/' %}active{% endif %}">Conference Realignment</a>
+        <a href="{% url 'colley_matrix' %}" class="{% if request.path == '/colley_matrix/' %}active{% endif %}">Team Rankings</a>
+        <a href="{% url 'about' %}" class="{% if request.path == '/about/' %}active{% endif %}">About</a>
+        {% comment %} {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="{% if request.path == '/profile/' %}active{% endif %}">Profile</a>
+        {% else %}
+            <a href="{% url 'signup' %}" class="{% if request.path == '/signup/' %}active{% endif %}">Login</a>
+        {% endif %} {% endcomment %}
+    </div>
 </div>
+
+<script type="text/javascript" src="{% static 'navbar.js' %}"></script>

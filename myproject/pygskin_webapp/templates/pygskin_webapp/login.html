@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'login.css' %}">
+
+<section id="login-form">
+    {% if user.is_authenticated %}
+        <h2>{{ user.first_name }} {{ user.last_name }} is logged in</h2>
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="custom-button">
+                <div class="custom-button-box">
+                    <p>LOGOUT</p>
+                </div>
+            </button>
+        </form>
+    {% else %}
+        <h2>LOGIN</h2>
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="custom-button">
+                <div class="custom-button-box">
+                    <p>LOGIN</p>
+                </div>
+            </button>
+        </form>
+
+        <!-- Display errors -->
+        {% if messages %}
+        <div class="alert alert-danger">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endif %}
+</section>
+
+{% endblock %}

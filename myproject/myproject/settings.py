@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG") == "TRUE"
+DEBUG = os.getenv("DEBUG").upper() == "True"
 
 # Cybercoach loading
 PATH_TO_CYBERCOACHES = "/app/myproject/pygskin_webapp/cybercoaches" if os.getenv("RUNNING_ON") == "DOCKER" else "./myproject/pygskin_webapp/cybercoaches"
@@ -154,3 +154,10 @@ RATELIMIT_VIEW = "pygskin_webapp.views.rate_limit_error"
 MAILGUN_API_KEY = os.getenv("MAILGUN_API_KEY")
 MAILGUN_DOMAIN = os.getenv("MAILGUN_DOMAIN")
 TARGET_EMAIL = os.getenv("TARGET_EMAIL")    # For testing purposes
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',  # For development; use Redis or Memcached in production
+        'LOCATION': 'unique-snowflake',
+    }
+}

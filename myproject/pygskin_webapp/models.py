@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from pygskin import ModelType
+from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.models import User
 
 class Coach(models.Model):
     """Model representing a coach."""
@@ -51,12 +53,71 @@ class Subscriber(models.Model):
         ('OTHER', 'Other'),
     ]
 
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True) # Links Djangos built-in User model
+    username = models.CharField(max_length=100, null=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
     reason_for_subscribing = models.CharField(max_length=50, choices=REASON_CHOICES, default='CFB')
     identity = models.CharField(max_length=50, choices=IDENTITY_CHOICES, default='FAN')
+    email_updates = models.BooleanField(default=True)
     date_subscribed = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} <{self.email}>"
+
+# This model holds all of the information for each game
+class Game(models.Model):
+    cfbdb_game_id = models.IntegerField()
+    season = models.IntegerField()
+    week = models.IntegerField()
+    home_team = models.CharField(max_length=50)
+    away_team = models.CharField(max_length=50)
+    home_money_line = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    away_money_line = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    spread = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    home_spread_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    away_spread_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    over_under = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    home_over_under_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    away_over_under_price = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    game_date = models.DateTimeField(null=True, blank=True)
+
+
+# This model holds all of the information for each bet made by a user
+class Bet(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    bet_type = models.CharField(max_length=50) # 'Spread', 'Money Line', 'Over Under'
+    credits_bet = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    odds = models.DecimalField(max_digits=5, decimal_places=2)
+    bet_placed_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, default='Pending')
+    payout = models.IntegerField(default=0)
+
+# This model holds all of the information for each user's credits
+class UserCredit(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    total_credits = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, default=10000.00)
+    credits_won = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, default=0)
+    credits_lost = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True, default=0)
+    last_updated = models.DateTimeField(auto_now=True)
+
+# This model holds all of the information for each user's bet and the results
+class BettingTransaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    bet = models.ForeignKey(Bet, on_delete=models.SET_NULL, null=True)
+    transaction_type = models.CharField(max_length=20) # 'Bet placed', 'Win', 'lose'
+    credits_adjusted = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    balance_after_transaction = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
+    transaction_date = models.DateTimeField(auto_now_add=True)
+
+# This model holds all of the information for each game score and when it was last updated
+class GameScore(models.Model):
+    game = models.OneToOneField(Game, on_delete=models.CASCADE)
+    home_team_score = models.IntegerField(default=0)
+    away_team_score = models.IntegerField(default=0)
+    last_updated = models.DateTimeField(auto_now=True)
+    # auto_now=True will updated this variable automatically when 'GameScore' object is updated.
+    # So there is no need to update it manually in the code. 

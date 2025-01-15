@@ -4,34 +4,51 @@
 
 {% block content %}
 
-<h1>Cybercoach of {{ coach_name }} {% if first_year == last_year %}({{ first_year }}){% else %}({{ first_year }}-{{ last_year }}){% endif %}</h1>
+{% load static %}
 
-<h2>Cybercoach Statistics</h2>
-<p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
-<p>You created a custom scenario, shown below.</p>
-<p>These are the plays that the {{ model_type }} Cybercoach of {{ coach_name }} predicts for that scenario.</p>
+<!-- Link to the custom CSS for this page -->
+<link rel="stylesheet" type="text/css" href="{% static 'custom_prediction/custom_prediction.css' %}">
 
-<h2>Drive Data</h2>
-<p>The Cybercoach would call for {% if prediction == 0 %}a <strong>Pass</strong> play{% elif prediction == 1 %}a <strong>Rush</strong> play{% elif prediction == 2 %}a <strong>Field Goal</strong>{% elif prediction == 3 %}a <strong>PAT</strong>{% elif prediction == 4 %}a <strong>Punt</strong>{% else %}an <strong>Other</strong> play{% endif %} in this situation.</p>
-<p><strong>Scroll to the right</strong> to see more of the data.</p>
+<!-- Header container -->
+<div class="header-container">
+    <div class="group">
+        <h1>{{ coach_name|upper }} CYBERCOACH FOR CUSTOM SCENARIO</h1>
+    </div>
+    <div class="group" style="color:white;">
+        <p>This Cybercoach is a {{ model_type }} model trained on 80% of {{ coach_name }}'s offensive play calls from
+            the beginning of the {{ first_year }} season to the end of the {{ last_year }} season. 20% of the plays were
+            withheld from the training set in order to be used in the evaluation of the model. This model was <strong>{{ model_accuracy }}%</strong> accurate on the evaluation data set.</p>
+        <p>This is the decision that the {{ model_type }} Cybercoach of {{ coach_name }} would make in this custom
+            scenario.</p>
+    </div>
+</div>
+
+<!-- Display the cybercoach's prediction -->
+<div class="group" style="margin:0px;">
+    <h2>THE CYBERCOACH WOULD CALL {% if prediction == 0 %}A <u>PASS</u> PLAY{% elif prediction == 1 %}A <u>RUSH</u>
+        PLAY{% elif prediction == 2 %}A <u>FIELD GOAL</u>{% elif prediction == 3 %}A <u>PAT</u>{% elif prediction == 4 %}A <u>PUNT</u>{% else %}AN <u>OTHER</u> PLAY{% endif %} IN THIS SITUATION.</h2>
+</div>
+
+<p><u>Scroll to the right</u> to see more of the data.</p>
+<!-- Scrollable table to see the data -->
 <div class="scrollable-table">
     <table>
         <thead>
             <tr>
                 {% if drive_dict %}
-                    {% for key in drive_dict.0.keys %}
-                        <th>{{ key }}</th>
-                    {% endfor %}
+                {% for key in drive_dict.0.keys %}
+                <th>{{ key }}</th>
+                {% endfor %}
                 {% endif %}
             </tr>
         </thead>
         <tbody>
             {% for row in drive_dict %}
-                <tr>
-                    {% for value in row.values %}
-                        <td>{{ value }}</td>
-                    {% endfor %}
-                </tr>
+            <tr>
+                {% for value in row.values %}
+                <td>{{ value }}</td>
+                {% endfor %}
+            </tr>
             {% endfor %}
         </tbody>
     </table>

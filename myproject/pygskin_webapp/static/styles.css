@@ -21,7 +21,23 @@
 
     --mobile-view-max-width: 768px;
 
-    font-family: Tahoma, sans-serif;
+    /* For the all caps text: */
+    font-family: 'Fugaz One', sans-serif;
+    font-weight: 400;
+
+    /* For the bold body text: */
+    /*
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700; */
+
+    /* For the regular body text: */
+    /*
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400; */
+}
+
+main {
+    flex: 1
 }
 
 /* Common styles */
@@ -37,9 +53,12 @@ header {
     width: 100%;
     box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.5);
     top: 0;
+    min-height: 50px;
 }
 
 footer {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
     display: flex;
     flex-direction: column;
     text-align: center;
@@ -49,6 +68,7 @@ footer {
     color: #fff;
     padding-left: 10px;
     padding-right: 10px;
+    min-height: 50px;
 }
 
 html {
@@ -64,7 +84,10 @@ body {
     color: var(--text-color);
     outline-color: #fff;
     outline-width: 2px;
-    margin: 15px;
+    margin: 0px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 body > a {
@@ -77,6 +100,9 @@ body > a:visited {
 
 .container {
     padding: 20px 7vw;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 h1 {
@@ -101,37 +127,65 @@ h3 {
 
 /* Navbar styles */
 .navbar {
-    position: sticky;
+    z-index: 10;
+    position: relative;
     display: flex;
-    flex-direction: row;
-    flex-grow: 1;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    background-color: var(--turf-green);
-    padding: 10px 10px;
-    box-shadow: 0px 0px 20px 5px rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.navbar-logo {
+    width: 150px;
+}
+
+.navbar-menu {
+    display: flex;
+    gap: 20px;
+}
+
+.navbar-menu a {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    color: #333333;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+/* Non-active links */
 .navbar a {
-    color: var(--sideline-green);
-    text-shadow: 1px 1px 1px #000;
-    font-size: x-large;
+    color: grey;
+    font-weight: normal;
     text-decoration: none;
 }
 
-.navbar a:visited {
-    color: var(--sideline-green);
+/* Active link */
+.navbar a.active {
+    color: black;
+    font-weight: bold;
 }
 
-.navbar a:hover {
-    color: var(--goalpost-yellow);
+/* Style the navbar container */
+.navbar-logo-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.navbar img {
-    max-height: 80px;
-    min-height: 30px;
-    padding-left: 1.5vw;
-    padding-right: 1.5vw;
+/* Style for the subtext */
+.navbar-subtext {
+    font-size: 12px;  /* Adjust size as needed */
+    color: green;     /* Adjust color to match your design */
+    margin-top: 5px;  /* Space between logo and text */
+    font-weight: bold;
 }
 
 /* Table styles */
@@ -153,12 +207,12 @@ h3 {
 }
 
 .scrollable-table thead {
-    background: #000;
+    background: rgb(0, 97, 6);
     color: #fff;
 }
 
 .scrollable-table thead tr {
-    background: #000;
+    background: rgb(0, 97, 6);
     color: #fff;
 }
 
@@ -343,4 +397,26 @@ input[type="text"], input[type="email"], select {
     min-width: 300px;
     max-height: 400px;
     min-height: 300px;
+}
+
+/* New fonts*/
+@font-face {
+    font-family: 'DM Sans';
+    src: url("fonts/DM_Sans/DMSans_18pt-Regular.ttf") format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'DM Sans';
+    src: url("fonts/DM_Sans/DMSans_18pt-Bold.ttf") format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Fugaz One';
+    src: url("fonts/Fugaz_One/FugazOne-Regular.ttf") format('truetype');
+    font-weight: 400;
+    font-style: normal;
 }

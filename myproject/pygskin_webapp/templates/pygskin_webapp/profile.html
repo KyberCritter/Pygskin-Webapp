@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'profile.css' %}">
+
+<section id="profile-section">
+    <h1>Welcome, {{ first_name }} {{ last_name }}</h1>
+
+    <h2>Email:</h2>
+    <p>{{ email }}</p>
+
+    <h2>Credit Balance:</h2>
+    <p>{{ credit_balance }}</p>
+
+    <h2>Credits Won/Lost:</h2>
+    <p>+{{ credits_won }} / -{{ credits_lost }}</p>
+
+    <h2>Transaction History:</h2>
+    <table class="scrollable-table">
+        <thead>
+            <tr>
+                <th>Game</th>
+                <th>Bet Type</th>
+                <th>Credits Bet</th>
+                <th>Outcome</th>
+                <th>Payout</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transaction_history %}
+                <tr>
+                    <td>{{ transaction.bet.game.home_team }} vs {{ transaction.bet.game.away_team }}</td>
+                    <td>{{ transaction.bet.bet_type }}</td>
+                    <td>{{ transaction.bet.credits_bet }}</td>
+                    <td>{{ transaction.transaction_type }}</td>
+                    <td>{{ transaction.credits_adjusted }}</td>
+                </tr>
+                {% empty %}
+                    <tr><td colspan="5">No transactions yet.</td></tr>
+                {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Active Bets:</h2>
+    <table class="scrollable-table">
+        <thead>
+            <tr>
+                <th>Game</th>
+                <th>Bet Type</th>
+                <th>Credits Bet</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bet in active_bets %}
+                <tr>
+                    <td>{{ bet.game.home_team }} vs {{ bet.game.away_team }}</td>
+                    <td>{{ bet.bet_type }}: {{ bet.odds }}</td>
+                    <td>{{ bet.credits_bet }}</td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="3">No active bets.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="custom-button">
+            <div class="custom-button-box">
+                <p>Logout</p>
+            </div>
+        </button>
+    </form>
+</section>
+
+{% endblock %}
+
+<!-- Information to put on profile page -->
+<!-- User Info -->
+    <!--  1. Username -->
+    <!--  2. Email address -->
+    <!--  3. First/last name -->
+    <!--  4. Email updates status -->
+
+<!-- Credit Balance -->
+    <!-- 1. Current Credits -->
+    <!-- 2. Credits won/lost -->
+    <!-- 3. Transaction History -->
+
+<!-- Active Bets -->
+    <!-- 1. Game -->
+    <!-- 2. Bet Type -->
+    <!-- 3. Credits Bet -->
+    <!-- 4. Odds -->
+    <!-- 5. Potential Payout -->
+
+<!-- Betting History -->
+    <!-- 1. Game -->
+    <!-- 2. Bet Type -->
+    <!-- 3. Credits Bet -->
+    <!-- 4. Outcome -->
+    <!-- 5. Payout -->
+
+<!-- Profile Actions -->
+    <!-- Edit profile: name, email (maybe), password -->
+    <!-- Logout -->

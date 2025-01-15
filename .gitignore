@@ -166,5 +166,10 @@ cython_debug/
 /certs
 Pipfile
 Pipfile.lock
-/notes.txt
-/notes.md
+
+#macOS DS Store
+.DS_Store
+
+# Notes files
+/notes/
+notes.*
